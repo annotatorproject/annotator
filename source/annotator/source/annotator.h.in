@@ -1,0 +1,15 @@
+#ifndef Annotator_INCLUDED
+#define Annotator_INCLUDED
+
+
+namespace Annotator {
+        static const std::string NAME = "@META_PROJECT_NAME@";
+        static const std::string VERSION = "@META_VERSION@";
+        static const unsigned int MAJOR = @META_VERSION_MAJOR@;
+        static const unsigned int MINOR = @META_VERSION_MINOR@;
+        static const unsigned int PATCH = @META_VERSION_PATCH@;
+        static const std::string RELEASE = "@META_NAME_VERSION@";
+}
+
+
+#endif // Annotator_INCLUDED
