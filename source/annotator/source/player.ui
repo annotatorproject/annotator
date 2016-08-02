@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1019</width>
-        <height>469</height>
+        <width>1023</width>
+        <height>475</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -153,7 +153,7 @@ color: #ffffff</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res/icons.qrc">
+            <iconset resource="../resource/icons.qrc">
              <normaloff>:/Icons/last.png</normaloff>:/Icons/last.png</iconset>
            </property>
           </widget>
@@ -173,7 +173,7 @@ color: #ffffff</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res/icons.qrc">
+            <iconset resource="../resource/icons.qrc">
              <normaloff>:/Icons/play.png</normaloff>:/Icons/play.png</iconset>
            </property>
            <property name="iconSize">
@@ -199,7 +199,7 @@ color: #ffffff</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res/icons.qrc">
+            <iconset resource="../resource/icons.qrc">
              <normaloff>:/Icons/pause.png</normaloff>:/Icons/pause.png</iconset>
            </property>
            <property name="iconSize">
@@ -225,7 +225,7 @@ color: #ffffff</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res/icons.qrc">
+            <iconset resource="../resource/icons.qrc">
              <normaloff>:/Icons/stop.png</normaloff>:/Icons/stop.png</iconset>
            </property>
            <property name="iconSize">
@@ -251,7 +251,7 @@ color: #ffffff</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res/icons.qrc">
+            <iconset resource="../resource/icons.qrc">
              <normaloff>:/Icons/next.png</normaloff>:/Icons/next.png</iconset>
            </property>
            <property name="iconSize">
@@ -277,6 +277,35 @@ color: #ffffff</string>
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>speed [%]:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="speedSpinBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;speed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the video speed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="minimum">
+         <number>5</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>5</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="timeLabel">
@@ -396,7 +425,7 @@ border-radius: 4px;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="res/icons.qrc"/>
+  <include location="../resource/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

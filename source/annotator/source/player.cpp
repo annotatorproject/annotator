@@ -19,6 +19,9 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->horizontalSlider->setMaximum(9999);
   ui->btnNext->setAutoRepeat(true);
   ui->btnLast->setAutoRepeat(true);
+
+  video->setDelay(ui->speedSpinBox->value());  //get default value
+
   updateStatus(false);  // set Status disable
   updateBtn();          // update the button Play & Pause
 
@@ -308,17 +311,21 @@ void Player::updateHorizontalSlider() {
   updateTimeLabel();
 }
 
+void Player::on_horizontalSlider_sliderMoved(int newpos)
+{
+   long pos = newpos * video->getTotalFrameNr() / ui->horizontalSlider->maximum();
+
+   video->jumpTo(pos);
+   updateTimeLabel();
+}
+
 /**
  * setSliderValue	-	set new value on the progress bar
  *
 */
 void Player::setSliderValue(int newpos) {
-  ui->horizontalSlider->setValue(newpos);
-  long pos =
-      newpos * video->getTotalFrameNr() / ui->horizontalSlider->maximum();
-
-  video->jumpTo(pos);
-  updateTimeLabel();
+    ui->horizontalSlider->setValue(newpos);
+    on_horizontalSlider_sliderMoved(newpos);
 }
 
 void Player::jumpTo(long index) { this->video->jumpTo(index); }
@@ -353,7 +360,7 @@ void Player::updateTimeLabel() {
  *
  */
 void Player::play() {
-  video->setDelay(1000.f / video->getFrameRate());
+  //video->setDelay(1000.f / video->getFrameRate());
   video->playIt();
 }
 
@@ -392,3 +399,16 @@ void Player::reload() {
   this->scene->removeLastItem();
   this->video->reload();
 }
+
+
+/**
+ * update the video speed by a factor f in percent
+ *
+ */
+void Player::on_speedSpinBox_valueChanged(int f)
+{
+    //TODO: set proper framerate
+    video->setDelay( (100.f * video->getFrameRate()) / (float) f);
+}
+
+

@@ -38,7 +38,8 @@ class Videoplayer : public QThread {
   bool isStop();           // return is the player playing
   bool isOpened();         // return is the player opened
   void playIt();           // play the frames of the sequence
-  void setDelay(int d);    // set a delay between each frame
+  void setDelay(int d);    // set a delay between each frame in [ms]
+  //void setFrameRate(int r);// set a specific framerate
   void pauseIt();          // pause the frames of the sequence
   void stopIt();           // Stop playing
   void close();            // close video

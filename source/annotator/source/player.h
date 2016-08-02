@@ -71,7 +71,13 @@ class Player : public QWidget {
  protected slots:
   void setInputCoordinate(QPoint point);
 
- private slots:
+private slots:
+  void on_horizontalSlider_sliderMoved(int pos);
+
+private slots:
+  void on_speedSpinBox_valueChanged(int arg1);   //change video playback speed
+
+private slots:
   void updateBtn();
   void on_btnPlay_clicked();
   void sleep(int msecs);  // sleep for a while

@@ -61,7 +61,8 @@ bool Videoplayer::setInput(const std::string &fileName) {
  * @return the frame rate
  */
 double Videoplayer::getFrameRate() {
-  // return capture.get(CV_CAP_PROP_FPS);
+  //TODO:
+  //return capture.get(CV_CAP_PROP_FPS);
   return 25;
 }
 
@@ -154,6 +155,7 @@ bool Videoplayer::getNextFrame(cv::Mat &frame) {
  * @param d	-	delay param
  */
 void Videoplayer::setDelay(int d) { delay = d; }
+
 
 void Videoplayer::run() { playIt(); }
 
