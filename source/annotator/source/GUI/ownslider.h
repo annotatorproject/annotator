@@ -17,9 +17,8 @@ public:
 signals:
     void sendClickPosition(int);
 
-public slots:
-
 protected:
+    void mouseReleaseEvent(QMouseEvent *event);
     void mousePressEvent ( QMouseEvent * event );
 
 private:
