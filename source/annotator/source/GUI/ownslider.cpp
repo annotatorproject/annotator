@@ -50,3 +50,8 @@ void OwnSlider::mousePressEvent ( QMouseEvent * event )
       }
       QSlider::mousePressEvent(event);
 }
+
+void OwnSlider::mouseReleaseEvent(QMouseEvent *event){
+    emit sendClickPosition(this->value());
+    QSlider::mouseReleaseEvent(event);
+}
