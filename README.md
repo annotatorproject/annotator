@@ -20,7 +20,7 @@ git submodule update --init --recursive
 cd annotatorlib
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Debug ..
 make
 ```
 
@@ -32,6 +32,6 @@ git submodule update --init --recursive
 cd annotator
 mkdir build
 cd build
-cmake -Dannotatorlib_DIR=../annotatorlib ..
+cmake -Dannotatorlib_DIR=../annotatorlib -DCMAKE_BUILD_TYPE=Debug ..
 make
 ```
