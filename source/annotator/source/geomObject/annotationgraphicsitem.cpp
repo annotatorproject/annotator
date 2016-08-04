@@ -105,8 +105,8 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos)
    QAction action_del(QString("Remove"), (QObject*)this->parentObject());
    QAction action_edit(QString("Edit"), (QObject*)this->parentObject());
 
-   QObject::connect(&action_del, SIGNAL(triggered()), (QObject*)this->parentObject(), SLOT(removeAnnotation()));
-   QObject::connect(&action_edit, SIGNAL(triggered()), (QObject*)this->parentObject(), SLOT(editAnnotation()));
+   QObject::connect(&action_del, SIGNAL(triggered()), this, SLOT(removeAnnotation()));
+   QObject::connect(&action_edit, SIGNAL(triggered()), this, SLOT(editAnnotation()));
 
    contextMenu.addAction(&action_del);
    contextMenu.addAction(&action_edit);

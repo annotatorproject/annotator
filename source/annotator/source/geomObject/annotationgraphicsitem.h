@@ -14,8 +14,10 @@
 #include "player.h"
 #include "corner.h"
 
-class AnnotationGraphicsItem : public QGraphicsItem
+class AnnotationGraphicsItem : public QObject, public QGraphicsItem
 {
+    Q_OBJECT
+
 public:
     AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
     virtual ~AnnotationGraphicsItem();
@@ -74,8 +76,10 @@ protected:
 
 private:
     void showContextMenu(const QPoint &pos);
-    void removeAnnotation();
-    void editAnnotation();
+
+private slots:
+    void removeAnnotation();        //slot
+    void editAnnotation();          //slot
 
 };
 
