@@ -46,6 +46,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
   connect(popup, SIGNAL(removeLastItem()), this, SLOT(reload()));
+
 }
 
 Player::~Player() {
@@ -364,6 +365,14 @@ void Player::play() {
   video->playIt();
 }
 
+/**
+ * pause	-	pause the video
+ *
+ */
+void Player::pause() {
+  video->pauseIt();
+}
+
 void Player::on_btnPlay_clicked() { play(); }
 
 /**
@@ -373,7 +382,7 @@ void Player::on_btnPlay_clicked() { play(); }
  */
 void Player::sleep(int msecs) { video->wait(msecs); }
 
-void Player::on_btnPause_clicked() { video->pauseIt(); }
+void Player::on_btnPause_clicked() { pause(); }
 
 void Player::on_btnStop_clicked() { video->stopIt(); }
 

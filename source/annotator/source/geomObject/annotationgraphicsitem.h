@@ -65,6 +65,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
     void setCornerPositions();
     void setAnnotationSize(int x, int y);
@@ -72,6 +73,9 @@ protected:
     void changeAnnotationSize(int x, int y, int w, int h);
 
 private:
+    void showContextMenu(const QPoint &pos);
+    void removeAnnotation();
+    void editAnnotation();
 
 };
 

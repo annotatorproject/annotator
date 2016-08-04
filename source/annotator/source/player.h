@@ -34,6 +34,7 @@ class Player : public QWidget {
   void setProject(AnnotatorLib::Project *project);
   bool LoadFile(const QString &fileName);
   void play();
+  void pause();
   Videoplayer *video;  // videoplayer instance
 
   OwnGraphicScene *scene;

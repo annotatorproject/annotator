@@ -1,3 +1,5 @@
+#include <QMenu>
+#include <QObject>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 
@@ -12,6 +14,7 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
     AnnotatorLib::Annotation *annotation)
     : QGraphicsItem::QGraphicsItem(nullptr) {
   this->annotation = annotation;
+
   if (annotation->getObject() == nullptr)
     borderColor = idToColor(annotation->getId());
   else
@@ -80,11 +83,53 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
   }
 }
 
+/**
+ * Will be triggered when a
+ *
+*/
+void AnnotationGraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+//    QMenu menu;
+//    menu.addAction("Edit");
+//    menu.addAction("Remove");
+//    QAction *a = menu.exec(event->screenPos());
+
+    //this->player->pause();
+    showContextMenu( event->screenPos());
+}
+
+void AnnotationGraphicsItem::showContextMenu(const QPoint &pos)
+{
+   QMenu contextMenu("Context menu");
+
+   QAction action_del(QString("Remove"), (QObject*)this->parentObject());
+   QAction action_edit(QString("Edit"), (QObject*)this->parentObject());
+
+   QObject::connect(&action_del, SIGNAL(triggered()), (QObject*)this->parentObject(), SLOT(removeAnnotation()));
+   QObject::connect(&action_edit, SIGNAL(triggered()), (QObject*)this->parentObject(), SLOT(editAnnotation()));
+
+   contextMenu.addAction(&action_del);
+   contextMenu.addAction(&action_edit);
+   contextMenu.exec(pos);
+}
+
 /*
 void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y)
 {
     annotation->setPosition(x, y);
 }*/
+
+
+void AnnotationGraphicsItem::removeAnnotation()
+{
+    //TODO: remove rect permanently
+}
+
+
+void AnnotationGraphicsItem::editAnnotation()
+{
+    //TODO: emit signal to show popup
+}
 
 /////////////////////////////////////////////////////////////
 /**
@@ -167,7 +212,7 @@ void AnnotationGraphicsItem::setSize(int x, int y) {
 }
 
 /**
- * filter event: to get mpouse press, move and release from parent graphicsScene
+ * filter event: to get mouse press, move and release from parent graphicsScene
 */
 bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
                                               QEvent *event) {
@@ -286,19 +331,29 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
 
 void AnnotationGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mousePressEvent(event);
-  deltax = this->x();
-  deltay = this->y();
+
+  if(event->button() ==  Qt::LeftButton)
+  {
+      deltax = this->x();
+      deltay = this->y();
+
+  }
 }
 
 void AnnotationGraphicsItem::mouseReleaseEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseReleaseEvent(event);
-  deltax = this->x() - deltax;
-  deltay = this->y() - deltay;
 
-  changeAnnotationPosition(this->x(), this->y());
-  setCornerPositions();
-  this->update();
+  if(event->button() ==  Qt::LeftButton)
+  {
+    deltax = this->x() - deltax;
+    deltay = this->y() - deltay;
+
+    changeAnnotationPosition(this->x(), this->y());
+    setCornerPositions();
+    this->update();
+
+  }
 }
 
 void AnnotationGraphicsItem::setAnnotationSize(int x, int y) {

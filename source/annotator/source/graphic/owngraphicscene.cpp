@@ -142,19 +142,23 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else
     {
         drawMode = DrawOFF;
-        if(event->button() == Qt::RightButton && !isLeftPressed){
-            //selectItem;
-            point1 = (event->scenePos());
+        if(event->button() == Qt::RightButton && !isLeftPressed)
+        {
+            //TODO: I removed this, because we don't want the rect to disappear when right-clicking.
 
-            QTransform transform;
-            rectangle = (OwnQGraphicsItem*)this->itemAt(point1,transform);
-            if(rectangle!=0){
-                this->removeItem(rectangle);
-                this->update();
-                ItemsList.removeOne(rectangle);
-                ///qDebug()<<"# of Rects: "<<ItemsList.size();
-            }
-        }else if(event->button() == Qt::LeftButton){
+            //selectItem;
+//            point1 = (event->scenePos());
+
+//            QTransform transform;
+//            rectangle = (OwnQGraphicsItem*)this->itemAt(point1,transform);
+//            if(rectangle!=0){
+//                this->removeItem(rectangle);
+//                this->update();
+//                ItemsList.removeOne(rectangle);
+//                ///qDebug()<<"# of Rects: "<<ItemsList.size();
+//            }
+        } else if(event->button() == Qt::LeftButton)
+        {
             this->clearSelection();     //single selection mode
         }
     }
