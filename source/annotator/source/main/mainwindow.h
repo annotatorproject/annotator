@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
-#include <AnnotatorLib/Project.h>
 #include <QLabel>
 #include "player.h"
+#include <AnnotatorLib/Project.h>
 #include "annotation/annotationswidget.h"
 #include "object/objectswidget.h"
 #include "attribute/attributeswidget.h"

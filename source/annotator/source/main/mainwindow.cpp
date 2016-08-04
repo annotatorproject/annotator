@@ -1,9 +1,8 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QDebug>
-
+#include <QSettings>
 #include <AnnotatorLib/Annotation.h>
-
 #include "aboutdialog.h"
 #include "mainwindow.h"
 #include "newprojectdialog.h"
@@ -70,6 +69,12 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
          Annotator::PluginLoader::getInstance().getPlugins()) {
       p->setSession(project->getSession());
     }
+
+    //save path to last opened project in settings
+    //TODO: ORG_NAME
+    QSettings settings("ORG_NAME", "annotator-demo");
+    settings.setValue( "LastProjectPath", QString(project->getPath().c_str()) );
+
   }
 }
 
