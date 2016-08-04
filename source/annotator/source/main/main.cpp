@@ -23,8 +23,7 @@ int main(int argc, char *argv[])
     w.show();
 
     //try to open last project
-    //TODO: ORG_NAME
-    QSettings settings("ORG_NAME", "annotator-demo");
+    QSettings settings("lasmue", "annotator-demo");
     QString lastProjPath = settings.value("LastProjectPath","").value<QString>();
 
     //check if path was stored previously

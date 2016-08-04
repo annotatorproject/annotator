@@ -71,8 +71,7 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
     }
 
     //save path to last opened project in settings
-    //TODO: ORG_NAME
-    QSettings settings("ORG_NAME", "annotator-demo");
+    QSettings settings("lasmue", "annotator-demo");
     settings.setValue( "LastProjectPath", QString(project->getPath().c_str()) );
 
   }
