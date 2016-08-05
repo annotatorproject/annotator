@@ -25,8 +25,8 @@ Then clone and build [annotatorlib](https://github.com/lasmue/annotatorlib).
 
 ```sh
 git clone https://github.com/lasmue/annotatorlib
-git submodule update --init --recursive
 cd annotatorlib
+git submodule update --init --recursive
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
@@ -37,8 +37,8 @@ Now you can clone and build annotator.
 
 ```sh
 git clone https://github.com/lasmue/annotator
-git submodule update --init --recursive
 cd annotator
+git submodule update --init --recursive
 mkdir build
 cd build
 cmake -Dannotatorlib_DIR=../annotatorlib -DCMAKE_BUILD_TYPE=Debug ..
