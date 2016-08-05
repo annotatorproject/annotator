@@ -29,6 +29,8 @@ public:
     OwnQGraphicsItem *getItemByID(QString ID);
     void clearItemsList();
     void editItem(OwnQGraphicsItem *rectangle);
+    void setCurrentFrame(int frame);
+    void setSession(AnnotatorLib::Session *session);
 
 
 
@@ -50,6 +52,10 @@ private slots:
 
 signals:
     void on_btnPause_clicked();
+
+protected:
+    float currentFrame = 0;
+    AnnotatorLib::Session *session = nullptr;
 
 private:
     Popup *popup;

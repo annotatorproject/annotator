@@ -13,6 +13,7 @@ void setStyleSheet(QApplication &app, QString filename){
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setOrganizationName("AnnotatorProject");
     a.setApplicationName("Annotator");
     //a.setApplicationDisplayName("Annotation Tool");
     a.setApplicationVersion("Alpha");
@@ -23,8 +24,8 @@ int main(int argc, char *argv[])
     w.show();
 
     //try to open last project
-    QSettings settings("lasmue", "annotator-demo");
-    QString lastProjPath = settings.value("LastProjectPath","").value<QString>();
+    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
+    QString lastProjPath = settings.value("LastProjectPath","").toString();
 
     //check if path was stored previously
     if (!lastProjPath.isEmpty())
@@ -33,7 +34,6 @@ int main(int argc, char *argv[])
         struct stat buffer;
         if(stat (lastProjPath.toStdString().c_str(), &buffer) == 0) w.openProject(AnnotatorLib::Project::load(lastProjPath.toStdString()));
     }
-
 
     return a.exec();
 }

@@ -32,6 +32,20 @@ public:
 
     void openProject(AnnotatorLib::Project *project);
 
+protected:
+    /**
+     * @brief loadRecentProjects
+     * Loads recent projects files from settings and creates menu items for them.
+     */
+    void loadRecentProjects();
+
+    /**
+     * @brief addRecentProject
+     * @param projectfile The project file to save in settings.
+     *
+     */
+    void addRecentProject(QString projectfile);
+
 public slots:
     void reloadWidgets();
 

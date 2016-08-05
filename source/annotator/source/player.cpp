@@ -88,6 +88,7 @@ void Player::setProject(AnnotatorLib::Project *project) {
   cv::Mat firstImage = project->getImageSet()->next();
   project->getImageSet()->gotoPosition(0);
   scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
+  scene->setSession(session);
   overlay->fitInView(scene->sceneRect());
 
   updateStatus(true);
@@ -231,7 +232,7 @@ void Player::showFrame(long frame) {
 
   // set current frame into popup.
   long cfn = video->getCurFrameNr();
-  popup->setCurrFrame(frame);
+  this->scene->setCurrentFrame(frame);
   // clearAnnotations();
 }
 

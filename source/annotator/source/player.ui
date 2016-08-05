@@ -421,7 +421,7 @@ border-radius: 4px;
   <customwidget>
    <class>OwnSlider</class>
    <extends>QSlider</extends>
-   <header>GUI/ownslider.h</header>
+   <header>gui/ownslider.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -1,4 +1,9 @@
 #include "owngraphicscene.h"
+#include "graphic/owngraphicscene.h"
+#include "gui/newobjectdialog.h"
+
+#include <algorithm>
+
 #include <QDebug>
 
 OwnGraphicScene::OwnGraphicScene(Popup *parent):
@@ -226,17 +231,22 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if(drawMode==DrawON){
 
             if(isDrawn){
+                NewObjectDialog newObjectDialog;
+                QPointF upperLeft = adjustCoordinate(point1);
+                QPointF lowerRight =  adjustCoordinate(point2);
+                float x = std::min(upperLeft.x(), lowerRight.x());
+                float y = std::min(upperLeft.y(), lowerRight.y());
+                float w = std::max(upperLeft.x(), lowerRight.x()) - x;
+                float h = std::max(upperLeft.y(), lowerRight.y()) - y;
+
+                newObjectDialog.setSession(session);
+                newObjectDialog.setDimenstions(x, y, w, h);
+                newObjectDialog.setFrame(currentFrame);
+                newObjectDialog.move(event->scenePos().x(),event->scenePos().y());
+                newObjectDialog.exec();
+
                 ItemsList.append(rectangle);
-                rectangle->setID(loadSettings());
 
-                popup->setModal(true);
-                popup->move(event->scenePos().x(),event->scenePos().y());
-
-                //popup->setData(point1,point2,rectangle->getNextID(), NULL, itemColor);
-                popup->setData(adjustCoordinate(point1), adjustCoordinate(point2),
-                               rectangle->getNextID(), NULL, itemColor);
-                popup->isEditItem = false;
-                popup->exec();
 
                 isDrawn = false;
 
@@ -313,6 +323,16 @@ void OwnGraphicScene::editItem(OwnQGraphicsItem *rectangle)
 
     rectangle->selectItem(rectangle);
     rectangle->diselectAll();
+}
+
+void OwnGraphicScene::setCurrentFrame(int frame)
+{
+    this->currentFrame = frame;
+}
+
+void OwnGraphicScene::setSession(AnnotatorLib::Session *session)
+{
+    this->session = session;
 }
 
 
