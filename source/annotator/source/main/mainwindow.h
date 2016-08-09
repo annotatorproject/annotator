@@ -72,6 +72,8 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_actionClasses_triggered();
+
 protected:
     Player playerWidget;
     AnnotationsWidget annotationsWidget;

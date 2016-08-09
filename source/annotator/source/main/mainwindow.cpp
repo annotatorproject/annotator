@@ -3,6 +3,7 @@
 #include "newprojectdialog.h"
 #include "plugins/pluginloader.h"
 #include "ui_mainwindow.h"
+#include "gui/classesdialog.h"
 #include <AnnotatorLib/Annotation.h>
 #include <QApplication>
 #include <QDebug>
@@ -216,4 +217,12 @@ void MainWindow::on_actionAuto_Annotate_toggled(bool arg1) {
 void MainWindow::on_actionAbout_triggered() {
   AboutDialog aboutDialog;
   aboutDialog.exec();
+}
+
+void MainWindow::on_actionClasses_triggered()
+{
+    if(session != nullptr){
+        ClassesDialog dialog(session, this);
+        dialog.exec();
+    }
 }
