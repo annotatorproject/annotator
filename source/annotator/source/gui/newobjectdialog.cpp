@@ -1,13 +1,15 @@
 #include "newobjectdialog.h"
 #include "ui_newobjectdialog.h"
+#include "classesdialog.h"
 
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/NewObject.h>
 #include "plugins/pluginloader.h"
 
-NewObjectDialog::NewObjectDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::NewObjectDialog) {
+NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, QWidget *parent)
+    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session) {
   ui->setupUi(this);
+  reloadClasses();
 }
 
 NewObjectDialog::~NewObjectDialog() { delete ui; }
@@ -49,4 +51,19 @@ void NewObjectDialog::createObject() {
   plugin->setLastAnnotation(nA->getAnnotation());
 }
 
+void NewObjectDialog::reloadClasses()
+{
+    ui->objectClassComboBox->clear();
+    for(AnnotatorLib::Class * c: session->getClasses()){
+        ui->objectClassComboBox->addItem(QString::fromStdString(c->getName()));
+    }
+}
+
 void NewObjectDialog::on_buttonBox_accepted() { createObject(); }
+
+void NewObjectDialog::on_editClassesButton_clicked()
+{
+    ClassesDialog dialog(session, this);
+    dialog.exec();
+    reloadClasses();
+}
