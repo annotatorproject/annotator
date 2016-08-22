@@ -7,7 +7,6 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 # Include cmake modules
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(WriterCompilerDetectionHeaderFound NOTFOUND)
 
@@ -19,6 +18,7 @@ include(WriteCompilerDetectionHeader OPTIONAL RESULT_VARIABLE WriterCompilerDete
 
 include(cmake/GetGitRevisionDescription.cmake)
 include(cmake/Custom.cmake)
+
 
 # Set policies
 set_policy(CMP0028 NEW) # ENABLE CMP0028: Double colon in target name means ALIAS or IMPORTED target.
@@ -86,7 +86,7 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 # 
 
 include(cmake/CompileOptions.cmake)
-
+include(cmake/3rdParty.cmake)
 
 # 
 # Deployment/installation setup
