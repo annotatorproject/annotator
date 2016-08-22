@@ -32,7 +32,7 @@ set(DEFAULT_PROJECT_OPTIONS
  find_package(Qt5LinguistTools REQUIRED)
  find_package(Qt5Xml REQUIRED)
  find_package( OpenCV 3 REQUIRED )
- find_package( annotatorlib REQUIRED )
+ find_package( annotatorlib )
 
 # 
 # Include directories
