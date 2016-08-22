@@ -231,7 +231,7 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if(drawMode==DrawON){
 
             if(isDrawn){
-                NewObjectDialog newObjectDialog;
+                NewObjectDialog newObjectDialog(session);
                 QPointF upperLeft = adjustCoordinate(point1);
                 QPointF lowerRight =  adjustCoordinate(point2);
                 float x = std::min(upperLeft.x(), lowerRight.x());
@@ -239,7 +239,6 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 float w = std::max(upperLeft.x(), lowerRight.x()) - x;
                 float h = std::max(upperLeft.y(), lowerRight.y()) - y;
 
-                newObjectDialog.setSession(session);
                 newObjectDialog.setDimenstions(x, y, w, h);
                 newObjectDialog.setFrame(currentFrame);
                 newObjectDialog.move(event->scenePos().x(),event->scenePos().y());

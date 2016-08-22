@@ -14,7 +14,7 @@ class NewObjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewObjectDialog(QWidget *parent = 0);
+    explicit NewObjectDialog(AnnotatorLib::Session * session, QWidget *parent = 0);
     ~NewObjectDialog();
     void setDimenstions(float x, float y, float w, float h);
     void setFrame(int frame);
@@ -22,6 +22,8 @@ public:
     void createObject();
 
 protected:
+    void reloadClasses();
+
     float x = 0;
     float y = 0;
     float w = 0;
@@ -31,6 +33,8 @@ protected:
 
 private slots:
     void on_buttonBox_accepted();
+
+    void on_editClassesButton_clicked();
 
 private:
     Ui::NewObjectDialog *ui;
