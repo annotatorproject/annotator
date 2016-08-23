@@ -92,34 +92,6 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 /**
- * remove last drawed geom_item
-*/
-void OwnGraphicScene::removeLastItem()
-{
-
-    QTransform transform;
-    //calculate the average Point
-    qreal x = (point1.x()<= point2.x()) ? point1.x()+((point2.x()-point1.x())/2) : point2.x() + ((point1.x()-point2.x())/2);
-    qreal y = (point1.y()<= point2.y()) ? point1.y()+((point2.y()-point1.y())/2) : point2.y() + ((point1.y()-point2.y())/2);
-
-    QPointF removePoint;
-    removePoint.setX(x);
-    removePoint.setY(y);
-
-    rectangle = (OwnQGraphicsItem*)this->itemAt(removePoint,transform);
-
-    if(rectangle!=0){
-        this->removeItem(rectangle);
-        this->update();
-        ItemsList.removeOne(rectangle);
-        ///qDebug()<<"# of Rects: "<<ItemsList.size();
-    }
-}
-
-
-
-
-/**
  * mouse move: if drawmode active, draw geom_item
 */
 void OwnGraphicScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
