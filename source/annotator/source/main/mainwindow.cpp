@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)

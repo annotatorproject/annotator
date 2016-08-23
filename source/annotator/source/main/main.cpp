@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QSettings>
 #include <sys/stat.h>
 #include "mainwindow.h"
 

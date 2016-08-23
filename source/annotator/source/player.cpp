@@ -14,7 +14,6 @@
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
   video = new Videoplayer;  // Creating an instance of class videoplayer
-  popup = new Popup(this);
 
   ui->horizontalSlider->setMaximum(9999);
   ui->btnNext->setAutoRepeat(true);
@@ -37,7 +36,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(setInputCoordinate(QPoint)));
 
   // create graphicsview to be able to draw objects on screen.
-  scene = new OwnGraphicScene(popup);
+  scene = new OwnGraphicScene();
   overlay = new OwnGraphicView(scene, this);
   // overlay->setEnabled(false);
   ui->playerLayout->addWidget(overlay);
@@ -45,7 +44,6 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
 
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
-  connect(popup, SIGNAL(removeLastItem()), this, SLOT(reload()));
 
 }
 
@@ -81,8 +79,6 @@ void Player::setAutoAnnotation(bool autoAnnotation) {
 void Player::setProject(AnnotatorLib::Project *project) {
   this->project = project;
   this->session = project->getSession();
-
-  popup->setSession(session);
 
   video->setImageSet(project->getImageSet());
   cv::Mat firstImage = project->getImageSet()->next();
@@ -395,18 +391,9 @@ void Player::on_btnLast_clicked() {
 void Player::on_btnNext_clicked() { video->nextFrame(); }
 
 ///#################################################################################################///
-/**
- * 	-	draw items on screen
- *
-*/
-void Player::paintItem(QPointF point1, QPointF point2, int id,
-                       QColor borderColor) {
-  scene->setItem(point1, point2, id, borderColor);
-}
 
 void Player::reload() {
   emit requestReload();
-  this->scene->removeLastItem();
   this->video->reload();
 }
 

@@ -43,7 +43,6 @@ class Player : public QWidget {
   QString getRateValue();
 
   void selectObject(AnnotatorLib::Object *object);
-  Popup *popup;
 
   AnnotatorLib::Session *getSession();
 
@@ -92,7 +91,6 @@ private slots:
   void on_btnNext_clicked();
 
   void updateHorizontalSlider();
-  void paintItem(QPointF point1, QPointF point2, int id, QColor borderColor);
 
  private:
   bool autoAnnotation = false;
