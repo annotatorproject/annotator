@@ -1,12 +1,12 @@
 #ifndef OWNGRAPHICSCENE_H
 #define OWNGRAPHICSCENE_H
 
+#include <AnnotatorLib/Session.h>
 #include <QGraphicsScene>
 #include <QImage>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
-#include "geomObject/ownqgaphicsItem.h"
-#include "interpolation/popup.h"
+#include <QGraphicsRectItem>
 
 
 #define DrawON   0
@@ -16,26 +16,17 @@ class OwnGraphicScene:public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit OwnGraphicScene(Popup *parent);
+    explicit OwnGraphicScene();
     void addBackgroundImg(QImage img);
 
     QPoint inputCoordinate;     //image/video coordinate
-    OwnQGraphicsItem* rectangle;
-    QString id_File;
 
-    QList<OwnQGraphicsItem*> ItemsList;
-    void setItem(QPointF point_Top, QPointF point_Bottom, int id, QColor borderColor);
-
-    OwnQGraphicsItem *getItemByID(QString ID);
-    void clearItemsList();
-    void editItem(OwnQGraphicsItem *rectangle);
     void setCurrentFrame(int frame);
     void setSession(AnnotatorLib::Session *session);
 
 
 
 public slots:
-    void removeLastItem();
 
 
 protected:
@@ -48,8 +39,6 @@ protected:
 
 private slots:
 
-    void saveIDsettings();
-
 signals:
     void on_btnPause_clicked();
 
@@ -58,10 +47,10 @@ protected:
     AnnotatorLib::Session *session = nullptr;
 
 private:
-    Popup *popup;
     QImage image;
     int drawMode;
-    QPainter* painter;
+
+    QGraphicsRectItem * selectionRect = nullptr;
 
     QPointF point1;     //clicked point
     QPointF point2;     //released point
@@ -75,8 +64,6 @@ private:
 
     void rectDraw(QPointF pt1,QPointF pt2);
 
-
-    int loadSettings();
     QPoint adjustCoordinate(QPointF MousePos);
     QPointF resetCoordinate(QPointF RectPos);
 };

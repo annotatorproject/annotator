@@ -1,14 +1,14 @@
 #ifndef OWNGRAPHICVIEW_H
 #define OWNGRAPHICVIEW_H
 
-#include <QGraphicsView>
 #include "owngraphicscene.h"
+
+#include <QGraphicsView>
 #include <QGraphicsItem>
 #include <QMouseEvent>
 #include <QPointF>
 #include <QRectF>
 #include <QDebug>
-#include "geomObject/ownqgaphicsItem.h"
 
 
 #define onDRAW   0
