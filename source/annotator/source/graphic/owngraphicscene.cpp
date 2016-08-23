@@ -239,16 +239,14 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 float w = std::max(upperLeft.x(), lowerRight.x()) - x;
                 float h = std::max(upperLeft.y(), lowerRight.y()) - y;
 
-                newObjectDialog.setDimenstions(x, y, w, h);
+                newObjectDialog.setDimensions(x, y, w, h);
                 newObjectDialog.setFrame(currentFrame);
                 newObjectDialog.move(event->scenePos().x(),event->scenePos().y());
                 newObjectDialog.exec();
 
                 ItemsList.append(rectangle);
 
-
                 isDrawn = false;
-
             }
 
 
