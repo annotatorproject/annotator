@@ -16,7 +16,7 @@ class NewObjectDialog : public QDialog
 public:
     explicit NewObjectDialog(AnnotatorLib::Session * session, QWidget *parent = 0);
     ~NewObjectDialog();
-    void setDimenstions(float x, float y, float w, float h);
+    void setDimensions(float x, float y, float w, float h);
     void setFrame(int frame);
     void setSession(AnnotatorLib::Session *session);
     void createObject();
@@ -32,11 +32,16 @@ protected:
     AnnotatorLib::Session *session;
 
 private slots:
-    void on_buttonBox_accepted();
+    void done(int r) override;  //called when ok or cancel is clicked
+
+    //void on_buttonBox_accepted();
+    //void on_buttonBox_rejected();
 
     void on_editClassesButton_clicked();
 
 private:
+    bool checkValues();
+
     Ui::NewObjectDialog *ui;
 };
 

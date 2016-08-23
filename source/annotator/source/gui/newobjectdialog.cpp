@@ -1,3 +1,4 @@
+#include <QMessageBox>
 #include "newobjectdialog.h"
 #include "ui_newobjectdialog.h"
 #include "classesdialog.h"
@@ -8,13 +9,15 @@
 
 NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, QWidget *parent)
     : QDialog(parent), ui(new Ui::NewObjectDialog), session(session) {
+
   ui->setupUi(this);
+
   reloadClasses();
 }
 
 NewObjectDialog::~NewObjectDialog() { delete ui; }
 
-void NewObjectDialog::setDimenstions(float x, float y, float w, float h) {
+void NewObjectDialog::setDimensions(float x, float y, float w, float h) {
   this->x = x;
   this->y = y;
   this->w = w;
@@ -59,7 +62,31 @@ void NewObjectDialog::reloadClasses()
     }
 }
 
-void NewObjectDialog::on_buttonBox_accepted() { createObject(); }
+void NewObjectDialog::done(int r) {
+
+  if(QDialog::Accepted == r) {
+    if(!checkValues()) {
+      return;
+    }
+    createObject();
+  }
+  QDialog::done(r);
+}
+
+bool NewObjectDialog::checkValues() {
+
+  if (ui->objectIdLineEdit->text().isEmpty()) {
+    (void) QMessageBox::information(this, tr("No ID"),
+        tr("Please supply an ID."), QMessageBox::Ok);
+    return false;
+  } 
+  if (ui->objectClassComboBox->currentText().isEmpty()) {
+    (void) QMessageBox::information(this, tr("No Name"),
+        tr("Please supply a class for the object."), QMessageBox::Ok);
+    return false;
+  }
+  return true;
+}
 
 void NewObjectDialog::on_editClassesButton_clicked()
 {
