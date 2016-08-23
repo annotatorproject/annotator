@@ -109,8 +109,7 @@ void Popup::on_btnPopSave_clicked() {
     return;
   }
 
-  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
-      ui->lEObject->text().toStdString(), session);
+  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(session);
   session->execute(nO);
   float width = std::abs(pointLR.x() - pointUL.x());
   float height = std::abs(pointLR.y() - pointUL.y());

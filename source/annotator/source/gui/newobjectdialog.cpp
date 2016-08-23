@@ -11,7 +11,7 @@ NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, QWidget *parent
     : QDialog(parent), ui(new Ui::NewObjectDialog), session(session) {
 
   ui->setupUi(this);
-
+  ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
   reloadClasses();
 }
 
@@ -37,7 +37,8 @@ void NewObjectDialog::setSession(AnnotatorLib::Session *session) {
 
 void NewObjectDialog::createObject() {
   AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
-      ui->objectNameLineEdit->text().toStdString(), session);
+        session,
+        (unsigned long)ui->objectIdLineEdit->text().toULong());
   session->execute(nO);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
