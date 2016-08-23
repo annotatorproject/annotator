@@ -6,6 +6,7 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/NewObject.h>
 #include "plugins/pluginloader.h"
+#include "controller/commandcontroller.h"
 
 NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, QWidget *parent)
     : QDialog(parent), ui(new Ui::NewObjectDialog), session(session) {
@@ -39,7 +40,8 @@ void NewObjectDialog::createObject() {
   AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
         session,
         (unsigned long)ui->objectIdLineEdit->text().toULong());
-  session->execute(nO);
+
+  CommandController::instance()->execute(nO);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
 
@@ -47,7 +49,8 @@ void NewObjectDialog::createObject() {
       new AnnotatorLib::Commands::NewAnnotation(
           nO->getObject(), frame, x, y, w, h, this->session, false);
 
-  session->execute(nA);
+
+  CommandController::instance()->execute(nA);
 
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();

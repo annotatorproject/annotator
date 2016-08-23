@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include "geomObject/annotationgraphicsitemfactory.h"
 #include "plugins/pluginloader.h"
+#include "controller/commandcontroller.h"
 
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
@@ -34,6 +35,10 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(updateHorizontalSlider()));
   connect(video, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
+
+  // command controller
+  connect(CommandController::instance(), SIGNAL(onExecute()), this, SLOT(reload()));
+  connect(CommandController::instance(), SIGNAL(onUndo()), this, SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
   scene = new OwnGraphicScene();

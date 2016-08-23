@@ -4,6 +4,7 @@
 #include "plugins/pluginloader.h"
 #include "ui_mainwindow.h"
 #include "gui/classesdialog.h"
+#include "controller/commandcontroller.h"
 #include <AnnotatorLib/Annotation.h>
 #include <QApplication>
 #include <QDebug>
@@ -57,6 +58,7 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
     this->project = project;
 
     this->session = project->getSession();
+    CommandController::instance()->setSession(session);
     playerWidget.setProject(project);
 
     annotationsWidget.setSession(this->session);
@@ -193,19 +195,13 @@ void MainWindow::on_actionSave_Project_triggered() {
 
 void MainWindow::on_actionUndo_triggered() {
   if (this->project != nullptr) {
-    try {
-      project->getSession()->undo();
-    } catch (std::exception &e) {
-    }
+    CommandController::instance()->undo();
   }
 }
 
 void MainWindow::on_actionRedo_triggered() {
   if (this->project != nullptr) {
-    try {
-      project->getSession()->redo();
-    } catch (std::exception &e) {
-    }
+    CommandController::instance()->redo();
   }
 }
 
