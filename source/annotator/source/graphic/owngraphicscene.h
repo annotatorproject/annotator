@@ -43,7 +43,7 @@ signals:
     void on_btnPause_clicked();
 
 protected:
-    float currentFrame = 0;
+    unsigned long currentFrame = 0;
     AnnotatorLib::Session *session = nullptr;
 
 private:
