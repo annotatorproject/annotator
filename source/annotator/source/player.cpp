@@ -53,7 +53,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
 }
 
 Player::~Player() {
-  clearAnnotations();
+  clearAnnotationsGraphics();
   delete ui;
 }
 
@@ -110,14 +110,12 @@ void Player::loadVideo(QString fileName) {
   }
 }
 
-void Player::clearAnnotations() {
-  std::list<AnnotationGraphicsItem *>::iterator i = annotationGraphics.begin();
-
-  while (i != annotationGraphics.end()) {
-    scene->removeItem((*i));
-    annotationGraphics.erase(i++);
-    // delete (*i);
+void Player::clearAnnotationsGraphics() {
+  while(!annotationGraphics.empty()) {
+    delete annotationGraphics.front();
+    annotationGraphics.pop_front();
   }
+  scene->update();
 }
 
 /**
@@ -225,7 +223,7 @@ void Player::showFrame(long frame) {
         plugin->setFrame(f, currentFrame);
       }
       algoExecuteCommands();
-      showTrackedAnnotations(f);
+      showTrackedAnnotations(f); //only active when plugin was loaded //rename this method??
     }
   }
 
@@ -234,12 +232,11 @@ void Player::showFrame(long frame) {
   // set current frame into popup.
   //long cfn = video->getCurFrameNr();
   this->scene->setCurrentFrame(frame);
-  // clearAnnotations();
 }
 
 void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
-  clearAnnotations();
-  if (frame != nullptr) {
+  clearAnnotationsGraphics();
+  if (!autoAnnotation && frame != nullptr) {
     for (AnnotatorLib::Annotation *annotation :
          AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
              frame, this->session)) {

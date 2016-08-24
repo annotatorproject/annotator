@@ -80,6 +80,17 @@ void AnnotationGraphicsItem::initIdText() {
   }
 }
 
+void AnnotationGraphicsItem::hide() {
+  for (int i = 0; i < 4; ++i) {
+    corners[i]->hide();
+  }
+  borderColor = originColor;
+
+  brush = Qt::NoBrush;
+  idText.hide();
+  update();
+}
+
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
@@ -133,15 +144,15 @@ void AnnotationGraphicsItem::editAnnotation()
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  corners[0] = new Corner(this, 0);
-  corners[1] = new Corner(this, 1);
-  corners[2] = new Corner(this, 2);
-  corners[3] = new Corner(this, 3);
+//  corners[0] = new Corner(this, 0);
+//  corners[1] = new Corner(this, 1);
+//  corners[2] = new Corner(this, 2);
+//  corners[3] = new Corner(this, 3);
 
-  corners[0]->installSceneEventFilter(this);
-  corners[1]->installSceneEventFilter(this);
-  corners[2]->installSceneEventFilter(this);
-  corners[3]->installSceneEventFilter(this);
+  for (int i = 0; i < 4; ++i) {
+    corners[i]->setVisible(true);
+    corners[i]->installSceneEventFilter(this);
+  }
 
   setCornerPositions();
 
@@ -180,21 +191,17 @@ void AnnotationGraphicsItem::setCornerPositions() {
  * reset item setting: if mouse leave hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  corners[0]->setParentItem(NULL);
-  corners[1]->setParentItem(NULL);
-  corners[2]->setParentItem(NULL);
-  corners[3]->setParentItem(NULL);
+//  corners[0]->setParentItem(NULL);
+//  corners[1]->setParentItem(NULL);
+//  corners[2]->setParentItem(NULL);
+//  corners[3]->setParentItem(NULL);
 
-  delete corners[0];
-  delete corners[1];
-  delete corners[2];
-  delete corners[3];
+//  delete corners[0];
+//  delete corners[1];
+//  delete corners[2];
+//  delete corners[3];
 
-  borderColor = originColor;
-
-  brush = Qt::NoBrush;
-  idText.hide();
-  update();
+  hide();
 }
 
 /**

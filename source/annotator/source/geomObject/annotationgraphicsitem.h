@@ -59,9 +59,6 @@ protected:
     int deltay = 0;
 
 protected:
-    void initCorners();
-    void initIdText();
-
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
@@ -71,12 +68,15 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
+private:
     void setCornerPositions();
     void setAnnotationSize(int x, int y);
     void changeAnnotationPosition(int x, int y);
     void changeAnnotationSize(int x, int y, int w, int h);
+    void initCorners();
+    void initIdText();
+    void hide();
 
-private:
     void showContextMenu(const QPoint &pos);
 
 private slots:
