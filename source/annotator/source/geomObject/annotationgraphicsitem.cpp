@@ -1,11 +1,13 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
+#include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <QMenu>
 #include <QObject>
 
 #include "annotationgraphicsitem.h"
 #include "plugins/pluginloader.h"
 #include "gui/newobjectdialog.h"
+#include "controller/commandcontroller.h"
 
 AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() {
   return annotation;
@@ -93,11 +95,6 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
 */
 void AnnotationGraphicsItem::contextMenuEvent(
     QGraphicsSceneContextMenuEvent *event) {
-  //    QMenu menu;
-  //    menu.addAction("Edit");
-  //    menu.addAction("Remove");
-  //    QAction *a = menu.exec(event->screenPos());
-
   // this->player->pause();
   showContextMenu(event->screenPos());
 }
@@ -122,7 +119,7 @@ void AnnotationGraphicsItem::removeAnnotation()
 {
     //TODO: remove rect permanently
     AnnotatorLib::Commands::RemoveAnnotation * cmd = new AnnotatorLib::Commands::RemoveAnnotation(player->getSession(), annotation);
-    player->getSession()->execute(cmd);
+    CommandController::instance()->execute(cmd);
 }
 
 
