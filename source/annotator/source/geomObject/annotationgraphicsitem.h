@@ -27,8 +27,10 @@ public:
     QColor idToColor(long id);
 
     void setPlayer(Player *player);
-    AnnotatorLib::Annotation *annotation;
     void setSize(int x, int y);
+
+    AnnotatorLib::Annotation *annotation;
+
 signals:
     void objectSelected(AnnotatorLib::Object *object);
 

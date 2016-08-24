@@ -36,9 +36,17 @@ void NewObjectDialog::setSession(AnnotatorLib::Session *session) {
 }
 
 void NewObjectDialog::createObject() {
+
+  AnnotatorLib::Class * selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
+  if(selClass == nullptr){
+      (void) QMessageBox::information(this, tr("Error"),
+                                                          tr("No such class registered."), QMessageBox::Ok);
+      return;
+  }
   AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
         session,
-        (unsigned long)ui->objectIdLineEdit->text().toULong());
+        (unsigned long)ui->objectIdLineEdit->text().toULong(),
+        selClass->getId());
   session->execute(nO);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
