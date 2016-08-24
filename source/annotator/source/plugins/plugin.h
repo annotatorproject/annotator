@@ -18,6 +18,6 @@ public:
 }
 
 Q_DECLARE_INTERFACE(Annotator::Plugin,
-                    "Annotator.Plugin/1.0");
+                    "Annotator.Plugin/1.0")
 
 #endif // PLUGIN_H

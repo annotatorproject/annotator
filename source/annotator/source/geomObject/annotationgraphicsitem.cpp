@@ -275,6 +275,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       XSign = +1;
       YSign = -1;
     } break;
+    default: { }
     }
 
     // Set the new size of Item, whene the the corner position is changed.

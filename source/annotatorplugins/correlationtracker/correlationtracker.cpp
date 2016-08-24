@@ -1,18 +1,17 @@
 #include "correlationtracker.h"
-#include "widget.h"
-
-#include <AnnotatorLib/Annotation.h>
-#include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <AnnotatorLib/Frame.h>
 
 #include <ctype.h>
 #include <iostream>
-
 #include <dlib/opencv.h>
 #include <QDebug>
 #include <QtGui/QPainter>
 #include <opencv2/core/core.hpp>
 #include <opencv2/video/tracking.hpp>
+
+#include <AnnotatorLib/Annotation.h>
+#include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Frame.h>
+#include "widget.h"
 
 using namespace Annotator::Plugins;
 

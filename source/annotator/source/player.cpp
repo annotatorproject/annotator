@@ -224,7 +224,7 @@ void Player::showFrame(long frame) {
       if (plugin) {
         plugin->setFrame(f, currentFrame);
       }
-      algoExecuteCommands(f);
+      algoExecuteCommands();
       showTrackedAnnotations(f);
     }
   }
@@ -232,7 +232,7 @@ void Player::showFrame(long frame) {
   showAnnotationsOfFrame(f);
 
   // set current frame into popup.
-  long cfn = video->getCurFrameNr();
+  //long cfn = video->getCurFrameNr();
   this->scene->setCurrentFrame(frame);
   // clearAnnotations();
 }
@@ -259,7 +259,7 @@ void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
   }
 }
 
-void Player::algoExecuteCommands(AnnotatorLib::Frame *frame) {
+void Player::algoExecuteCommands() {
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
 
@@ -267,7 +267,7 @@ void Player::algoExecuteCommands(AnnotatorLib::Frame *frame) {
     std::vector<AnnotatorLib::Commands::Command *> commands =
         plugin->getCommands();
     for (AnnotatorLib::Commands::Command *command : commands) {
-      command->execute();
+      CommandController::instance()->execute(command);
     }
   }
 }
@@ -291,7 +291,7 @@ void Player::showTrackedAnnotations(AnnotatorLib::Frame *frame) {
           new AnnotatorLib::Commands::NewAnnotation(
               a->getObject(), frame, x, y, w, h, a->getNext(),
               a->isInterpolated() ? a->getPrevious() : a, getSession(), false);
-      getSession()->execute(nA);
+      CommandController::instance()->execute(nA);
 
       // update position of last annotation in automation plugin
       if (plugin->getObject() == a->getObject()) {
