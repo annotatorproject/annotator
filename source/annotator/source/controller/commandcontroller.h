@@ -18,8 +18,8 @@ public:
     void setSession(AnnotatorLib::Session *session);
 
 signals:
-    void onExecute();
-    void onUndo();
+    void onCommandExecute();
+    void onCommandUndo();
 
 public slots:
     void execute(AnnotatorLib::Commands::Command *command);

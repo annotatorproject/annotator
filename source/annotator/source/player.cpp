@@ -14,31 +14,55 @@
 
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
-  video = new Videoplayer;  // Creating an instance of class videoplayer
+  videoplayer = new Videoplayer;  // Creating an instance of class videoplayer
 
   ui->horizontalSlider->setMaximum(9999);
   ui->btnNext->setAutoRepeat(true);
   ui->btnPrev->setAutoRepeat(true);
 
-  video->setDelay(ui->speedSpinBox->value());  //get default value
+  videoplayer->setDelay(ui->speedSpinBox->value());  //get default value
 
   updateStatus(false);  // set Status disable
   updateBtn();          // update the button Play & Pause
 
-  connect(video, SIGNAL(showFrame(cv::Mat)), this, SLOT(showFrame(cv::Mat)));
-  connect(video, SIGNAL(showFrame(long)), this, SLOT(showFrame(long)));
-  connect(ui->horizontalSlider, SIGNAL(sendClickPosition(int)), this,
+  connect(videoplayer,
+          SIGNAL(showFrame(cv::Mat)),
+          this,
+          SLOT(showFrame(cv::Mat)));
+  connect(videoplayer,
+          SIGNAL(updateFrame(long)),
+          this,
+          SLOT(updateFrame(long)));
+  connect(ui->horizontalSlider,
+          SIGNAL(sendClickPosition(int)),
+          this,
           SLOT(setSliderValue(int)));
-  connect(video, SIGNAL(updateBtn()), this, SLOT(updateBtn()));
-  connect(video, SIGNAL(sleep(int)), this, SLOT(sleep(int)));
-  connect(video, SIGNAL(updateHorizontalSlider()), this,
+  connect(videoplayer,
+          SIGNAL(updateBtn()),
+          this,
+          SLOT(updateBtn()));
+  connect(videoplayer,
+          SIGNAL(sleep(int)),
+          this,
+          SLOT(sleep(int)));
+  connect(videoplayer,
+          SIGNAL(updateHorizontalSlider()),
+          this,
           SLOT(updateHorizontalSlider()));
-  connect(video, SIGNAL(setInputCoordinate(QPoint)), this,
+  connect(videoplayer,
+          SIGNAL(setInputCoordinate(QPoint)),
+          this,
           SLOT(setInputCoordinate(QPoint)));
 
   // command controller
-  connect(CommandController::instance(), SIGNAL(onExecute()), this, SLOT(reload()));
-  connect(CommandController::instance(), SIGNAL(onUndo()), this, SLOT(reload()));
+  connect(CommandController::instance(),
+          SIGNAL(onCommandExecute()),
+          this,
+          SLOT(reload()));
+  connect(CommandController::instance(),
+          SIGNAL(onCommandUndo()),
+          this,
+          SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
   scene = new OwnGraphicScene();
@@ -68,7 +92,7 @@ void Player::setInputCoordinate(QPoint point) {
 void Player::setRateLabel(QLabel *label) { this->rateLabel = label; }
 
 QString Player::getRateValue() {
-  return "FPS: " + QString::number(video->rate);
+  return "FPS: " + QString::number(videoplayer->rate);
 }
 
 void Player::selectObject(AnnotatorLib::Object *object) {
@@ -85,7 +109,7 @@ void Player::setProject(AnnotatorLib::Project *project) {
   this->project = project;
   this->session = project->getSession();
 
-  video->setImageSet(project->getImageSet());
+  videoplayer->setImageSet(project->getImageSet());
   cv::Mat firstImage = project->getImageSet()->next();
   project->getImageSet()->gotoPosition(0);
   scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
@@ -139,7 +163,7 @@ bool Player::LoadFile(const QString &fileName) {
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
   // input file
-  if (!video->setInput(fileName.toStdString())) {
+  if (!videoplayer->setInput(fileName.toStdString())) {
     QMessageBox::warning(this, tr("VideoPlayer"),
                          tr("Unable to load file %1:\n%2.")
                              .arg(fileName)
@@ -179,7 +203,7 @@ void Player::updateStatus(bool enable) {
  *
  */
 void Player::updateBtn() {
-  bool isStop = video->isStop();
+  bool isStop = videoplayer->isStop();
   ui->btnPause->setVisible(!isStop);
   ui->btnPlay->setVisible(isStop);
 }
@@ -211,9 +235,9 @@ void Player::showFrame(cv::Mat frame) {
   scene->setBackgroundBrush(pim);
 }
 
-void Player::showFrame(long frame) {
-  AnnotatorLib::Frame *f = session->getFrame(frame);
-  if (f == nullptr) f = new AnnotatorLib::Frame(frame);
+void Player::updateFrame(long frame_nmb) {
+  AnnotatorLib::Frame *f = session->getFrame(frame_nmb);
+  if (f == nullptr) f = new AnnotatorLib::Frame(frame_nmb);
 
   if (autoAnnotation) {
     if (f != nullptr) {
@@ -231,12 +255,12 @@ void Player::showFrame(long frame) {
 
   // set current frame into popup.
   //long cfn = video->getCurFrameNr();
-  this->scene->setCurrentFrame(frame);
+  this->scene->setCurrentFrame(frame_nmb);
 }
 
 void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
   clearAnnotationsGraphics();
-  if (!autoAnnotation && frame != nullptr) {
+  if (frame != nullptr) {
     for (AnnotatorLib::Annotation *annotation :
          AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
              frame, this->session)) {
@@ -304,18 +328,18 @@ void Player::showTrackedAnnotations(AnnotatorLib::Frame *frame) {
  */
 void Player::updateHorizontalSlider() {
   // update the progress bar
-  ui->horizontalSlider->setValue((double)video->getCurFrameNr() *
+  ui->horizontalSlider->setValue((double)videoplayer->getCurFrameNr() *
                                  ui->horizontalSlider->maximum() /
-                                 video->getTotalFrameNr() * 1.0);
+                                 videoplayer->getTotalFrameNr() * 1.0);
   // update the time label
   updateTimeLabel();
 }
 
 void Player::on_horizontalSlider_sliderMoved(int newpos)
 {
-   long pos = newpos * video->getTotalFrameNr() / ui->horizontalSlider->maximum();
+   long pos = newpos * videoplayer->getTotalFrameNr() / ui->horizontalSlider->maximum();
 
-   video->jumpTo(pos);
+   videoplayer->jumpTo(pos);
    updateTimeLabel();
 }
 
@@ -328,26 +352,26 @@ void Player::setSliderValue(int newpos) {
     on_horizontalSlider_sliderMoved(newpos);
 }
 
-void Player::jumpTo(long index) { this->video->jumpTo(index); }
+void Player::jumpTo(long index) { this->videoplayer->jumpTo(index); }
 
 /**
  * updateTimeLabel	-	update Time Label
  */
 void Player::updateTimeLabel() {
   QString curPos =
-      QDateTime::fromMSecsSinceEpoch(video->getPositionMS() - 3600000)
+      QDateTime::fromMSecsSinceEpoch(videoplayer->getPositionMS() - 3600000)
           .toString("hh:mm:ss");
 
   QString length =
-      QDateTime::fromMSecsSinceEpoch(video->getLengthMS() - 3600000)
+      QDateTime::fromMSecsSinceEpoch(videoplayer->getLengthMS() - 3600000)
           .toString("hh:mm:ss");
 
   ui->timeLabel->setText(tr("<span style=' color:#FFCD00;'>"
                             "%1</span> / %2")
                              .arg(curPos, length));
 
-  long cfn = video->getCurFrameNr();
-  long tfn = video->getTotalFrameNr();
+  long cfn = videoplayer->getCurFrameNr();
+  long tfn = videoplayer->getTotalFrameNr();
 
   ui->frameNrLabel->setText(
       tr("<span style=' color:#FFCD00;'>"
@@ -361,7 +385,7 @@ void Player::updateTimeLabel() {
  */
 void Player::play() {
   //video->setDelay(1000.f / video->getFrameRate());
-  video->playIt();
+  videoplayer->playIt();
 }
 
 /**
@@ -369,7 +393,7 @@ void Player::play() {
  *
  */
 void Player::pause() {
-  video->pauseIt();
+  videoplayer->pauseIt();
 }
 
 void Player::on_btnPlay_clicked() { play(); }
@@ -379,24 +403,24 @@ void Player::on_btnPlay_clicked() { play(); }
  *
  * @param msecs
  */
-void Player::sleep(int msecs) { video->wait(msecs); }
+void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 
 void Player::on_btnPause_clicked() { pause(); }
 
-void Player::on_btnStop_clicked() { video->stopIt(); }
+void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
 
 void Player::on_btnPrev_clicked() {
   //this->setAutoAnnotation(false);
-  video->prevFrame();
+  videoplayer->prevFrame();
 }
 
-void Player::on_btnNext_clicked() { video->nextFrame(); }
+void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 
 ///#################################################################################################///
 
 void Player::reload() {
   emit requestReload();
-  this->video->reload();
+  this->videoplayer->reload();
 }
 
 
@@ -407,7 +431,7 @@ void Player::reload() {
 void Player::on_speedSpinBox_valueChanged(int f)
 {
     //TODO: set proper framerate
-    video->setDelay( (100.f * video->getFrameRate()) / (float) f);
+    videoplayer->setDelay( (100.f * videoplayer->getFrameRate()) / (float) f);
 }
 
 

@@ -48,7 +48,7 @@ bool Videoplayer::setInput(const std::string &fileName) {
   emit setInputCoordinate(QPoint(input.cols, input.rows));
 
   emit showFrame(input);
-  emit showFrame(getCurFrameNr());
+  emit updateFrame(getCurFrameNr());
 
   emit updateBtn();
   return true;
@@ -171,7 +171,7 @@ void Videoplayer::playIt() {
   if (!isOpened()) return;
 
   // is playing
-  stop = false;
+  setStop(false);
 
   // update buttons
   emit updateBtn();
@@ -187,7 +187,7 @@ void Videoplayer::playIt() {
 
     // display input frame
     emit showFrame(input);
-    emit showFrame(getCurFrameNr());
+    emit updateFrame(getCurFrameNr());
 
     // update the progress bar
     emit updateHorizontalSlider();
@@ -195,6 +195,7 @@ void Videoplayer::playIt() {
     // introduce a delay
     emit sleep(delay);
   }
+  //if video ended and not stopped jump to first frame
   if (!isStop()) {
     emit revert();
   }
@@ -235,7 +236,7 @@ bool Videoplayer::jumpTo(long index) {
     getNextFrame(frame);
     emit showFrame(frame);
     curPos = index;
-    emit showFrame(getCurFrameNr());
+    emit updateFrame(getCurFrameNr());
   }
   start_Timer.restart();
   return re;

@@ -35,7 +35,7 @@ class Player : public QWidget {
   bool LoadFile(const QString &fileName);
   void play();
   void pause();
-  Videoplayer *video;  // videoplayer instance
+  Videoplayer *videoplayer;  // videoplayer instance
 
   OwnGraphicScene *scene;
   OwnGraphicView *overlay;
@@ -50,7 +50,7 @@ class Player : public QWidget {
 
  public slots:
   void showFrame(cv::Mat frame);
-  void showFrame(long frame);
+  void updateFrame(long frame);
   void showAnnotationsOfFrame(AnnotatorLib::Frame *frame);
   void algoExecuteCommands();
   void showTrackedAnnotations(AnnotatorLib::Frame *frame);

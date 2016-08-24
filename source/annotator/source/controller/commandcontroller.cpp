@@ -1,5 +1,7 @@
 #include "commandcontroller.h"
 
+#include <QMessageBox>
+
 static CommandController *singleton = nullptr;
 
 CommandController::CommandController(QObject *parent) : QObject(parent) {}
@@ -15,8 +17,8 @@ void CommandController::setSession(AnnotatorLib::Session *session) {
 }
 
 void CommandController::execute(AnnotatorLib::Commands::Command *command) {
-  command->execute();
-  emit onExecute();
+  bool success = command->execute();
+  if (success) emit onCommandExecute();
 }
 
 void CommandController::redo() {
@@ -24,7 +26,7 @@ void CommandController::redo() {
     session->redo();
   } catch (std::exception &e) {
   }
-  emit onExecute();
+  emit onCommandExecute();
 }
 
 void CommandController::undo() {
@@ -32,5 +34,5 @@ void CommandController::undo() {
     session->undo();
   } catch (std::exception &e) {
   }
-  emit onUndo();
+  emit onCommandUndo();
 }

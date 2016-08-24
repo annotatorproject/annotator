@@ -27,6 +27,7 @@ void OwnGraphicScene::drawBackground(QPainter *painter, const QRectF &rect) {
 
 
 /**
+ * Draw a sigle, temporary rectangle.
  * @brief OwnGraphicScene::rectDraw
  * @param pt1
  * @param pt2

@@ -181,8 +181,8 @@ void MainWindow::on_actionNew_Project_triggered() {
 }
 
 void MainWindow::on_actionQuit_triggered() {
-  if (!playerWidget.video->isStop()) {
-    playerWidget.video->pauseIt();
+  if (!playerWidget.videoplayer->isStop()) {
+    playerWidget.videoplayer->pauseIt();
   }
   this->close();
 }

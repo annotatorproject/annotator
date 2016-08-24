@@ -128,7 +128,7 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
 
 void AnnotationGraphicsItem::removeAnnotation()
 {
-    //TODO: remove rect permanently
+    //TODO: remove rect permanently (works nnot everytime)
     AnnotatorLib::Commands::RemoveAnnotation * cmd = new AnnotatorLib::Commands::RemoveAnnotation(player->getSession(), annotation);
     CommandController::instance()->execute(cmd);
 }

@@ -19,6 +19,7 @@ class AnnotationGraphicsItem : public QObject, public QGraphicsItem
     Q_OBJECT
 
 public:
+    AnnotationGraphicsItem() = delete;
     AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
     virtual ~AnnotationGraphicsItem();
     AnnotatorLib::Annotation *getAnnotation();
