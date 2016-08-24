@@ -47,8 +47,8 @@ void AnnotationsWidget::addObject(AnnotatorLib::Object *object) {
   if(firstAnnotation == nullptr) return;
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
   item->setText(
-      0, QString::fromStdString(firstAnnotation->getObject()->getName()) +
-             " (" + QString::number(firstAnnotation->getFrame()->getNumber()) +
+      0, QString::fromStdString(object->getClass() ? object->getClass()->getName() : "unnamed") +
+             " (" + QString::number(object->getId()) +
              ")");
   ui->treeWidget->addTopLevelItem(item);
   addAnnotation(firstAnnotation, item);

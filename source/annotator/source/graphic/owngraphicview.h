@@ -15,7 +15,6 @@
 #define offDRAW  1
 
 class OwnGraphicScene;
-class OwnQGraphicsItem;
 
 class OwnGraphicView : public QGraphicsView
 {
@@ -26,8 +25,6 @@ public:
     void setBackground(QImage background);
     void updateSceneSize(int width, int height);
 
-
-    OwnQGraphicsItem* rectangle;
     OwnGraphicScene* ownScene;
 
 public slots:
