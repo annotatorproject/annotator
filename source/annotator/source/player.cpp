@@ -18,7 +18,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
 
   ui->horizontalSlider->setMaximum(9999);
   ui->btnNext->setAutoRepeat(true);
-  ui->btnLast->setAutoRepeat(true);
+  ui->btnPrev->setAutoRepeat(true);
 
   video->setDelay(ui->speedSpinBox->value());  //get default value
 
@@ -163,15 +163,15 @@ bool Player::LoadFile(const QString &fileName) {
  *
  * @param var	-	the enable variable
  */
-void Player::updateStatus(bool var) {
-  ui->horizontalSlider->setEnabled(var);
-  ui->btnLast->setEnabled(var);
-  ui->btnNext->setEnabled(var);
-  ui->btnPlay->setEnabled(var);
-  ui->btnStop->setEnabled(var);
-  ui->btnPause->setEnabled(var);
+void Player::updateStatus(bool enable) {
+  ui->horizontalSlider->setEnabled(enable);
+  ui->btnPrev->setEnabled(enable);
+  ui->btnNext->setEnabled(enable);
+  ui->btnPlay->setEnabled(enable);
+  ui->btnStop->setEnabled(enable);
+  ui->btnPause->setEnabled(enable);
 
-  if (!var) {
+  if (!enable) {
     ui->horizontalSlider->setValue(0);
   }
 }
@@ -388,8 +388,8 @@ void Player::on_btnPause_clicked() { pause(); }
 
 void Player::on_btnStop_clicked() { video->stopIt(); }
 
-void Player::on_btnLast_clicked() {
-  this->setAutoAnnotation(false);
+void Player::on_btnPrev_clicked() {
+  //this->setAutoAnnotation(false);
   video->prevFrame();
 }
 

@@ -86,7 +86,7 @@ private slots:
 
   void on_btnStop_clicked();
 
-  void on_btnLast_clicked();
+  void on_btnPrev_clicked();
 
   void on_btnNext_clicked();
 

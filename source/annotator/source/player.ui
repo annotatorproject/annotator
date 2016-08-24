@@ -139,7 +139,7 @@ color: #ffffff</string>
           <number>19</number>
          </property>
          <item>
-          <widget class="QPushButton" name="btnLast">
+          <widget class="QPushButton" name="btnPrev">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
