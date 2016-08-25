@@ -54,7 +54,7 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
                              0 | CV_HAAR_SCALE_IMAGE, cv::Size(30, 30));
 
     for (size_t i = 0; i < objects.size(); i++) {
-      std::string name = this->objectNames + std::to_string(this->objectNr++);
+      //std::string name = this->objectNames + std::to_string(this->objectNr++);
       float x = objects[i].x;
       float y = objects[i].y;
       float w = objects[i].width;
@@ -62,7 +62,7 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
 
       // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
       AnnotatorLib::Commands::NewAnnotation *nA =
-          new AnnotatorLib::Commands::NewAnnotation(name, frame, x, y, w, h,
+          new AnnotatorLib::Commands::NewAnnotation(this->object, frame, x, y, w, h,
                                                     this->session, true);
       commands.push_back(nA);
     }
