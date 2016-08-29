@@ -44,11 +44,12 @@ void KalmanFilter::addNegative(cv::Mat image)
     // unused
 }
 
-void KalmanFilter::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
+bool KalmanFilter::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
 {
     this->lastFrame = this->frame;
     this->frame = frame;
     this->frameImg = image;
+    return lastFrame != frame;
 }
 
 
@@ -71,6 +72,7 @@ void KalmanFilter::setLastAnnotation(AnnotatorLib::Annotation *annotation)
     if(lastAnnotation != nullptr &&annotation->getObject() == lastAnnotation->getObject())
         return;
     this->lastAnnotation = annotation;
+    lastFrame = this->lastAnnotation->getFrame();
 }
 
 std::vector<AnnotatorLib::Commands::Command *> KalmanFilter::getCommands()

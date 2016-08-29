@@ -39,10 +39,11 @@ void CamShift::addNegative(cv::Mat image) {
   // unused
 }
 
-void CamShift::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool CamShift::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
+  return lastFrame != frame;
 }
 
 // first call
@@ -62,14 +63,14 @@ void CamShift::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
   this->lastAnnotation = annotation;
   selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
                        lastAnnotation->getWidth(), lastAnnotation->getHeight());
-
+  this->lastFrame = this->lastAnnotation->getFrame();
   newSelection = true;
 }
 
 std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
   std::vector<AnnotatorLib::Commands::Command *> commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
-      this->lastAnnotation == nullptr)
+      this->lastAnnotation == nullptr || frame == lastFrame)
     return commands;
 
   try {
@@ -83,10 +84,7 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
 
     AnnotatorLib::Commands::NewAnnotation *nA =
         new AnnotatorLib::Commands::NewAnnotation(
-            lastAnnotation->getObject(), this->frame, x, y, w, h,
-            lastAnnotation->getNext(),
-            lastAnnotation->isInterpolated() ? lastAnnotation->getPrevious()
-                                             : lastAnnotation,
+            lastAnnotation->getObject(), frame, x, y, w, h,
             this->session, false);
     commands.push_back(nA);
 

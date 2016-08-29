@@ -45,11 +45,12 @@ void TemplateMatcher::addNegative(cv::Mat image)
     // unused
 }
 
-void TemplateMatcher::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
+bool TemplateMatcher::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
 {
     this->lastFrame = this->frame;
     this->frame = frame;
     this->frameImg = image;
+    return lastFrame != frame;
 }
 
 
@@ -73,6 +74,7 @@ void TemplateMatcher::setLastAnnotation(AnnotatorLib::Annotation *annotation)
     if(lastAnnotation != nullptr &&annotation->getObject() == lastAnnotation->getObject())
         return;
     this->lastAnnotation = annotation;
+    lastFrame = this->lastAnnotation->getFrame();
     if(!initialized)
     {
         cv::Rect roi(annotation->getX() - annotation->getHRadius() *0.5f,
@@ -121,7 +123,6 @@ std::vector<AnnotatorLib::Commands::Command *> TemplateMatcher::getCommands()
         AnnotatorLib::Commands::NewAnnotation * nA =
                 new AnnotatorLib::Commands::NewAnnotation(lastAnnotation->getObject(), this->frame,
                                                           x, y, hradius, vradius,
-                                                          lastAnnotation->getNext(), lastAnnotation->isInterpolated() ? lastAnnotation->getPrevious() : lastAnnotation,
                                                           this->session, false);
         commands.push_back(nA);
 

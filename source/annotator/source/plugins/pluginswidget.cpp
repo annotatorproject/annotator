@@ -14,7 +14,7 @@ PluginsWidget::PluginsWidget(QWidget *parent) :
 
 PluginsWidget::~PluginsWidget()
 {
-    ui->layout->removeWidget(this->lastWidget);
+    ui->comboBox->clear();
     delete ui;
 }
 

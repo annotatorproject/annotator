@@ -237,25 +237,20 @@ void Player::showFrame(cv::Mat frame) {
 
 void Player::updateFrame(long frame_nmb) {
   AnnotatorLib::Frame *f = session->getFrame(frame_nmb);
-  if (f == nullptr) f = new AnnotatorLib::Frame(frame_nmb);
 
   if (autoAnnotation) {
-    if (f != nullptr) {
-      Annotator::Plugin *plugin =
-          Annotator::PluginLoader::getInstance().getCurrent();
-      if (plugin) {
-        plugin->setFrame(f, currentFrame);
-      }
-      algoExecuteCommands();
-      showTrackedAnnotations(f); //only active when plugin was loaded //rename this method??
+    Annotator::Plugin *plugin =
+        Annotator::PluginLoader::getInstance().getCurrent();
+    if (plugin) {
+      if (plugin->setFrame(f, currentFrame))
+        algoExecuteCommands();
     }
   }
 
   showAnnotationsOfFrame(f);
 
-  // set current frame into popup.
-  //long cfn = video->getCurFrameNr();
   this->scene->setCurrentFrame(frame_nmb);
+  this->scene->update();
 }
 
 void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
@@ -267,14 +262,8 @@ void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
       AnnotationGraphicsItem *graphicsItem =
           AnnotationGraphicsItemFactory::createItem(annotation);
 
-      /*scene->setItem(QPointF(graphicsItem->annotation->getX()-graphicsItem->annotation->getHRadius(),
-         graphicsItem->annotation->getX()-graphicsItem->annotation->getHRadius()),
-                     QPointF(graphicsItem->annotation->getX()+graphicsItem->annotation->getHRadius(),
-         graphicsItem->annotation->getX()+graphicsItem->annotation->getHRadius()),
-                     2333, QColor(255,0,0,255));*/
       graphicsItem->setPlayer(this);
-      scene->addItem(graphicsItem);
-      scene->update();
+      scene->addItem(graphicsItem);      
       annotationGraphics.push_back(graphicsItem);
     }
   }
@@ -289,35 +278,6 @@ void Player::algoExecuteCommands() {
         plugin->getCommands();
     for (AnnotatorLib::Commands::Command *command : commands) {
       CommandController::instance()->execute(command);
-    }
-  }
-}
-
-void Player::showTrackedAnnotations(AnnotatorLib::Frame *frame) {
-  if (frame != nullptr) {
-    Annotator::Plugin *plugin =
-        Annotator::PluginLoader::getInstance().getCurrent();
-    AnnotatorLib::Annotation *a = nullptr;
-
-    if (plugin) {
-      a = plugin->getAnnotation();
-    }
-    if (a) {
-      int x = a->getX();
-      int y = a->getY();
-      int w = a->getHRadius();
-      int h = a->getVRadius();
-
-      AnnotatorLib::Commands::NewAnnotation *nA =
-          new AnnotatorLib::Commands::NewAnnotation(
-              a->getObject(), frame, x, y, w, h, a->getNext(),
-              a->isInterpolated() ? a->getPrevious() : a, getSession(), false);
-      CommandController::instance()->execute(nA);
-
-      // update position of last annotation in automation plugin
-      if (plugin->getObject() == a->getObject()) {
-        plugin->setLastAnnotation(nA->getAnnotation());
-      }
     }
   }
 }
@@ -421,6 +381,7 @@ void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 void Player::reload() {
   emit requestReload();
   this->videoplayer->reload();
+  //TODO: reload annotations?
 }
 
 

@@ -12,5 +12,5 @@ Widget::Widget(QWidget *parent) :
 
 Widget::~Widget()
 {
-    delete ui;
+  delete ui;
 }

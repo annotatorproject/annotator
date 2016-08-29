@@ -29,9 +29,9 @@ public:
     QString getName();
     QWidget *getWidget();
 
-    void addPositive(cv::Mat image);
-    void addNegative(cv::Mat image);
-    void setFrame(AnnotatorLib::Frame *frame, cv::Mat image);
+    void addPositive(cv::Mat image) override;
+    void addNegative(cv::Mat image) override;
+    bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
     void setObject(AnnotatorLib::Object *object);
     AnnotatorLib::Object *getObject();
     void setLastAnnotation(AnnotatorLib::Annotation *annotation);

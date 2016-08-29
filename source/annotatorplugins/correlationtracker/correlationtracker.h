@@ -32,7 +32,7 @@ class CorrelationTracker : public Plugin {
 
   void addPositive(cv::Mat image);
   void addNegative(cv::Mat image);
-  void setFrame(AnnotatorLib::Frame *frame, cv::Mat image);
+  bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
   void setObject(AnnotatorLib::Object *object);
   AnnotatorLib::Object *getObject();
   void setLastAnnotation(AnnotatorLib::Annotation *annotation);

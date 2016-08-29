@@ -26,10 +26,11 @@ void Haarcascade::addPositive(cv::Mat image) {}
 
 void Haarcascade::addNegative(cv::Mat image) {}
 
-void Haarcascade::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool Haarcascade::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
+  return lastFrame != frame;
 }
 
 void Haarcascade::setObject(AnnotatorLib::Object *object) {

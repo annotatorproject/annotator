@@ -4,7 +4,6 @@
 #include "classesdialog.h"
 
 #include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <AnnotatorLib/Commands/NewObject.h>
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
 
@@ -44,24 +43,24 @@ void NewObjectDialog::createObject() {
                                                           tr("No such class registered."), QMessageBox::Ok);
       return;
   }
-  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
-        session,
-        (unsigned long)ui->objectIdLineEdit->text().toULong(),
-        selClass->getId());
-  CommandController::instance()->execute(nO);
+//  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
+//        session,
+//        (unsigned long)ui->objectIdLineEdit->text().toULong(),
+//        selClass->getId());
+//  CommandController::instance()->execute(nO, false);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
+  unsigned long id = (unsigned long)ui->objectIdLineEdit->text().toULong();
 
   AnnotatorLib::Commands::NewAnnotation *nA =
       new AnnotatorLib::Commands::NewAnnotation(
-          nO->getObject(), frame, x, y, w, h, this->session, false);
-
+          id, selClass, frame, x, y, w, h, this->session, false);
 
   CommandController::instance()->execute(nA);
 
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
-  plugin->setObject(nO->getObject());
+  plugin->setObject(nA->getAnnotation()->getObject());
   plugin->setLastAnnotation(nA->getAnnotation());
 }
 

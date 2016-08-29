@@ -371,7 +371,6 @@ void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
         new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y,
             annotation->getWidth(), annotation->getHeight(),
-            annotation->getNext(), annotation->getPrevious(),
             player->getSession(), true);
     player->getSession()->execute(nA);
   } else {
@@ -396,7 +395,6 @@ void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
     AnnotatorLib::Commands::NewAnnotation *nA =
         new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y, w, h,
-            annotation->getNext(), annotation->getPrevious(),
             player->getSession(), true);
     player->getSession()->execute(nA);
   } else {

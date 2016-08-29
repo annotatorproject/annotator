@@ -35,10 +35,11 @@ void CorrelationTracker::addNegative(cv::Mat image) {
   // unused
 }
 
-void CorrelationTracker::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool CorrelationTracker::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
+  return lastFrame != frame;
 }
 
 // first call
@@ -68,6 +69,7 @@ void CorrelationTracker::setLastAnnotation(
                                              selection.x + selection.width,
                                              selection.y + selection.height));
 
+  lastFrame = this->lastAnnotation->getFrame();
   trackerStarted = true;
   newSelection = true;
 }
@@ -76,7 +78,7 @@ std::vector<AnnotatorLib::Commands::Command *>
 CorrelationTracker::getCommands() {
   std::vector<AnnotatorLib::Commands::Command *> commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
-      this->lastAnnotation == nullptr)
+      this->lastAnnotation == nullptr || lastFrame == frame)
     return commands;
 
   try {
@@ -91,9 +93,6 @@ CorrelationTracker::getCommands() {
     AnnotatorLib::Commands::NewAnnotation *nA =
         new AnnotatorLib::Commands::NewAnnotation(
             lastAnnotation->getObject(), this->frame, x, y, w, h,
-            lastAnnotation->getNext(),
-            lastAnnotation->isInterpolated() ? lastAnnotation->getPrevious()
-                                             : lastAnnotation,
             this->session, false);
     commands.push_back(nA);
 
