@@ -121,7 +121,9 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
   QObject::connect(&action_edit, SIGNAL(triggered()), this,
                    SLOT(editAnnotation()));
 
-  contextMenu.addAction(&action_del);
+  if (!this->annotation->isInterpolated()) {
+    contextMenu.addAction(&action_del);  //you cannot delete a temporary annotation
+  }
   contextMenu.addAction(&action_edit);
   contextMenu.exec(pos);
 }
@@ -135,7 +137,11 @@ void AnnotationGraphicsItem::removeAnnotation() {
 }
 
 void AnnotationGraphicsItem::editAnnotation() {
-  // TODO: emit signal to show popup
+
+  if (this->annotation->isInterpolated()) {
+      //TODO: create a new annotation
+  }
+  // TODO: show dialog
 }
 
 /////////////////////////////////////////////////////////////
