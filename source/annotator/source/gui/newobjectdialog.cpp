@@ -45,11 +45,6 @@ void NewObjectDialog::createObject() {
                                                           tr("No such class registered."), QMessageBox::Ok);
       return;
   }
-//  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
-//        session,
-//        (unsigned long)ui->objectIdLineEdit->text().toULong(),
-//        selClass->getId());
-//  CommandController::instance()->execute(nO, false);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
   unsigned long id = (unsigned long)ui->objectIdLineEdit->text().toULong();

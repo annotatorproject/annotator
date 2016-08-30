@@ -1,13 +1,14 @@
-#include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <AnnotatorLib/Commands/RemoveAnnotation.h>
-#include <AnnotatorLib/Commands/UpdateAnnotation.h>
-#include <QMenu>
-#include <QObject>
 
 #include "annotationgraphicsitem.h"
 #include "controller/commandcontroller.h"
 #include "gui/newobjectdialog.h"
 #include "plugins/pluginloader.h"
+
+#include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Commands/RemoveAnnotation.h>
+#include <AnnotatorLib/Commands/UpdateAnnotation.h>
+#include <QMenu>
+#include <QObject>
 
 AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() {
   return annotation;
@@ -132,7 +133,7 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
 
   if (!this->annotation->isInterpolated()) {
     contextMenu.addAction(
-        &action_del); // you cannot delete a temporary annotation
+        &action_del);  // you cannot delete a temporary annotation
   }
   contextMenu.addAction(&action_edit);
   contextMenu.exec(pos);
@@ -147,7 +148,6 @@ void AnnotationGraphicsItem::removeAnnotation() {
 }
 
 void AnnotationGraphicsItem::editAnnotation() {
-
   if (this->annotation->isInterpolated()) {
     // TODO: create a new annotation
   }
@@ -185,26 +185,26 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
   int XSign = 0;
   int YSign = 0;
   switch (corner->getCorner()) {
-  case 0: {
-    XSign = +1;
-    YSign = +1;
-  } break;
+    case 0: {
+      XSign = +1;
+      YSign = +1;
+    } break;
 
-  case 1: {
-    XSign = -1;
-    YSign = +1;
-  } break;
+    case 1: {
+      XSign = -1;
+      YSign = +1;
+    } break;
 
-  case 2: {
-    XSign = -1;
-    YSign = -1;
-  } break;
+    case 2: {
+      XSign = -1;
+      YSign = -1;
+    } break;
 
-  case 3: {
-    XSign = +1;
-    YSign = -1;
-  } break;
-  default: {}
+    case 3: {
+      XSign = +1;
+      YSign = -1;
+    } break;
+    default: {}
   }
 
   // Set the new size of Item, whene the the corner position is changed.
@@ -213,12 +213,10 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
 
   // set min width and min height to 10 px.
   int newWidth = width + (XSign * XPos);
-  if (newWidth < 10)
-    newWidth = 10;
+  if (newWidth < 10) newWidth = 10;
 
   int newHeight = height + (YSign * YPos);
-  if (newHeight < 10)
-    newHeight = 10;
+  if (newHeight < 10) newHeight = 10;
 
   int deltaWidth = newWidth - width;
   int deltaHeight = newHeight - height;
@@ -231,30 +229,29 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
   deltaHeight *= (-1);
 
   switch (corner->getCorner()) {
-  case 0: {
-    int newXPos = this->pos().x() + deltaWidth;
-    int newYpos = this->pos().y() + deltaHeight;
-    this->setPos(newXPos, newYpos);
-  } break;
+    case 0: {
+      int newXPos = this->pos().x() + deltaWidth;
+      int newYpos = this->pos().y() + deltaHeight;
+      this->setPos(newXPos, newYpos);
+    } break;
 
-  case 1: {
-    int newYpos = this->pos().y() + deltaHeight;
-    this->setPos(this->pos().x(), newYpos);
-  } break;
+    case 1: {
+      int newYpos = this->pos().y() + deltaHeight;
+      this->setPos(this->pos().x(), newYpos);
+    } break;
 
-  case 2: {
-    this->setPos(this->pos().x(), this->pos().y());
-  } break;
+    case 2: {
+      this->setPos(this->pos().x(), this->pos().y());
+    } break;
 
-  case 3: {
-    int newXPos = this->pos().x() + deltaWidth;
-    this->setPos(newXPos, this->pos().y());
-  } break;
+    case 3: {
+      int newXPos = this->pos().x() + deltaWidth;
+      this->setPos(newXPos, this->pos().y());
+    } break;
   }
 }
 
 QBrush AnnotationGraphicsItem::getGradient() {
-
   QLinearGradient gradient;
   gradient.setStart(rectX, rectY);
   gradient.setFinalStop(width, height);
@@ -277,35 +274,35 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       dynamic_cast<QGraphicsSceneMouseEvent *>(event);
 
   if (corner && own_event) {
-
     switch (event->type()) {
-    // if the mouse pressed, save the (x,y) coordinates inside the corner object
-    case QEvent::GraphicsSceneMousePress: {
-      corner->setMouseState(Corner::MouseDown);
-      corner->mouseDownX = own_event->pos().x();
-      corner->mouseDownY = own_event->pos().y();
-      // this->setSelected(true);
-    } break;
+      // if the mouse pressed, save the (x,y) coordinates inside the corner
+      // object
+      case QEvent::GraphicsSceneMousePress: {
+        corner->setMouseState(Corner::MouseDown);
+        corner->mouseDownX = own_event->pos().x();
+        corner->mouseDownY = own_event->pos().y();
+        // this->setSelected(true);
+      } break;
 
-    case QEvent::GraphicsSceneMouseRelease: {
-      corner->setMouseState(Corner::MouseReleased);
-      changeAnnotationSize((int)this->x(), (int)this->y(), (int)this->width,
-                           (int)this->height);
-    } break;
+      case QEvent::GraphicsSceneMouseRelease: {
+        corner->setMouseState(Corner::MouseReleased);
+        changeAnnotationSize((int)this->x(), (int)this->y(), (int)this->width,
+                             (int)this->height);
+      } break;
 
-    case QEvent::GraphicsSceneMouseMove: {
-      corner->setMouseState(Corner::MouseMoving);
-      qreal x = own_event->pos().x();
-      qreal y = own_event->pos().y();
-      getCornerPositions(corner, x, y);
-      setCornerPositions();
+      case QEvent::GraphicsSceneMouseMove: {
+        corner->setMouseState(Corner::MouseMoving);
+        qreal x = own_event->pos().x();
+        qreal y = own_event->pos().y();
+        getCornerPositions(corner, x, y);
+        setCornerPositions();
 
-      this->update();
-    } break;
+        this->update();
+      } break;
 
-    default:
-      return false;
-      break;
+      default:
+        return false;
+        break;
     }
 
     return true;
@@ -342,11 +339,9 @@ void AnnotationGraphicsItem::setAnnotationSize(int x, int y) {
 }
 
 void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
-  if (x == annotation->getX() || y == annotation->getY())
-    return;
+  if (x == annotation->getX() && y == annotation->getY()) return;
 
   if (annotation->isInterpolated()) {
-    annotation->setInterpolated(false);
     AnnotatorLib::Commands::NewAnnotation *nA =
         new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y,
