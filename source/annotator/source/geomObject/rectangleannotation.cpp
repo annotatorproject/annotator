@@ -3,6 +3,7 @@
 RectangleAnnotation::RectangleAnnotation(AnnotatorLib::Annotation *annotation):
     AnnotationGraphicsItem::AnnotationGraphicsItem(annotation)
 {
+    assert(annotation->getObject());
     init();
 }
 
@@ -28,7 +29,7 @@ void RectangleAnnotation::init()
 */
 QRectF RectangleAnnotation::boundingRect() const
 {
-    return QRectF(rectX,rectY,cornerWidth,cornerHeight);
+    return QRectF(rectX,rectY,width,height);
 }
 
 

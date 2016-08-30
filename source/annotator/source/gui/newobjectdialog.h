@@ -21,6 +21,9 @@ public:
     void setSession(AnnotatorLib::Session *session);
     void createObject();
 
+public slots:
+    void on_radioButtonSelObj_clicked();
+    void on_radioButtonNewObj_clicked();
 protected:
     void reloadClasses();
 

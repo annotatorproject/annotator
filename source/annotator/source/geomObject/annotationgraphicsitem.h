@@ -28,7 +28,6 @@ public:
     QColor idToColor(long id);
 
     void setPlayer(Player *player);
-    void setSize(int x, int y);
 
     AnnotatorLib::Annotation *annotation;
 
@@ -50,16 +49,14 @@ protected:
     qreal rectY;
     qreal width;
     qreal height;
-    qreal   cornerXPos;
-    qreal   cornerYPos;
-    qreal   cornerWidth;
-    qreal   cornerHeight;
     Corner*  corners[4];
 
     int deltax = 0;
     int deltay = 0;
 
 protected:
+    QBrush getGradient();
+
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
@@ -71,11 +68,23 @@ protected:
 
 private:
     void setCornerPositions();
+    void getCornerPositions(Corner *corner, qreal x, qreal y);
     void setAnnotationSize(int x, int y);
     void changeAnnotationPosition(int x, int y);
     void changeAnnotationSize(int x, int y, int w, int h);
     void initCorners();
     void initIdText();
+
+    /**
+     * @brief hightLight
+     * show id and corners
+     */
+    void highLight();
+
+    /**
+     * @brief hide
+     * hide id and corners (if highlighted)
+     */
     void hide();
 
     void showContextMenu(const QPoint &pos);

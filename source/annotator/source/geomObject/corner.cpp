@@ -2,8 +2,6 @@
 
 Corner::Corner(QGraphicsItem *parent,  int corner) :
     QGraphicsItem(parent),
-    mouseDownX(0),
-    mouseDownY(0),
     cornerborderColor(Qt::green),
     cornerborderPen(),
     cornerwidth(10),
@@ -44,40 +42,11 @@ int Corner::getCorner()
     return corner;
 }
 
-
-// set accepted to false since are not actually handling them
-
-void Corner::mouseMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    event->setAccepted(false);
-}
-
-void Corner::mousePressEvent(QGraphicsSceneDragDropEvent *event)
-{
-    event->setAccepted(false);
-}
-
-void Corner::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
-{
-    event->setAccepted(true);
-}
-
-void Corner::mousePressEvent ( QGraphicsSceneMouseEvent * event )
-{
-    event->setAccepted(false);
-}
-
-void Corner::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
-{
-    event->setAccepted(false);
-}
-
-
 // change the color of captured object on hover events
 
 void Corner::hoverLeaveEvent ( QGraphicsSceneHoverEvent * )
 {
-    cornerborderColor = Qt::black;
+    cornerborderColor = Qt::green;
     this->update(0,0,cornerwidth,cornerheight);
 }
 
@@ -101,10 +70,7 @@ void Corner::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     cornerborderPen.setStyle(Qt::SolidLine);
     painter->setPen(cornerborderPen);
 
-    QPointF topLeft (0, 0);
-    QPointF bottomRight ( cornerwidth, cornerheight);
-
-    QRectF rect (topLeft, bottomRight);
+    QRectF rect(0,0, cornerwidth, cornerheight);
 
     QBrush brush (Qt::SolidPattern);
     brush.setColor (cornerborderColor);

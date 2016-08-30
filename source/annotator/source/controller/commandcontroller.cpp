@@ -17,7 +17,7 @@ void CommandController::setSession(AnnotatorLib::Session *session) {
 }
 
 void CommandController::execute(AnnotatorLib::Commands::Command *command, bool request_gui_reload) {
-  bool success = command->execute();
+  bool success = session->execute(command);
   if (request_gui_reload && success) emit onCommandExecute();
 }
 
