@@ -6,7 +6,7 @@
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
-    ui(new HaarCascade::Ui::Widget)
+    ui(new Ui::Widget)
 {
     ui->setupUi(this);
 }

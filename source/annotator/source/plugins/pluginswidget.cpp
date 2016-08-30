@@ -15,6 +15,10 @@ PluginsWidget::PluginsWidget(QWidget *parent) :
 PluginsWidget::~PluginsWidget()
 {
     ui->comboBox->clear();
+    if(lastWidget != nullptr){
+        ui->layout->removeWidget(lastWidget);
+        lastWidget->setParent(nullptr);
+    }
     delete ui;
 }
 
@@ -38,7 +42,8 @@ void PluginsWidget::on_comboBox_currentIndexChanged(const QString &arg1)
 
     if(plugin){
         if(lastWidget != nullptr){
-            ui->layout->takeAt(0);
+            ui->layout->removeWidget(lastWidget);
+            //ui->layout->takeAt(0);
             lastWidget->setParent(nullptr);
         }
         lastWidget = plugin->getWidget();

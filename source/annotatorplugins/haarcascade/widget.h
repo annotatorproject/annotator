@@ -3,10 +3,8 @@
 
 #include <QWidget>
 
-namespace HaarCascade {
 namespace Ui {
 class Widget;
-}
 }
 
 namespace Annotator{
@@ -32,7 +30,7 @@ private slots:
     void on_newObjectsCheckBox_toggled(bool checked);
 
 private:
-    HaarCascade::Ui::Widget *ui;
+    Ui::Widget *ui;
     Annotator::Plugins::Haarcascade *haarcascade = nullptr;
 
 };
