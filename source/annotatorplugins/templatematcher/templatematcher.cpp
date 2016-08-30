@@ -35,16 +35,6 @@ QWidget *TemplateMatcher::getWidget()
     return &widget;
 }
 
-void TemplateMatcher::addPositive(cv::Mat image)
-{
-    // unused
-}
-
-void TemplateMatcher::addNegative(cv::Mat image)
-{
-    // unused
-}
-
 bool TemplateMatcher::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
 {
     this->lastFrame = this->frame;
@@ -140,14 +130,6 @@ std::vector<AnnotatorLib::Commands::Command *> TemplateMatcher::getCommands()
 
     return commands;
 
-}
-
-
-//get annotation from kalmanfilter
-AnnotatorLib::Annotation *TemplateMatcher::getAnnotation()
-{
-    AnnotatorLib::Annotation * annotation = nullptr;
-    return annotation;
 }
 
 void TemplateMatcher::setSession(AnnotatorLib::Session *session)

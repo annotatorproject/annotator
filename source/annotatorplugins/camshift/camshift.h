@@ -26,18 +26,15 @@ class CamShift : public Plugin
 public:
     CamShift();
     ~CamShift();
-    QString getName();
-    QWidget *getWidget();
+    QString getName() override;
+    QWidget *getWidget() override;
 
-    void addPositive(cv::Mat image) override;
-    void addNegative(cv::Mat image) override;
     bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
-    void setObject(AnnotatorLib::Object *object);
-    AnnotatorLib::Object *getObject();
-    void setLastAnnotation(AnnotatorLib::Annotation *annotation);
-    std::vector<AnnotatorLib::Commands::Command *> getCommands();
-    AnnotatorLib::Annotation *getAnnotation();
-    void setSession(AnnotatorLib::Session * session);
+    void setObject(AnnotatorLib::Object *object) override;
+    AnnotatorLib::Object *getObject() override;
+    void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
+    std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
+    void setSession(AnnotatorLib::Session * session) override;
 
     cv::Mat frameImg;
     AnnotatorLib::Annotation *lastAnnotation = nullptr;

@@ -22,10 +22,6 @@ QString Haarcascade::getName() { return "Haarcascade"; }
 
 QWidget *Haarcascade::getWidget() { return &widget; }
 
-void Haarcascade::addPositive(cv::Mat image) {}
-
-void Haarcascade::addNegative(cv::Mat image) {}
-
 bool Haarcascade::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
@@ -73,12 +69,6 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
   }
 
   return commands;
-}
-
-AnnotatorLib::Annotation *Haarcascade::getAnnotation() {
-  AnnotatorLib::Annotation *annotation = nullptr;
-
-  return annotation;
 }
 
 void Haarcascade::setSession(AnnotatorLib::Session *session) {

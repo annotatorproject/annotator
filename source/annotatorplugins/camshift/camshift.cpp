@@ -31,14 +31,6 @@ QString CamShift::getName() { return "CamShift"; }
 
 QWidget *CamShift::getWidget() { return &widget; }
 
-void CamShift::addPositive(cv::Mat image) {
-  // unused
-}
-
-void CamShift::addNegative(cv::Mat image) {
-  // unused
-}
-
 bool CamShift::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
@@ -93,33 +85,6 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
   }
 
   return commands;
-}
-
-// get annotation from camshift
-AnnotatorLib::Annotation *CamShift::getAnnotation() {
-  if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
-      this->lastAnnotation == nullptr)
-    return nullptr;
-
-  AnnotatorLib::Annotation *annotation = nullptr;
-  /*
-  try{
-
-  cv::Rect found_rect = findObject();
-
-  annotation = new AnnotatorLib::Annotation(lastAnnotation->getType());
-  annotation->setPrevious(lastAnnotation);
-  annotation->setObject(lastAnnotation->getObject());
-  annotation->setFrame(this->frame);
-  annotation->setPosition(found_rect.x + found_rect.width * 0.5 , found_rect.y +
-  found_rect.height * 0.5,
-                            found_rect.width * 0.5, found_rect.height * 0.5);
-  annotation->setInterpolated(false);
-  }catch(cv::Exception &e){
-      qDebug() << e.what();
-  }
-  */
-  return annotation;
 }
 
 void CamShift::setSession(AnnotatorLib::Session *session) {

@@ -34,16 +34,6 @@ QWidget *KalmanFilter::getWidget()
     return &widget;
 }
 
-void KalmanFilter::addPositive(cv::Mat image)
-{
-    // unused
-}
-
-void KalmanFilter::addNegative(cv::Mat image)
-{
-    // unused
-}
-
 bool KalmanFilter::setFrame(AnnotatorLib::Frame *frame, cv::Mat image)
 {
     this->lastFrame = this->frame;
@@ -79,14 +69,6 @@ std::vector<AnnotatorLib::Commands::Command *> KalmanFilter::getCommands()
 {
     std::vector<AnnotatorLib::Commands::Command *> commands;
     return commands;
-}
-
-
-//get annotation from kalmanfilter
-AnnotatorLib::Annotation *KalmanFilter::getAnnotation()
-{
-    AnnotatorLib::Annotation * annotation = nullptr;
-    return annotation;
 }
 
 void KalmanFilter::setSession(AnnotatorLib::Session *session)

@@ -14,6 +14,12 @@ void RectangleAnnotation::init()
     setFlag(ItemIsSelectable, true);
 
     //idText->hide();
+
+    if(this->annotation->isInterpolated())
+        pen.setStyle(Qt::DashLine);
+
+    pen.setColor(borderColor);
+    pen.setWidth(2);
 }
 
 
@@ -32,10 +38,6 @@ QRectF RectangleAnnotation::boundingRect() const
 */
 void RectangleAnnotation::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
-    pen.setColor(borderColor);
-    pen.setWidth(2);
-
     painter->setPen(pen);
     painter->setBrush(brush);
 

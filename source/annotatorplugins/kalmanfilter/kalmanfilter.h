@@ -26,18 +26,15 @@ class KalmanFilter : public Plugin
 public:
     KalmanFilter();
     ~KalmanFilter();
-    QString getName();
-    QWidget *getWidget();
+    QString getName() override;
+    QWidget *getWidget() override;
 
-    void addPositive(cv::Mat image);
-    void addNegative(cv::Mat image);
-    bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image);
-    void setObject(AnnotatorLib::Object *object);
-    AnnotatorLib::Object *getObject();
-    void setLastAnnotation(AnnotatorLib::Annotation *annotation);
-    std::vector<AnnotatorLib::Commands::Command *> getCommands();
-    AnnotatorLib::Annotation *getAnnotation();
-    void setSession(AnnotatorLib::Session * session);
+    bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
+    void setObject(AnnotatorLib::Object *object) override;
+    AnnotatorLib::Object *getObject() override;
+    void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
+    std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
+    void setSession(AnnotatorLib::Session * session) override;
 
     AnnotatorLib::Annotation *lastAnnotation = nullptr;
     AnnotatorLib::Object *object = nullptr;

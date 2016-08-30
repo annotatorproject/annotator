@@ -1,13 +1,13 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
+#include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <QMenu>
 #include <QObject>
 
 #include "annotationgraphicsitem.h"
-#include "plugins/pluginloader.h"
-#include "gui/newobjectdialog.h"
 #include "controller/commandcontroller.h"
+#include "gui/newobjectdialog.h"
+#include "plugins/pluginloader.h"
 
 AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() {
   return annotation;
@@ -45,11 +45,11 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   }
 }
 
-static double r_ = (1 + sqrt(5)) / 2;
-static double g_ = (3 + sqrt(7)) / 2;
-static double b_ = (11 + sqrt(13)) / 2;
-
 QColor AnnotationGraphicsItem::idToColor(long id) {
+  static double r_ = (1 + sqrt(5)) / 2;
+  static double g_ = (3 + sqrt(7)) / 2;
+  static double b_ = (11 + sqrt(13)) / 2;
+
   double r = id * r_ - floor(id * r_);
   double g = id * g_ - floor(id * g_);
   double b = id * b_ - floor(id * b_);
@@ -126,17 +126,16 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
   contextMenu.exec(pos);
 }
 
-void AnnotationGraphicsItem::removeAnnotation()
-{
-    //TODO: remove rect permanently (works nnot everytime)
-    AnnotatorLib::Commands::RemoveAnnotation * cmd = new AnnotatorLib::Commands::RemoveAnnotation(player->getSession(), annotation);
-    CommandController::instance()->execute(cmd);
+void AnnotationGraphicsItem::removeAnnotation() {
+  // TODO: remove rect permanently (works nnot everytime)
+  AnnotatorLib::Commands::RemoveAnnotation *cmd =
+      new AnnotatorLib::Commands::RemoveAnnotation(player->getSession(),
+                                                   annotation);
+  CommandController::instance()->execute(cmd);
 }
 
-
-void AnnotationGraphicsItem::editAnnotation()
-{
-    //TODO: emit signal to show popup
+void AnnotationGraphicsItem::editAnnotation() {
+  // TODO: emit signal to show popup
 }
 
 /////////////////////////////////////////////////////////////
@@ -144,10 +143,10 @@ void AnnotationGraphicsItem::editAnnotation()
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-//  corners[0] = new Corner(this, 0);
-//  corners[1] = new Corner(this, 1);
-//  corners[2] = new Corner(this, 2);
-//  corners[3] = new Corner(this, 3);
+  //  corners[0] = new Corner(this, 0);
+  //  corners[1] = new Corner(this, 1);
+  //  corners[2] = new Corner(this, 2);
+  //  corners[3] = new Corner(this, 3);
 
   for (int i = 0; i < 4; ++i) {
     corners[i]->setVisible(true);
@@ -191,15 +190,15 @@ void AnnotationGraphicsItem::setCornerPositions() {
  * reset item setting: if mouse leave hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-//  corners[0]->setParentItem(NULL);
-//  corners[1]->setParentItem(NULL);
-//  corners[2]->setParentItem(NULL);
-//  corners[3]->setParentItem(NULL);
+  //  corners[0]->setParentItem(NULL);
+  //  corners[1]->setParentItem(NULL);
+  //  corners[2]->setParentItem(NULL);
+  //  corners[3]->setParentItem(NULL);
 
-//  delete corners[0];
-//  delete corners[1];
-//  delete corners[2];
-//  delete corners[3];
+  //  delete corners[0];
+  //  delete corners[1];
+  //  delete corners[2];
+  //  delete corners[3];
 
   hide();
 }
@@ -282,7 +281,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       XSign = +1;
       YSign = -1;
     } break;
-    default: { }
+    default: {}
     }
 
     // Set the new size of Item, whene the the corner position is changed.
@@ -355,8 +354,8 @@ void AnnotationGraphicsItem::mouseReleaseEvent(
     deltay = this->y() - deltay;
 
     changeAnnotationPosition(this->x(), this->y());
-    setCornerPositions();
-    this->update();
+    // setCornerPositions();
+    // this->update();
   }
 }
 
@@ -372,20 +371,20 @@ void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
             annotation->getObject(), annotation->getFrame(), x, y,
             annotation->getWidth(), annotation->getHeight(),
             player->getSession(), true);
-    player->getSession()->execute(nA);
+    CommandController::instance()->execute(nA);
   } else {
     AnnotatorLib::Commands::UpdateAnnotation *uA =
         new AnnotatorLib::Commands::UpdateAnnotation(
             annotation, x, y, annotation->getWidth(), annotation->getHeight());
-    player->getSession()->execute(uA);
+    CommandController::instance()->execute(uA);
   }
 
   // update position of last annotation in automation plugin
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
   if (plugin) {
-    plugin->setObject(annotation->getObject());
-    plugin->setLastAnnotation(annotation);
+    // plugin->setObject(annotation->getObject());
+    // plugin->setLastAnnotation(annotation);
   }
 }
 
@@ -396,18 +395,18 @@ void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
         new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y, w, h,
             player->getSession(), true);
-    player->getSession()->execute(nA);
+    CommandController::instance()->execute(nA);
   } else {
     AnnotatorLib::Commands::UpdateAnnotation *uA =
         new AnnotatorLib::Commands::UpdateAnnotation(annotation, x, y, w, h);
-    player->getSession()->execute(uA);
+    CommandController::instance()->execute(uA);
   }
 
   // update position of last annotation in automation plugin
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
   if (plugin) {
-    plugin->setObject(annotation->getObject());
-    plugin->setLastAnnotation(annotation);
+    // plugin->setObject(annotation->getObject());
+    // plugin->setLastAnnotation(annotation);
   }
 }

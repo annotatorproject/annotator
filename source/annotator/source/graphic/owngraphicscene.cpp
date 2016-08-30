@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QSettings>
 
+
 OwnGraphicScene::OwnGraphicScene()
     : isDrawn(false), isLeftPressed(false), isItemMove(false) {
 }
@@ -134,6 +135,8 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         float y = std::min(upperLeft.y(), lowerRight.y());
         float w = std::max(upperLeft.x(), lowerRight.x()) - x;
         float h = std::max(upperLeft.y(), lowerRight.y()) - y;
+        if(w <= 0 || h <= 0)
+            return;
 
         newObjectDialog.setDimensions(x, y, w, h);
         newObjectDialog.setFrame(currentFrame);

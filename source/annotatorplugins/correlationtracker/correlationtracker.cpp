@@ -27,14 +27,6 @@ QString CorrelationTracker::getName() { return "CorrelationTracker"; }
 
 QWidget *CorrelationTracker::getWidget() { return &widget; }
 
-void CorrelationTracker::addPositive(cv::Mat image) {
-  // unused
-}
-
-void CorrelationTracker::addNegative(cv::Mat image) {
-  // unused
-}
-
 bool CorrelationTracker::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
@@ -101,15 +93,6 @@ CorrelationTracker::getCommands() {
   }
 
   return commands;
-}
-
-AnnotatorLib::Annotation *CorrelationTracker::getAnnotation() {
-  if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
-      this->lastAnnotation == nullptr)
-    return nullptr;
-
-  AnnotatorLib::Annotation *annotation = nullptr;
-  return annotation;
 }
 
 void CorrelationTracker::setSession(AnnotatorLib::Session *session) {
