@@ -22,7 +22,9 @@ void NewObjectDialog::setDimensions(float x, float y, float w, float h) {
   this->y = y;
   this->w = w;
   this->h = h;
-  ui->positionLabel->setText("Position: " + QString::number(x) + "x" +
+  ui->positionValue->setText(QString::number(w) + " x " +
+                             QString::number(h) + " @ " +
+                             QString::number(x) + " | " +
                              QString::number(y));
 }
 
@@ -103,4 +105,15 @@ void NewObjectDialog::on_editClassesButton_clicked()
     ClassesDialog dialog(session, this);
     dialog.exec();
     reloadClasses();
+}
+
+
+void NewObjectDialog::on_radioButtonSelObj_clicked()
+{
+    //TODO
+}
+
+void NewObjectDialog::on_radioButtonNewObj_clicked()
+{
+    //TODO
 }
