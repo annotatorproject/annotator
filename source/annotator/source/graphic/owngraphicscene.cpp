@@ -128,7 +128,7 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     if (drawMode == DrawON) {
 
       if (isDrawn) {
-        NewObjectDialog newObjectDialog(session);
+        NewObjectDialog newObjectDialog(session, this->selected_obj);
         QPointF upperLeft = adjustCoordinate(point1);
         QPointF lowerRight = adjustCoordinate(point2);
         float x = std::min(upperLeft.x(), lowerRight.x());
@@ -194,4 +194,8 @@ QPoint OwnGraphicScene::adjustCoordinate(QPointF MousePos) {
 QPointF OwnGraphicScene::resetCoordinate(QPointF RectPos) {
   return QPointF(((RectPos.x() * this->width()) / inputCoordinate.x()),
                  ((RectPos.y() * this->height()) / inputCoordinate.y()));
+}
+
+void OwnGraphicScene::on_objectSelected(AnnotatorLib::Object* obj) {
+  this->selected_obj = obj;
 }

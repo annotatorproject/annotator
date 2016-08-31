@@ -12,7 +12,7 @@
 #define DrawON   0
 #define DrawOFF  1
 
-class OwnGraphicScene:public QGraphicsScene
+class OwnGraphicScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
@@ -24,11 +24,6 @@ public:
     void setCurrentFrame(int frame);
     void setSession(AnnotatorLib::Session *session);
 
-
-
-public slots:
-
-
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -38,6 +33,8 @@ protected:
     virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
 private slots:
+    //void on_btnPause_clicked();
+    void on_objectSelected(AnnotatorLib::Object *object);
 
 signals:
     void on_btnPause_clicked();
@@ -45,6 +42,7 @@ signals:
 protected:
     unsigned long currentFrame = 0;
     AnnotatorLib::Session *session = nullptr;
+    AnnotatorLib::Object *selected_obj = nullptr;
 
 private:
     QImage image;
@@ -54,7 +52,6 @@ private:
 
     QPointF point1;     //clicked point
     QPointF point2;     //released point
-
 
     bool isDrawn;
     bool isLeftPressed; //left click is clicked

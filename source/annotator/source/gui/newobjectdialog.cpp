@@ -7,11 +7,21 @@
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
 
-NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, QWidget *parent)
-    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session) {
+NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, AnnotatorLib::Object* selected_obj , QWidget *parent)
+    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session), selected_obj(selected_obj) {
 
   ui->setupUi(this);
-  ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
+  if (selected_obj == nullptr) {
+    ui->radioButtonSelObj->hide();
+    ui->radioButtonSelObj->setChecked(false);
+    ui->radioButtonNewObj->setChecked(true);
+    ui->radioButtonNewObj->setEnabled(false);
+  }
+  if (ui->radioButtonNewObj->isChecked()) {
+      this->on_radioButtonNewObj_clicked();
+  } else if (ui->radioButtonSelObj->isChecked()) {
+      this->on_radioButtonSelObj_clicked();
+  }
   reloadClasses();
 }
 
@@ -45,11 +55,6 @@ void NewObjectDialog::createObject() {
                                                           tr("No such class registered."), QMessageBox::Ok);
       return;
   }
-//  AnnotatorLib::Commands::NewObject *nO = new AnnotatorLib::Commands::NewObject(
-//        session,
-//        (unsigned long)ui->objectIdLineEdit->text().toULong(),
-//        selClass->getId());
-//  CommandController::instance()->execute(nO, false);
 
   AnnotatorLib::Frame *frame = session->getFrame(this->frame);
   unsigned long id = (unsigned long)ui->objectIdLineEdit->text().toULong();
@@ -110,10 +115,11 @@ void NewObjectDialog::on_editClassesButton_clicked()
 
 void NewObjectDialog::on_radioButtonSelObj_clicked()
 {
-    //TODO
+    ui->objectIdLineEdit->setText(QString::number(this->selected_obj->getId()));
 }
+
 
 void NewObjectDialog::on_radioButtonNewObj_clicked()
 {
-    //TODO
+    ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
 }

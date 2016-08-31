@@ -30,14 +30,10 @@ public:
     void setPlayer(Player *player);
     void setSize(int x, int y);
 
-    AnnotatorLib::Annotation *annotation;
-
 signals:
     void objectSelected(AnnotatorLib::Object *object);
 
 protected:
-    //AnnotatorLib::Annotation *annotation;
-
     QPen pen;
     QBrush brush;
     QColor borderColor;
@@ -70,6 +66,10 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
+
+    static AnnotatorLib::Annotation* sel_annotation;
+    AnnotatorLib::Annotation *annotation;
+
     void setCornerPositions();
     void setAnnotationSize(int x, int y);
     void changeAnnotationPosition(int x, int y);

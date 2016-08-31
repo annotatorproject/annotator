@@ -9,6 +9,10 @@
 #include "gui/newobjectdialog.h"
 #include "plugins/pluginloader.h"
 
+
+//static
+AnnotatorLib::Annotation* selected_annotation = nullptr;
+
 AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() {
   return annotation;
 }
@@ -94,9 +98,11 @@ void AnnotationGraphicsItem::hide() {
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
-  if (this->player != nullptr && this->annotation != nullptr &&
+  if (this->player != nullptr &&
+      this->annotation != nullptr &&
       this->annotation->getObject() != nullptr) {
-    this->player->selectObject(annotation->getObject());
+
+      this->player->selectObject(annotation->getObject());
   }
 }
 
@@ -112,9 +118,8 @@ void AnnotationGraphicsItem::contextMenuEvent(
 
 void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
   QMenu contextMenu("Context menu");
-
-  QAction action_del(QString("Remove"), (QObject *)this->parentObject());
   QAction action_edit(QString("Edit"), (QObject *)this->parentObject());
+  QAction action_del(QString("Remove"), (QObject *)this->parentObject());
 
   QObject::connect(&action_del, SIGNAL(triggered()), this,
                    SLOT(removeAnnotation()));
@@ -122,7 +127,7 @@ void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
                    SLOT(editAnnotation()));
 
   if (!this->annotation->isInterpolated()) {
-    contextMenu.addAction(&action_del);  //you cannot delete a temporary annotation
+      contextMenu.addAction(&action_del);  //you cannot delete a temporary annotation
   }
   contextMenu.addAction(&action_edit);
   contextMenu.exec(pos);
@@ -149,10 +154,6 @@ void AnnotationGraphicsItem::editAnnotation() {
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  //  corners[0] = new Corner(this, 0);
-  //  corners[1] = new Corner(this, 1);
-  //  corners[2] = new Corner(this, 2);
-  //  corners[3] = new Corner(this, 3);
 
   for (int i = 0; i < 4; ++i) {
     corners[i]->setVisible(true);
@@ -196,16 +197,6 @@ void AnnotationGraphicsItem::setCornerPositions() {
  * reset item setting: if mouse leave hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  //  corners[0]->setParentItem(NULL);
-  //  corners[1]->setParentItem(NULL);
-  //  corners[2]->setParentItem(NULL);
-  //  corners[3]->setParentItem(NULL);
-
-  //  delete corners[0];
-  //  delete corners[1];
-  //  delete corners[2];
-  //  delete corners[3];
-
   hide();
 }
 

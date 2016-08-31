@@ -74,6 +74,9 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
 
+  connect(this, SIGNAL(objectSelected(AnnotatorLib::Object*)), scene,
+          SLOT(on_objectSelected(AnnotatorLib::Object*)));
+
 }
 
 Player::~Player() {

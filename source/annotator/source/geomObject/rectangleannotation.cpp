@@ -15,7 +15,7 @@ void RectangleAnnotation::init()
 
     //idText->hide();
 
-    if(this->annotation->isInterpolated())
+    if(this->getAnnotation()->isInterpolated())
         pen.setStyle(Qt::DashLine);
 
     pen.setColor(borderColor);
