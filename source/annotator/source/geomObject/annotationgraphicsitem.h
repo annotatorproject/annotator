@@ -47,9 +47,6 @@ protected:
     qreal height;
     Corner*  corners[4];
 
-    int deltax = 0;
-    int deltay = 0;
-
 protected:
     QBrush getGradient();
 
@@ -57,7 +54,6 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -69,7 +65,6 @@ private:
 
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
-    void setAnnotationSize(int x, int y);
     void changeAnnotationPosition(int x, int y);
     void changeAnnotationSize(int x, int y, int w, int h);
     void initCorners();

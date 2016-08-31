@@ -172,16 +172,6 @@ void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  //  corners[0]->setParentItem(NULL);
-  //  corners[1]->setParentItem(NULL);
-  //  corners[2]->setParentItem(NULL);
-  //  corners[3]->setParentItem(NULL);
-
-  //  delete corners[0];
-  //  delete corners[1];
-  //  delete corners[2];
-  //  delete corners[3];
-
   hide();
 }
 
@@ -331,79 +321,42 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
   return true;
 }
 
-void AnnotationGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsItem::mousePressEvent(event);
-
-  if (event->button() == Qt::LeftButton) {
-    deltax = this->x();
-    deltay = this->y();
-  }
-}
-
 void AnnotationGraphicsItem::mouseReleaseEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseReleaseEvent(event);
 
   if (event->button() == Qt::LeftButton) {
-    deltax = this->x() - deltax;
-    deltay = this->y() - deltay;
-
     changeAnnotationPosition(this->x(), this->y());
-    // setCornerPositions();
-    // this->update();
   }
-}
-
-void AnnotationGraphicsItem::setAnnotationSize(int x, int y) {
-  annotation->setPosition(annotation->getX(), annotation->getY(), x, y);
 }
 
 void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
   if (x == annotation->getX() && y == annotation->getY()) return;
 
-  if (annotation->isInterpolated()) {
-    annotation->setInterpolated(false);
-    AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(
-            annotation->getObject(), annotation->getFrame(), x, y,
-            annotation->getWidth(), annotation->getHeight(),
-            player->getSession(), true);
-    CommandController::instance()->execute(nA);
-  } else {
-    AnnotatorLib::Commands::UpdateAnnotation *uA =
-        new AnnotatorLib::Commands::UpdateAnnotation(
-            annotation, x, y, annotation->getWidth(), annotation->getHeight());
-    CommandController::instance()->execute(uA);
-  }
-
-  // update position of last annotation in automation plugin
-  Annotator::Plugin *plugin =
-      Annotator::PluginLoader::getInstance().getCurrent();
-  if (plugin) {
-    // plugin->setObject(annotation->getObject());
-    // plugin->setLastAnnotation(annotation);
-  }
+  changeAnnotationSize(x, y, annotation->getWidth(), annotation->getHeight());
 }
 
 void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
+
+  AnnotatorLib::Commands::Command *nA;
   if (annotation->isInterpolated()) {
     annotation->setInterpolated(false);
-    AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(
+
+    //here is a bug somewhere (position is wrong)
+    nA = new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y, w, h,
             player->getSession(), true);
-    CommandController::instance()->execute(nA);
   } else {
-    AnnotatorLib::Commands::UpdateAnnotation *uA =
-        new AnnotatorLib::Commands::UpdateAnnotation(annotation, x, y, w, h);
-    CommandController::instance()->execute(uA);
+    nA = new AnnotatorLib::Commands::UpdateAnnotation(annotation, x, y, w, h);
+
   }
+  CommandController::instance()->execute(nA);
 
   // update position of last annotation in automation plugin
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
   if (plugin) {
-    // plugin->setObject(annotation->getObject());
-    // plugin->setLastAnnotation(annotation);
+    //plugin->setObject(annotation->getObject());
+    //plugin->setLastAnnotation(annotation);
   }
 }
