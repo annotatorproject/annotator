@@ -19,17 +19,13 @@ public:
     void setDimensions(float x, float y, float w, float h);
     void createObject();
 
-public slots:
-    void on_radioButtonSelObj_clicked();
-    void on_radioButtonNewObj_clicked();
 protected:
     bool checkValues();
     void reloadClasses();
 
-    const AnnotatorLib::Object* selected_obj;
-    const unsigned long frame_nmb = 0;
     AnnotatorLib::Session *session;
-
+    const unsigned long frame_nmb = 0;
+    const AnnotatorLib::Object* selected_obj;
     Ui::NewObjectDialog *ui;
     float x = 0;
     float y = 0;

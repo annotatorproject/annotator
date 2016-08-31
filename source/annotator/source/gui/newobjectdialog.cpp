@@ -11,7 +11,7 @@ NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session,
                                  unsigned long frame_nmb,
                                  AnnotatorLib::Object* selected_obj,
                                  QWidget *parent)
-    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj) {
+    : QDialog(parent), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj), ui(new Ui::NewObjectDialog) {
 
   ui->setupUi(this);
   if (selected_obj == nullptr || session->getFrame(frame_nmb)->getObject(selected_obj) != nullptr ) {
