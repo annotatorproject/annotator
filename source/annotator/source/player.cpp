@@ -314,7 +314,7 @@ void Player::setSliderValue(int newpos) {
 }
 
 void Player::jumpTo(long index) {
-  this->videoplayer->jumpTo(index);
+  this->videoplayer->jumpTo(index - 1); //why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }
