@@ -7,11 +7,14 @@
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
 
-NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, AnnotatorLib::Object* selected_obj , QWidget *parent)
-    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session), selected_obj(selected_obj) {
+NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session,
+                                 unsigned long frame_nmb,
+                                 AnnotatorLib::Object* selected_obj,
+                                 QWidget *parent)
+    : QDialog(parent), ui(new Ui::NewObjectDialog), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj) {
 
   ui->setupUi(this);
-  if (selected_obj == nullptr) {
+  if (selected_obj == nullptr || session->getFrame(frame_nmb)->getObject(selected_obj) != nullptr ) {
     ui->radioButtonSelObj->hide();
     ui->radioButtonSelObj->setChecked(false);
     ui->radioButtonNewObj->setChecked(true);
@@ -22,6 +25,7 @@ NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session, AnnotatorLib::O
   } else if (ui->radioButtonSelObj->isChecked()) {
       this->on_radioButtonSelObj_clicked();
   }
+  ui->frameSpinBox->setValue(frame_nmb);
   reloadClasses();
 }
 
@@ -38,15 +42,6 @@ void NewObjectDialog::setDimensions(float x, float y, float w, float h) {
                              QString::number(y));
 }
 
-void NewObjectDialog::setFrame(int frame) {
-  this->frame = frame;
-  ui->frameSpinBox->setValue(frame);
-}
-
-void NewObjectDialog::setSession(AnnotatorLib::Session *session) {
-  this->session = session;
-}
-
 void NewObjectDialog::createObject() {
 
   AnnotatorLib::Class * selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
@@ -56,13 +51,17 @@ void NewObjectDialog::createObject() {
       return;
   }
 
-  AnnotatorLib::Frame *frame = session->getFrame(this->frame);
+  AnnotatorLib::Frame *frame = session->getFrame(this->frame_nmb);
   unsigned long id = (unsigned long)ui->objectIdLineEdit->text().toULong();
 
-  AnnotatorLib::Commands::NewAnnotation *nA =
-      new AnnotatorLib::Commands::NewAnnotation(
-          id, selClass, frame, x, y, w, h, this->session, false);
-
+  AnnotatorLib::Commands::NewAnnotation *nA;
+  if (this->ui->radioButtonNewObj->isChecked()) {
+    nA = new AnnotatorLib::Commands::NewAnnotation(
+            id, selClass, frame, x, y, w, h, this->session, false);
+  } else {
+    nA = new AnnotatorLib::Commands::NewAnnotation(
+              session->getObject(id), frame, x, y, w, h, this->session, false);
+  }
   CommandController::instance()->execute(nA);
 
   Annotator::Plugin *plugin =

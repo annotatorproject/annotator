@@ -14,11 +14,9 @@ class NewObjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewObjectDialog(AnnotatorLib::Session * session, AnnotatorLib::Object* sel_obj = nullptr, QWidget *parent = 0);
+    explicit NewObjectDialog(AnnotatorLib::Session * session, unsigned long frame_nmb, AnnotatorLib::Object* sel_obj = nullptr, QWidget *parent = 0);
     ~NewObjectDialog();
     void setDimensions(float x, float y, float w, float h);
-    void setFrame(int frame);
-    void setSession(AnnotatorLib::Session *session);
     void createObject();
 
 protected:
@@ -26,13 +24,14 @@ protected:
     void reloadClasses();
 
     const AnnotatorLib::Object* selected_obj;
+    const unsigned long frame_nmb = 0;
+    AnnotatorLib::Session *session;
+
     Ui::NewObjectDialog *ui;
     float x = 0;
     float y = 0;
     float w = 0;
     float h = 0;
-    int frame = 0;
-    AnnotatorLib::Session *session;
 
 private slots:
     void on_radioButtonNewObj_clicked();
