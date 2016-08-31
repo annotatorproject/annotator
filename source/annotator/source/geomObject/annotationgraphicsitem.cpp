@@ -340,9 +340,6 @@ void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
 
   AnnotatorLib::Commands::Command *nA;
   if (annotation->isInterpolated()) {
-    annotation->setInterpolated(false);
-
-    //here is a bug somewhere (position is wrong)
     nA = new AnnotatorLib::Commands::NewAnnotation(
             annotation->getObject(), annotation->getFrame(), x, y, w, h,
             player->getSession(), true);
