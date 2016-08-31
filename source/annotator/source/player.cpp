@@ -294,16 +294,14 @@ void Player::updateHorizontalSlider() {
   ui->horizontalSlider->setValue((double)videoplayer->getCurFrameNr() *
                                  ui->horizontalSlider->maximum() /
                                  videoplayer->getTotalFrameNr() * 1.0);
-  // update the time label
   updateTimeLabel();
 }
 
 void Player::on_horizontalSlider_sliderMoved(int newpos)
 {
    long pos = newpos * videoplayer->getTotalFrameNr() / ui->horizontalSlider->maximum();
+   jumpTo(pos);
 
-   videoplayer->jumpTo(pos);
-   updateTimeLabel();
 }
 
 /**
@@ -315,7 +313,11 @@ void Player::setSliderValue(int newpos) {
     on_horizontalSlider_sliderMoved(newpos);
 }
 
-void Player::jumpTo(long index) { this->videoplayer->jumpTo(index); }
+void Player::jumpTo(long index) {
+  this->videoplayer->jumpTo(index);
+  updateTimeLabel();
+  updateHorizontalSlider();
+}
 
 /**
  * updateTimeLabel	-	update Time Label
@@ -377,7 +379,9 @@ void Player::on_btnPrev_clicked() {
   videoplayer->prevFrame();
 }
 
-void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
+void Player::on_btnNext_clicked() {
+  videoplayer->nextFrame();
+}
 
 ///#################################################################################################///
 

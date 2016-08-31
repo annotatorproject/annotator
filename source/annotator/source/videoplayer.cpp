@@ -242,7 +242,7 @@ bool Videoplayer::jumpTo(long index) {
   return re;
 }
 
-void Videoplayer::reload() { jumpTo(this->curPos-1); }
+void Videoplayer::reload() { jumpTo(this->curPos-1); }  //TODO: why -1?
 
 /**
  * pauseIt	-	pause playing
