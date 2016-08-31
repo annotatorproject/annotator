@@ -34,7 +34,7 @@ void EllipseAnnotation::init() {
  * define item as bounding rectangle
 */
 QRectF EllipseAnnotation::boundingRect() const {
-  return QRectF(rectX, rectY, cornerWidth, cornerHeight);
+  return QRectF(rectX, rectY, width, height);
 }
 
 /**

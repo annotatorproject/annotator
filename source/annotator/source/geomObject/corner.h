@@ -44,13 +44,6 @@ protected:
     virtual void paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual void hoverEnterEvent ( QGraphicsSceneHoverEvent * event );
     virtual void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event );
-
-
-    virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
-    virtual void mouseMoveEvent(QGraphicsSceneDragDropEvent *event);
-    virtual void mousePressEvent (QGraphicsSceneMouseEvent * event );
-    virtual void mousePressEvent(QGraphicsSceneDragDropEvent *event);
-    virtual void mouseReleaseEvent (QGraphicsSceneMouseEvent * event );
 };
 
 #endif // CORNER_H

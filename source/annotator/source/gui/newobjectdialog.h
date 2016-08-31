@@ -19,6 +19,9 @@ public:
     void setDimensions(float x, float y, float w, float h);
     void createObject();
 
+public slots:
+    void on_radioButtonSelObj_clicked();
+    void on_radioButtonNewObj_clicked();
 protected:
     bool checkValues();
     void reloadClasses();
