@@ -20,7 +20,7 @@ ObjectItem::~ObjectItem()
 void ObjectItem::reload()
 {
     this->ui->idLabel->setText(QString::number(this->object->getId()));
-    this->ui->nameLineEdit->setText(QString::fromStdString(this->object->getClass()->getName()));
+    this->ui->nameLineEdit->setText(QString::fromStdString(this->object->getName()));
 }
 
 AnnotatorLib::Object *ObjectItem::getObject()
