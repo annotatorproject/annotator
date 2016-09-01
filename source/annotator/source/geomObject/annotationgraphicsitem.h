@@ -14,6 +14,9 @@
 #include "player.h"
 #include "corner.h"
 
+
+class QAction;
+
 class AnnotationGraphicsItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -63,6 +66,9 @@ private:
     static AnnotatorLib::Annotation* sel_annotation;
     AnnotatorLib::Annotation *annotation;
 
+    QAction* action_del;
+    QAction* action_edit;
+
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
     void changeAnnotationPosition(int x, int y);
@@ -81,8 +87,6 @@ private:
      * hide id and corners (if highlighted)
      */
     void hide();
-
-    void showContextMenu(const QPoint &pos);
 
 private slots:
     void removeAnnotation();        //slot

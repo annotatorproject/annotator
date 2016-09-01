@@ -1,12 +1,11 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
-#include <QMenu>
 #include <QObject>
-
+#include <QMenu>
 #include "annotationgraphicsitem.h"
 #include "controller/commandcontroller.h"
-#include "gui/newannotationdialog.h"
+#include "gui/editobjectdialog.h"
 #include "plugins/pluginloader.h"
 
 
@@ -37,6 +36,13 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   width = annotation->getWidth();
   height = annotation->getHeight();
   originColor = borderColor;
+
+  action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
+  action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
+  QObject::connect(action_del, SIGNAL(triggered()), this,
+                   SLOT(removeAnnotation()));
+  QObject::connect(action_edit, SIGNAL(triggered()), this,
+                   SLOT(editAnnotation()));
 }
 
 AnnotationGraphicsItem::~AnnotationGraphicsItem() {
@@ -45,6 +51,8 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   }
   if (annotation->isInterpolated())
     delete annotation;
+  delete action_del;
+  delete action_edit;
 }
 
 QColor AnnotationGraphicsItem::idToColor(long id) {
@@ -123,26 +131,19 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
 */
 void AnnotationGraphicsItem::contextMenuEvent(
     QGraphicsSceneContextMenuEvent *event) {
-  // this->player->pause();
-  showContextMenu(event->screenPos());
-}
 
-void AnnotationGraphicsItem::showContextMenu(const QPoint &pos) {
+  // this->player->pause();
+
+  //init context menu
   QMenu contextMenu("Context menu");
 
-  QAction action_del(QString("Remove"), (QObject *)this->parentObject());
-  QAction action_edit(QString("Edit"), (QObject *)this->parentObject());
-
-  QObject::connect(&action_del, SIGNAL(triggered()), this,
-                   SLOT(removeAnnotation()));
-  QObject::connect(&action_edit, SIGNAL(triggered()), this,
-                   SLOT(editAnnotation()));
-
   if (!this->annotation->isInterpolated()) {
-      contextMenu.addAction(&action_del);  //you cannot delete a temporary annotation
+      contextMenu.addAction(action_del);  //you cannot delete a temporary annotation
   }
-  contextMenu.addAction(&action_edit);
-  contextMenu.exec(pos);
+  contextMenu.addAction(action_edit);
+
+  action_edit->setData(event->screenPos());
+  contextMenu.exec(event->screenPos());
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {
@@ -155,10 +156,11 @@ void AnnotationGraphicsItem::removeAnnotation() {
 
 void AnnotationGraphicsItem::editAnnotation() {
 
-  if (this->annotation->isInterpolated()) {
-      //TODO: create a new annotation
-  }
-  // TODO: show dialog
+    QPoint posFromAction = action_edit->data().toPoint();
+
+    EditObjectDialog editObjectDialog(player->getSession(), annotation->getObject());
+    editObjectDialog.move(posFromAction.x(), posFromAction.y());
+    editObjectDialog.exec();
 }
 
 /////////////////////////////////////////////////////////////

@@ -24,8 +24,8 @@ void ClassesDialog::on_addNewButton_clicked()
 {
     if(!ui->newLineEdit->text().isEmpty()){
         session->addClass(new AnnotatorLib::Class(ui->newLineEdit->text().toStdString()));
+        reloadClasses();
     }
-    reloadClasses();
 }
 
 void ClassesDialog::reloadClasses()
