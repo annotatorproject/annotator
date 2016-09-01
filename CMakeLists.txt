@@ -89,6 +89,7 @@ include(cmake/CompileOptions.cmake)
 include(cmake/3rdParty.cmake)
 
 include(cmake/Clang-Format.cmake)
+include(cmake/Clang-Tidy.cmake)
 # 
 # Deployment/installation setup
 # 

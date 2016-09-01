@@ -7,12 +7,15 @@ foreach (SOURCE_FILE ${ALL_SOURCE_FILES})
 endforeach ()
 
 # Adding clang-tidy target if executable is found
-find_program(CLANG_FORMAT "clang-format")
-if(CLANG_FORMAT)
- add_custom_target(
-  clang-format
-  COMMAND clang-format
-  -style=file -i
-  ${ALL_SOURCE_FILES}
- )
-endif()
+find_program(CLANG_TIDY "clang-tidy")
+if(CLANG_TIDY)
+  add_custom_target(
+    clang-tidy
+    COMMAND clang-tidy
+    ${ALL_SOURCE_FILES}
+    -config=''
+    --
+    -std=c++11
+    ${INCLUDE_DIRECTORIES}
+    )
+endif() 
