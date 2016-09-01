@@ -15,7 +15,7 @@ NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session,
 
   ui->setupUi(this);
   if (selected_obj == nullptr || session->getFrame(frame_nmb)->getObject(selected_obj) != nullptr ) {
-    ui->radioButtonSelObj->hide();
+    ui->radioButtonSelObj->setEnabled(false);
     ui->radioButtonSelObj->setChecked(false);
     ui->radioButtonNewObj->setChecked(true);
     ui->radioButtonNewObj->setEnabled(false);
@@ -115,10 +115,14 @@ void NewObjectDialog::on_editClassesButton_clicked()
 void NewObjectDialog::on_radioButtonSelObj_clicked()
 {
     ui->objectIdLineEdit->setText(QString::number(this->selected_obj->getId()));
+    ui->editClassesButton->hide();
+    ui->objectClassComboBox->setEnabled(false);
 }
 
 
 void NewObjectDialog::on_radioButtonNewObj_clicked()
 {
     ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
+    ui->editClassesButton->show();
+    ui->objectClassComboBox->setEnabled(true);
 }
