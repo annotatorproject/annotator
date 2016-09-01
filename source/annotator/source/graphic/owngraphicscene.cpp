@@ -1,12 +1,11 @@
 #include "owngraphicscene.h"
 #include "graphic/owngraphicscene.h"
-#include "gui/newobjectdialog.h"
+#include "gui/newannotationdialog.h"
 
 #include <algorithm>
 
 #include <QDebug>
 #include <QSettings>
-
 
 OwnGraphicScene::OwnGraphicScene()
     : isDrawn(false), isLeftPressed(false), isItemMove(false) {
@@ -128,7 +127,7 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     if (drawMode == DrawON) {
 
       if (isDrawn) {
-        NewObjectDialog newObjectDialog(session, this->currentFrame, this->selected_obj);
+        NewAnnotationDialog newAnnotationDialog(session, this->currentFrame, this->selected_obj);
         QPointF upperLeft = adjustCoordinate(point1);
         QPointF lowerRight = adjustCoordinate(point2);
         float x = std::min(upperLeft.x(), lowerRight.x());
@@ -138,9 +137,9 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         if(w <= 0 || h <= 0)
             return;
 
-        newObjectDialog.setDimensions(x, y, w, h);
-        newObjectDialog.move(event->scenePos().x(), event->scenePos().y());
-        newObjectDialog.exec();
+        newAnnotationDialog.setDimensions(x, y, w, h);
+        newAnnotationDialog.move(event->scenePos().x(), event->scenePos().y());
+        newAnnotationDialog.exec();
 
         isDrawn = false;
       }

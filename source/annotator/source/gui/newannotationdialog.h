@@ -1,23 +1,22 @@
-#ifndef NEWOBJECTDIALOG_H
-#define NEWOBJECTDIALOG_H
+#ifndef NEWANNOTATIONDIALOG_H
+#define NEWANNOTATIONDIALOG_H
 
 #include <QDialog>
 #include <AnnotatorLib/Session.h>
 
-
 namespace Ui {
-class NewObjectDialog;
+  class NewAnnotationDialog;
 }
 
-class NewObjectDialog : public QDialog
+class NewAnnotationDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit NewObjectDialog(AnnotatorLib::Session * session, unsigned long frame_nmb, AnnotatorLib::Object* sel_obj = nullptr, QWidget *parent = 0);
-    ~NewObjectDialog();
+    explicit NewAnnotationDialog(AnnotatorLib::Session * session, unsigned long frame_nmb, AnnotatorLib::Object* sel_obj = nullptr, QWidget *parent = 0);
+    ~NewAnnotationDialog();
     void setDimensions(float x, float y, float w, float h);
-    void createObject();
+    void createAnnotation();
 
 protected:
     bool checkValues();
@@ -26,7 +25,7 @@ protected:
     AnnotatorLib::Session *session;
     const unsigned long frame_nmb = 0;
     const AnnotatorLib::Object* selected_obj;
-    Ui::NewObjectDialog *ui;
+    Ui::NewAnnotationDialog *ui;
     float x = 0;
     float y = 0;
     float w = 0;
@@ -40,4 +39,5 @@ private slots:
 
 };
 
-#endif // NEWOBJECTDIALOG_H
+
+#endif // NEWANNOTATIONDIALOG_H

@@ -6,7 +6,7 @@
 
 #include "annotationgraphicsitem.h"
 #include "controller/commandcontroller.h"
-#include "gui/newobjectdialog.h"
+#include "gui/newannotationdialog.h"
 #include "plugins/pluginloader.h"
 
 

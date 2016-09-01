@@ -1,17 +1,18 @@
 #include <QMessageBox>
-#include "newobjectdialog.h"
-#include "ui_newobjectdialog.h"
+#include "newannotationdialog.h"
+#include "ui_newannotationdialog.h"
 #include "classesdialog.h"
 
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
 
-NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session,
+
+NewAnnotationDialog::NewAnnotationDialog(AnnotatorLib::Session *session,
                                  unsigned long frame_nmb,
                                  AnnotatorLib::Object* selected_obj,
                                  QWidget *parent)
-    : QDialog(parent), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj), ui(new Ui::NewObjectDialog) {
+    : QDialog(parent), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj), ui(new Ui::NewAnnotationDialog) {
 
   ui->setupUi(this);
   if (selected_obj == nullptr || session->getFrame(frame_nmb)->getObject(selected_obj) != nullptr ) {
@@ -29,9 +30,9 @@ NewObjectDialog::NewObjectDialog(AnnotatorLib::Session *session,
   reloadClasses();
 }
 
-NewObjectDialog::~NewObjectDialog() { delete ui; }
+NewAnnotationDialog::~NewAnnotationDialog() { delete ui; }
 
-void NewObjectDialog::setDimensions(float x, float y, float w, float h) {
+void NewAnnotationDialog::setDimensions(float x, float y, float w, float h) {
   this->x = x;
   this->y = y;
   this->w = w;
@@ -42,7 +43,7 @@ void NewObjectDialog::setDimensions(float x, float y, float w, float h) {
                              QString::number(y));
 }
 
-void NewObjectDialog::createObject() {
+void NewAnnotationDialog::createObject() {
 
   AnnotatorLib::Class * selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
   if(selClass == nullptr){
@@ -70,7 +71,7 @@ void NewObjectDialog::createObject() {
   plugin->setLastAnnotation(nA->getAnnotation());
 }
 
-void NewObjectDialog::reloadClasses()
+void NewAnnotationDialog::reloadClasses()
 {
     ui->objectClassComboBox->clear();
     for(AnnotatorLib::Class * c: session->getClasses()){
@@ -78,7 +79,7 @@ void NewObjectDialog::reloadClasses()
     }
 }
 
-void NewObjectDialog::done(int r) {
+void NewAnnotationDialog::done(int r) {
 
   if(QDialog::Accepted == r) {
     if(!checkValues()) {
@@ -89,7 +90,7 @@ void NewObjectDialog::done(int r) {
   QDialog::done(r);
 }
 
-bool NewObjectDialog::checkValues() {
+bool NewAnnotationDialog::checkValues() {
 
   if (ui->objectIdLineEdit->text().isEmpty()) {
     (void) QMessageBox::information(this, tr("No ID"),
@@ -104,7 +105,7 @@ bool NewObjectDialog::checkValues() {
   return true;
 }
 
-void NewObjectDialog::on_editClassesButton_clicked()
+void NewAnnotationDialog::on_editClassesButton_clicked()
 {
     ClassesDialog dialog(session, this);
     dialog.exec();
@@ -112,7 +113,7 @@ void NewObjectDialog::on_editClassesButton_clicked()
 }
 
 
-void NewObjectDialog::on_radioButtonSelObj_clicked()
+void NewAnnotationDialog::on_radioButtonSelObj_clicked()
 {
     ui->objectIdLineEdit->setText(QString::number(this->selected_obj->getId()));
     ui->editClassesButton->hide();
@@ -120,9 +121,10 @@ void NewObjectDialog::on_radioButtonSelObj_clicked()
 }
 
 
-void NewObjectDialog::on_radioButtonNewObj_clicked()
+void NewAnnotationDialog::on_radioButtonNewObj_clicked()
 {
     ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
     ui->editClassesButton->show();
     ui->objectClassComboBox->setEnabled(true);
 }
+
