@@ -245,8 +245,7 @@ void Player::updateFrame(long frame_nmb) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
     if (plugin) {
-      if (plugin->setFrame(f, currentFrame))
-        algoExecuteCommands();
+        //plugin->calculate(AnnotationGraphicsItem::getSelectedAnnotation()->getObject(), f, currentFrame);
     }
   }
 
@@ -268,19 +267,6 @@ void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
       graphicsItem->setPlayer(this);
       scene->addItem(graphicsItem);      
       annotationGraphics.push_back(graphicsItem);
-    }
-  }
-}
-
-void Player::algoExecuteCommands() {
-  Annotator::Plugin *plugin =
-      Annotator::PluginLoader::getInstance().getCurrent();
-
-  if (plugin) {
-    std::vector<AnnotatorLib::Commands::Command *> commands =
-        plugin->getCommands();
-    for (AnnotatorLib::Commands::Command *command : commands) {
-      CommandController::instance()->execute(command);
     }
   }
 }

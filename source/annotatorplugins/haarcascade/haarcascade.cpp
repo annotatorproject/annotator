@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Session.h>
 
 #include "haarcascade.h"
 #include "widget.h"
@@ -41,7 +42,8 @@ void Haarcascade::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
 
 std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
   std::vector<AnnotatorLib::Commands::Command *> commands;
-  if (!this->newObjects) return commands;
+  if (!this->newObjects)
+    return commands;
   try {
     std::vector<cv::Rect> objects;
     cv::Mat frame_gray;
@@ -51,7 +53,8 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
                              0 | CV_HAAR_SCALE_IMAGE, cv::Size(30, 30));
 
     for (size_t i = 0; i < objects.size(); i++) {
-      //std::string name = this->objectNames + std::to_string(this->objectNr++);
+      // std::string name = this->objectNames +
+      // std::to_string(this->objectNr++);
       float x = objects[i].x;
       float y = objects[i].y;
       float w = objects[i].width;
@@ -59,8 +62,8 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
 
       // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
       AnnotatorLib::Commands::NewAnnotation *nA =
-          new AnnotatorLib::Commands::NewAnnotation(this->object, frame, x, y, w, h,
-                                                    this->session, true);
+          new AnnotatorLib::Commands::NewAnnotation(this->object, frame, x, y,
+                                                    w, h, this->session, true);
       commands.push_back(nA);
     }
 
@@ -73,6 +76,15 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
 
 void Haarcascade::setSession(AnnotatorLib::Session *session) {
   this->session = session;
+}
+
+void Haarcascade::calculate(AnnotatorLib::Object *object,
+                            AnnotatorLib::Frame *frame, cv::Mat image) {
+  setObject(object);
+  setFrame(frame, image);
+  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+    session->execute(command);
+  }
 }
 
 void Haarcascade::loadCascade(std::string cascadeFile) {

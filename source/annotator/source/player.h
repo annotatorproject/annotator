@@ -52,7 +52,6 @@ class Player : public QWidget {
   void showFrame(cv::Mat frame);
   void updateFrame(long frame);
   void showAnnotationsOfFrame(AnnotatorLib::Frame *frame);
-  void algoExecuteCommands();
   //void showTrackedAnnotations(AnnotatorLib::Frame *frame);
   void setSliderValue(int newpos);
 

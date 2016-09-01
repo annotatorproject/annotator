@@ -36,6 +36,7 @@ public:
     void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
     std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
     void setSession(AnnotatorLib::Session * session) override;
+    void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame, cv::Mat image);
 
     AnnotatorLib::Annotation *lastAnnotation = nullptr;
     AnnotatorLib::Object *object = nullptr;

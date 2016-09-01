@@ -4,15 +4,14 @@
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Frame.h>
+#include <AnnotatorLib/Session.h>
 #include <QDebug>
 #include <QtGui/QPainter>
-#include <opencv2/video/tracking.hpp>
 
-// temp include ADIL
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/video/tracking.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/video/tracking.hpp>
 
 #include <ctype.h>
 #include <iostream>
@@ -47,7 +46,8 @@ AnnotatorLib::Object *CamShift::getObject() { return object; }
 
 // second call
 void CamShift::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
-  if (annotation == nullptr || annotation->getObject() != object) return;
+  if (annotation == nullptr || annotation->getObject() != object)
+    return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
     return;
@@ -75,9 +75,9 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
     int y = found_rect.y;
 
     AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(
-            lastAnnotation->getObject(), frame, x, y, w, h,
-            this->session, false);
+        new AnnotatorLib::Commands::NewAnnotation(lastAnnotation->getObject(),
+                                                  frame, x, y, w, h,
+                                                  this->session, false);
     commands.push_back(nA);
 
   } catch (std::exception &e) {
@@ -89,6 +89,15 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
 
 void CamShift::setSession(AnnotatorLib::Session *session) {
   this->session = session;
+}
+
+void CamShift::calculate(AnnotatorLib::Object *object,
+                         AnnotatorLib::Frame *frame, cv::Mat image) {
+  setObject(object);
+  setFrame(frame, image);
+  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+    session->execute(command);
+  }
 }
 
 cv::Rect CamShift::findObject() {

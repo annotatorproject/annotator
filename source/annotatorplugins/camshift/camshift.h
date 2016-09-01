@@ -36,6 +36,9 @@ public:
     std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
     void setSession(AnnotatorLib::Session * session) override;
 
+    void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame, cv::Mat image);
+
+protected:
     cv::Mat frameImg;
     AnnotatorLib::Annotation *lastAnnotation = nullptr;
     AnnotatorLib::Object *object = nullptr;
@@ -45,7 +48,6 @@ public:
     cv::Rect trackWindow, selection;
     cv::Mat hsv, hist, hue, mask, backproj;
 
-protected:
     cv::Rect findObject();
 
     Widget widget;
