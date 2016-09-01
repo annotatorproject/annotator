@@ -43,7 +43,7 @@ void NewAnnotationDialog::setDimensions(float x, float y, float w, float h) {
                              QString::number(y));
 }
 
-void NewAnnotationDialog::createObject() {
+void NewAnnotationDialog::createAnnotation() {
 
   AnnotatorLib::Class * selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
   if(selClass == nullptr){
@@ -85,7 +85,7 @@ void NewAnnotationDialog::done(int r) {
     if(!checkValues()) {
       return;
     }
-    createObject();
+    createAnnotation();
   }
   QDialog::done(r);
 }
