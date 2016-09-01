@@ -5,8 +5,8 @@
 
 ObjectItem::ObjectItem(AnnotatorLib::Object *object, QWidget *parent) :
     QWidget(parent),
-    object(object),
-    ui(new Ui::ObjectItem)
+    ui(new Ui::ObjectItem),
+    object(object)
 {
     ui->setupUi(this);
     reload();

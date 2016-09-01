@@ -29,7 +29,7 @@ protected:
      * @brief reloadClasses Clears classes list and recreates its content.
      */
     void reloadClasses();
-    AnnotatorLib::Session * session;
+    AnnotatorLib::Session * session = nullptr;
 
 private:
     Ui::ClassesDialog *ui;

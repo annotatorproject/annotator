@@ -37,6 +37,8 @@ class Haarcascade : public Plugin {
   void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
   std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
   void setSession(AnnotatorLib::Session *session) override;
+  void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame,
+                 cv::Mat image);
 
   void loadCascade(std::string cascadeFile);
   void setNewObjects(bool newObjects);

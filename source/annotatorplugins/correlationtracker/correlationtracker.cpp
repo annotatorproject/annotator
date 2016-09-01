@@ -1,17 +1,18 @@
 #include "correlationtracker.h"
 
-#include <ctype.h>
-#include <iostream>
-#include <dlib/opencv.h>
 #include <QDebug>
 #include <QtGui/QPainter>
+#include <ctype.h>
+#include <dlib/opencv.h>
+#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/video/tracking.hpp>
 
+#include "widget.h"
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Frame.h>
-#include "widget.h"
+#include <AnnotatorLib/Session.h>
 
 using namespace Annotator::Plugins;
 
@@ -44,18 +45,18 @@ AnnotatorLib::Object *CorrelationTracker::getObject() { return object; }
 // second call
 void CorrelationTracker::setLastAnnotation(
     AnnotatorLib::Annotation *annotation) {
-  if (annotation == nullptr || annotation->getObject() != object) return;
+  if (annotation == nullptr || annotation->getObject() != object)
+    return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
     return;
 
   this->lastAnnotation = annotation;
-  selection = cv::Rect(lastAnnotation->getX(),
-                       lastAnnotation->getY(),
-                       lastAnnotation->getWidth(),
-                       lastAnnotation->getHeight());
+  selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
+                       lastAnnotation->getWidth(), lastAnnotation->getHeight());
 
-  if (this->frameImg.empty()) return;
+  if (this->frameImg.empty())
+    return;
   dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
   tracker.start_track(cvimg, dlib::rectangle(selection.x, selection.y,
                                              selection.x + selection.width,
@@ -83,9 +84,9 @@ CorrelationTracker::getCommands() {
     int y = found_rect.y;
 
     AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(
-            lastAnnotation->getObject(), this->frame, x, y, w, h,
-            this->session, false);
+        new AnnotatorLib::Commands::NewAnnotation(lastAnnotation->getObject(),
+                                                  this->frame, x, y, w, h,
+                                                  this->session, false);
     commands.push_back(nA);
 
   } catch (std::exception &e) {
@@ -97,6 +98,15 @@ CorrelationTracker::getCommands() {
 
 void CorrelationTracker::setSession(AnnotatorLib::Session *session) {
   this->session = session;
+}
+
+void CorrelationTracker::calculate(AnnotatorLib::Object *object,
+                                   AnnotatorLib::Frame *frame, cv::Mat image) {
+  setObject(object);
+  setFrame(frame, image);
+  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+    session->execute(command);
+  }
 }
 
 cv::Rect CorrelationTracker::findObject() {

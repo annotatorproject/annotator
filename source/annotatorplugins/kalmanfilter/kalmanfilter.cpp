@@ -3,6 +3,8 @@
 
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Frame.h>
+#include <AnnotatorLib/Session.h>
+
 #include <QtGui/QPainter>
 #include <QDebug>
 #include <opencv2/video/tracking.hpp>
@@ -74,4 +76,13 @@ std::vector<AnnotatorLib::Commands::Command *> KalmanFilter::getCommands()
 void KalmanFilter::setSession(AnnotatorLib::Session *session)
 {
     this->session = session;
+}
+
+void KalmanFilter::calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame, cv::Mat image)
+{
+    setObject(object);
+    setFrame(frame, image);
+    for (AnnotatorLib::Commands::Command *command : getCommands()) {
+      session->execute(command);
+    }
 }

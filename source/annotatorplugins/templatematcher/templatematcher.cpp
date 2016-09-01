@@ -136,3 +136,8 @@ void TemplateMatcher::setSession(AnnotatorLib::Session *session)
 {
     this->session = session;
 }
+
+void Annotator::Plugins::TemplateMatcher::calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame, cv::Mat image)
+{
+
+}

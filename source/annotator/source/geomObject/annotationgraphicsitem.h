@@ -26,6 +26,8 @@ public:
     AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
     virtual ~AnnotationGraphicsItem();
     AnnotatorLib::Annotation *getAnnotation();
+    static AnnotatorLib::Annotation *getSelectedAnnotation();
+    static void setSelectedAnnotation(AnnotatorLib::Annotation *annotation);
 
 
     QColor idToColor(long id);
@@ -62,8 +64,6 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
-
-    static AnnotatorLib::Annotation* sel_annotation;
     AnnotatorLib::Annotation *annotation;
 
     QAction* action_del;
