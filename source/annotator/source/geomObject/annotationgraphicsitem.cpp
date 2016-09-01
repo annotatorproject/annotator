@@ -43,6 +43,8 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   for (int i = 0; i < 4; ++i) {
     delete corners[i];
   }
+  if (annotation->isInterpolated())
+    delete annotation;
 }
 
 QColor AnnotationGraphicsItem::idToColor(long id) {

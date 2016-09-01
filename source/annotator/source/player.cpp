@@ -139,7 +139,7 @@ void Player::loadVideo(QString fileName) {
 
 void Player::clearAnnotationsGraphics() {
   while(!annotationGraphics.empty()) {
-    delete annotationGraphics.front();
+    delete annotationGraphics.front();  //delete graphic and annotation if interpolated
     annotationGraphics.pop_front();
   }
   scene->update();
