@@ -1,5 +1,6 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
+#include <AnnotatorLib/Commands/RemoveObject.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <QObject>
 #include <QMenu>
@@ -38,9 +39,13 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   originColor = borderColor;
 
   action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
+  action_del_obj = new QAction(QString("Remove Object"), (QObject *)this->parentObject());
   action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
+
   QObject::connect(action_del, SIGNAL(triggered()), this,
                    SLOT(removeAnnotation()));
+  QObject::connect(action_del_obj, SIGNAL(triggered()), this,
+                   SLOT(removeObject()));
   QObject::connect(action_edit, SIGNAL(triggered()), this,
                    SLOT(editAnnotation()));
 }
@@ -53,6 +58,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
     delete annotation;
   delete action_del;
   delete action_edit;
+  delete action_del_obj;
 }
 
 QColor AnnotationGraphicsItem::idToColor(long id) {
@@ -141,9 +147,18 @@ void AnnotationGraphicsItem::contextMenuEvent(
       contextMenu.addAction(action_del);  //you cannot delete a temporary annotation
   }
   contextMenu.addAction(action_edit);
+  contextMenu.addAction(action_del_obj);
 
   action_edit->setData(event->screenPos());
   contextMenu.exec(event->screenPos());
+}
+
+void AnnotationGraphicsItem::removeObject() {
+
+  AnnotatorLib::Commands::RemoveObject *cmd =
+      new AnnotatorLib::Commands::RemoveObject(player->getSession(),
+                                                   annotation->getObject());
+  CommandController::instance()->execute(cmd);
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {

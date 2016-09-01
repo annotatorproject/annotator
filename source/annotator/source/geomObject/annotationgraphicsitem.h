@@ -68,6 +68,7 @@ private:
 
     QAction* action_del;
     QAction* action_edit;
+    QAction* action_del_obj;
 
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
@@ -89,8 +90,9 @@ private:
     void hide();
 
 private slots:
-    void removeAnnotation();        //slot
-    void editAnnotation();          //slot
+    void removeAnnotation();
+    void removeObject();
+    void editAnnotation();
 
 };
 
