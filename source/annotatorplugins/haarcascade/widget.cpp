@@ -9,6 +9,7 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    ui->nameLineEdit->setEnabled(false);
 }
 
 Widget::~Widget()
@@ -33,11 +34,11 @@ void Widget::on_pushButton_clicked()
 
 void Widget::on_objectNameLineEdit_editingFinished()
 {
-    haarcascade->setObjectName(ui->objectNameLineEdit->text().toStdString());
+    haarcascade->setObjectName(ui->nameLineEdit->text().toStdString());
 }
 
 void Widget::on_newObjectsCheckBox_toggled(bool checked)
 {
     haarcascade->setNewObjects(checked);
-    ui->objectNameLineEdit->setEnabled(checked);
+    ui->nameLineEdit->setEnabled(checked);
 }
