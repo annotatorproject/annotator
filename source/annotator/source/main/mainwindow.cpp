@@ -1,16 +1,16 @@
 #include "mainwindow.h"
-#include "aboutdialog.h"
-#include "newprojectdialog.h"
-#include "plugins/pluginloader.h"
-#include "ui_mainwindow.h"
-#include "gui/classesdialog.h"
-#include "controller/commandcontroller.h"
 #include <AnnotatorLib/Annotation.h>
 #include <QApplication>
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include "aboutdialog.h"
+#include "controller/commandcontroller.h"
+#include "gui/classesdialog.h"
+#include "newprojectdialog.h"
+#include "plugins/pluginloader.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
   // ui->attributesLayout->addWidget(&attributesWidget); // TODO
   ui->pluginsLayout->addWidget(&pluginsWidget);
 
-  rateLabel = new QLabel;    // Frame rate
-  rateLabel->setText("fps"); // Add to Status bar
+  rateLabel = new QLabel;     // Frame rate
+  rateLabel->setText("fps");  // Add to Status bar
 
   // make some initialization
   ui->statusBar->addPermanentWidget(rateLabel);
@@ -84,16 +84,18 @@ void MainWindow::loadRecentProjects() {
   QSettings settings(QApplication::organizationName(),
                      QApplication::applicationName());
   foreach (QVariant v, settings.value("RecentProjects").toList()) {
-      QFileInfo fileInfo(v.toString());
+    QFileInfo fileInfo(v.toString());
 
     QAction *recentProjectAction =
         new QAction(fileInfo.baseName(), ui->menuRecentProjects);
     recentProjectAction->setToolTip(v.toString());
     // load project when action is triggered
-    connect(recentProjectAction, &QAction::triggered, this, [recentProjectAction, this]() {
-        QString recentProject = recentProjectAction->toolTip();
-        this->openProject(AnnotatorLib::Project::load(recentProject.toStdString()));
-    });
+    connect(recentProjectAction, &QAction::triggered, this,
+            [recentProjectAction, this]() {
+              QString recentProject = recentProjectAction->toolTip();
+              this->openProject(
+                  AnnotatorLib::Project::load(recentProject.toStdString()));
+            });
     ui->menuRecentProjects->addAction(recentProjectAction);
   }
 }
@@ -129,8 +131,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   if (resBtn == QMessageBox::Cancel) {
     event->ignore();
   } else {
-    if (resBtn == QMessageBox::Yes)
-      project->saveSession();
+    if (resBtn == QMessageBox::Yes) project->saveSession();
     event->accept();
   }
 }
@@ -162,8 +163,7 @@ void MainWindow::on_actionClose_Project_triggered() {
       QMessageBox::Yes);
   if (resBtn == QMessageBox::Cancel) {
   } else {
-    if (resBtn == QMessageBox::Yes)
-      project->saveSession();
+    if (resBtn == QMessageBox::Yes) project->saveSession();
     if (this->project != nullptr) {
       delete this->project;
     }
@@ -216,10 +216,9 @@ void MainWindow::on_actionAbout_triggered() {
   aboutDialog.exec();
 }
 
-void MainWindow::on_actionClasses_triggered()
-{
-    if(session != nullptr){
-        ClassesDialog dialog(session, this);
-        dialog.exec();
-    }
+void MainWindow::on_actionClasses_triggered() {
+  if (session != nullptr) {
+    ClassesDialog dialog(session, this);
+    dialog.exec();
+  }
 }

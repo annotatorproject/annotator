@@ -7,16 +7,15 @@ namespace Ui {
 class ObjectConfig;
 }
 
-class ObjectConfig : public QDialog
-{
-    Q_OBJECT
+class ObjectConfig : public QDialog {
+  Q_OBJECT
 
-public:
-    explicit ObjectConfig(QWidget *parent = 0);
-    ~ObjectConfig();
+ public:
+  explicit ObjectConfig(QWidget *parent = 0);
+  ~ObjectConfig();
 
-private:
-    Ui::ObjectConfig *ui;
+ private:
+  Ui::ObjectConfig *ui;
 };
 
-#endif // OBJECTCONFIG_H
+#endif  // OBJECTCONFIG_H

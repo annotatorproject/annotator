@@ -88,6 +88,7 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 include(cmake/CompileOptions.cmake)
 include(cmake/3rdParty.cmake)
 
+include(cmake/Clang-Format.cmake)
 # 
 # Deployment/installation setup
 # 

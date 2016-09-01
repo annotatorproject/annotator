@@ -3,40 +3,37 @@
 
 #include "owngraphicscene.h"
 
-#include <QGraphicsView>
+#include <QDebug>
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPointF>
 #include <QRectF>
-#include <QDebug>
 
-
-#define onDRAW   0
-#define offDRAW  1
+#define onDRAW 0
+#define offDRAW 1
 
 class OwnGraphicScene;
 
-class OwnGraphicView : public QGraphicsView
-{
-    Q_OBJECT
-public:
-    OwnGraphicView(QGraphicsScene *scene, QWidget *parent = 0);
+class OwnGraphicView : public QGraphicsView {
+  Q_OBJECT
+ public:
+  OwnGraphicView(QGraphicsScene *scene, QWidget *parent = 0);
 
-    void setBackground(QImage background);
-    void updateSceneSize(int width, int height);
+  void setBackground(QImage background);
+  void updateSceneSize(int width, int height);
 
-    OwnGraphicScene* ownScene;
+  OwnGraphicScene *ownScene;
 
-public slots:
+ public slots:
 
-protected:
-    void resizeEvent(QResizeEvent *event);
-private:
-    int drawMode;
-    QPainter* painter;
-    QPointF point1;
-    QPointF point2;
+ protected:
+  void resizeEvent(QResizeEvent *event);
 
-
+ private:
+  int drawMode;
+  QPainter *painter;
+  QPointF point1;
+  QPointF point2;
 };
-#endif // OWNGRAPHICVIEW_H
+#endif  // OWNGRAPHICVIEW_H

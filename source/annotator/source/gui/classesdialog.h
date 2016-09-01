@@ -4,35 +4,33 @@
 #include <AnnotatorLib/Session.h>
 #include <QDialog>
 
-
 namespace Ui {
 class ClassesDialog;
 }
 
-class ClassesDialog : public QDialog
-{
-    Q_OBJECT
+class ClassesDialog : public QDialog {
+  Q_OBJECT
 
-public:
-    explicit ClassesDialog(AnnotatorLib::Session *session, QWidget *parent = 0);
-    ~ClassesDialog();
+ public:
+  explicit ClassesDialog(AnnotatorLib::Session *session, QWidget *parent = 0);
+  ~ClassesDialog();
 
-private slots:
-    void on_closeButton_clicked();
+ private slots:
+  void on_closeButton_clicked();
 
-    void on_addNewButton_clicked();
+  void on_addNewButton_clicked();
 
-    void on_newLineEdit_returnPressed();
+  void on_newLineEdit_returnPressed();
 
-protected:
-    /**
-     * @brief reloadClasses Clears classes list and recreates its content.
-     */
-    void reloadClasses();
-    AnnotatorLib::Session * session = nullptr;
+ protected:
+  /**
+   * @brief reloadClasses Clears classes list and recreates its content.
+   */
+  void reloadClasses();
+  AnnotatorLib::Session *session = nullptr;
 
-private:
-    Ui::ClassesDialog *ui;
+ private:
+  Ui::ClassesDialog *ui;
 };
 
-#endif // CLASSESDIALOG_H
+#endif  // CLASSESDIALOG_H

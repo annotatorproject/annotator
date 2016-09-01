@@ -2,67 +2,65 @@
 #define OWNGRAPHICSCENE_H
 
 #include <AnnotatorLib/Session.h>
+#include <QGraphicsRectItem>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include <QImage>
 #include <QPainter>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsRectItem>
 
+#define DrawON 0
+#define DrawOFF 1
 
-#define DrawON   0
-#define DrawOFF  1
+class OwnGraphicScene : public QGraphicsScene {
+  Q_OBJECT
+ public:
+  explicit OwnGraphicScene();
+  void addBackgroundImg(QImage img);
 
-class OwnGraphicScene : public QGraphicsScene
-{
-    Q_OBJECT
-public:
-    explicit OwnGraphicScene();
-    void addBackgroundImg(QImage img);
+  QPoint inputCoordinate;  // image/video coordinate
 
-    QPoint inputCoordinate;     //image/video coordinate
+  void setCurrentFrame(int frame);
+  void setSession(AnnotatorLib::Session *session);
 
-    void setCurrentFrame(int frame);
-    void setSession(AnnotatorLib::Session *session);
+ protected:
+  void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
-    virtual void drawBackground(QPainter *painter, const QRectF &rect);
+ private slots:
+  // void on_btnPause_clicked();
+  void on_objectSelected(AnnotatorLib::Object *object);
 
-private slots:
-    //void on_btnPause_clicked();
-    void on_objectSelected(AnnotatorLib::Object *object);
+ signals:
+  void on_btnPause_clicked();
 
-signals:
-    void on_btnPause_clicked();
+ protected:
+  unsigned long currentFrame = 0;
+  AnnotatorLib::Session *session = nullptr;
+  AnnotatorLib::Object *selected_obj = nullptr;
 
-protected:
-    unsigned long currentFrame = 0;
-    AnnotatorLib::Session *session = nullptr;
-    AnnotatorLib::Object *selected_obj = nullptr;
+ private:
+  QImage image;
+  int drawMode;
 
-private:
-    QImage image;
-    int drawMode;
+  QGraphicsRectItem *selectionRect = nullptr;
 
-    QGraphicsRectItem * selectionRect = nullptr;
+  QPointF point1;  // clicked point
+  QPointF point2;  // released point
 
-    QPointF point1;     //clicked point
-    QPointF point2;     //released point
+  bool isDrawn;
+  bool isLeftPressed;  // left click is clicked
+  bool isItemMove;     // if item was moving
 
-    bool isDrawn;
-    bool isLeftPressed; //left click is clicked
-    bool isItemMove;    //if item was moving
+  QColor itemColor;
 
-    QColor itemColor;
+  void rectDraw(QPointF pt1, QPointF pt2);
 
-    void rectDraw(QPointF pt1,QPointF pt2);
-
-    QPoint adjustCoordinate(QPointF MousePos);
-    QPointF resetCoordinate(QPointF RectPos);
+  QPoint adjustCoordinate(QPointF MousePos);
+  QPointF resetCoordinate(QPointF RectPos);
 };
 
-#endif // OWNGRAPHICSCENE_H
+#endif  // OWNGRAPHICSCENE_H

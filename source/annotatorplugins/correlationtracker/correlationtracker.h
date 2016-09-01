@@ -1,8 +1,8 @@
 #ifndef CORRELATIONTRACKER_H
 #define CORRELATIONTRACKER_H
 
-#include "widget.h"
 #include <annotator/plugins/plugin.h>
+#include "widget.h"
 
 #include <dlib/image_processing.h>
 #include <opencv2/core/mat.hpp>
@@ -24,7 +24,7 @@ class CorrelationTracker : public Plugin {
                         "correlationtracker.json")
   Q_INTERFACES(Annotator::Plugin)
 
-public:
+ public:
   CorrelationTracker();
   ~CorrelationTracker();
   QString getName() override;
@@ -40,7 +40,7 @@ public:
   void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame,
                  cv::Mat image);
 
-protected:
+ protected:
   cv::Mat frameImg;
   AnnotatorLib::Annotation *lastAnnotation = nullptr;
   AnnotatorLib::Object *object = nullptr;
@@ -71,4 +71,4 @@ protected:
 }
 }
 
-#endif // CORRELATIONTRACKER_H
+#endif  // CORRELATIONTRACKER_H

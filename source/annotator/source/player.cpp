@@ -8,9 +8,9 @@
 #include <QDebug>
 #include <QFile>
 #include <QMessageBox>
+#include "controller/commandcontroller.h"
 #include "geomObject/annotationgraphicsitemfactory.h"
 #include "plugins/pluginloader.h"
-#include "controller/commandcontroller.h"
 
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
@@ -20,48 +20,28 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->btnNext->setAutoRepeat(true);
   ui->btnPrev->setAutoRepeat(true);
 
-  videoplayer->setDelay(ui->speedSpinBox->value());  //get default value
+  videoplayer->setDelay(ui->speedSpinBox->value());  // get default value
 
   updateStatus(false);  // set Status disable
   updateBtn();          // update the button Play & Pause
 
-  connect(videoplayer,
-          SIGNAL(showFrame(cv::Mat)),
-          this,
+  connect(videoplayer, SIGNAL(showFrame(cv::Mat)), this,
           SLOT(showFrame(cv::Mat)));
-  connect(videoplayer,
-          SIGNAL(updateFrame(long)),
-          this,
+  connect(videoplayer, SIGNAL(updateFrame(long)), this,
           SLOT(updateFrame(long)));
-  connect(ui->horizontalSlider,
-          SIGNAL(sendClickPosition(int)),
-          this,
+  connect(ui->horizontalSlider, SIGNAL(sendClickPosition(int)), this,
           SLOT(setSliderValue(int)));
-  connect(videoplayer,
-          SIGNAL(updateBtn()),
-          this,
-          SLOT(updateBtn()));
-  connect(videoplayer,
-          SIGNAL(sleep(int)),
-          this,
-          SLOT(sleep(int)));
-  connect(videoplayer,
-          SIGNAL(updateHorizontalSlider()),
-          this,
+  connect(videoplayer, SIGNAL(updateBtn()), this, SLOT(updateBtn()));
+  connect(videoplayer, SIGNAL(sleep(int)), this, SLOT(sleep(int)));
+  connect(videoplayer, SIGNAL(updateHorizontalSlider()), this,
           SLOT(updateHorizontalSlider()));
-  connect(videoplayer,
-          SIGNAL(setInputCoordinate(QPoint)),
-          this,
+  connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
 
   // command controller
-  connect(CommandController::instance(),
-          SIGNAL(onCommandExecute()),
-          this,
+  connect(CommandController::instance(), SIGNAL(onCommandExecute()), this,
           SLOT(reload()));
-  connect(CommandController::instance(),
-          SIGNAL(onCommandUndo()),
-          this,
+  connect(CommandController::instance(), SIGNAL(onCommandUndo()), this,
           SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
@@ -74,9 +54,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
 
-  connect(this, SIGNAL(objectSelected(AnnotatorLib::Object*)), scene,
-          SLOT(on_objectSelected(AnnotatorLib::Object*)));
-
+  connect(this, SIGNAL(objectSelected(AnnotatorLib::Object *)), scene,
+          SLOT(on_objectSelected(AnnotatorLib::Object *)));
 }
 
 Player::~Player() {
@@ -138,8 +117,9 @@ void Player::loadVideo(QString fileName) {
 }
 
 void Player::clearAnnotationsGraphics() {
-  while(!annotationGraphics.empty()) {
-    delete annotationGraphics.front();  //delete graphic and annotation if interpolated
+  while (!annotationGraphics.empty()) {
+    delete annotationGraphics
+        .front();  // delete graphic and annotation if interpolated
     annotationGraphics.pop_front();
   }
   scene->update();
@@ -245,7 +225,8 @@ void Player::updateFrame(long frame_nmb) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
     if (plugin) {
-        //plugin->calculate(AnnotationGraphicsItem::getSelectedAnnotation()->getObject(), f, currentFrame);
+      // plugin->calculate(AnnotationGraphicsItem::getSelectedAnnotation()->getObject(),
+      // f, currentFrame);
     }
   }
 
@@ -265,7 +246,7 @@ void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
           AnnotationGraphicsItemFactory::createItem(annotation);
 
       graphicsItem->setPlayer(this);
-      scene->addItem(graphicsItem);      
+      scene->addItem(graphicsItem);
       annotationGraphics.push_back(graphicsItem);
     }
   }
@@ -283,11 +264,10 @@ void Player::updateHorizontalSlider() {
   updateTimeLabel();
 }
 
-void Player::on_horizontalSlider_sliderMoved(int newpos)
-{
-   long pos = newpos * videoplayer->getTotalFrameNr() / ui->horizontalSlider->maximum();
-   jumpTo(pos);
-
+void Player::on_horizontalSlider_sliderMoved(int newpos) {
+  long pos =
+      newpos * videoplayer->getTotalFrameNr() / ui->horizontalSlider->maximum();
+  jumpTo(pos);
 }
 
 /**
@@ -295,12 +275,12 @@ void Player::on_horizontalSlider_sliderMoved(int newpos)
  *
 */
 void Player::setSliderValue(int newpos) {
-    ui->horizontalSlider->setValue(newpos);
-    on_horizontalSlider_sliderMoved(newpos);
+  ui->horizontalSlider->setValue(newpos);
+  on_horizontalSlider_sliderMoved(newpos);
 }
 
 void Player::jumpTo(long index) {
-  this->videoplayer->jumpTo(index - 1); //why -1?
+  this->videoplayer->jumpTo(index - 1);  // why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }
@@ -335,7 +315,7 @@ void Player::updateTimeLabel() {
  *
  */
 void Player::play() {
-  //video->setDelay(1000.f / video->getFrameRate());
+  // video->setDelay(1000.f / video->getFrameRate());
   videoplayer->playIt();
 }
 
@@ -343,9 +323,7 @@ void Player::play() {
  * pause	-	pause the video
  *
  */
-void Player::pause() {
-  videoplayer->pauseIt();
-}
+void Player::pause() { videoplayer->pauseIt(); }
 
 void Player::on_btnPlay_clicked() { play(); }
 
@@ -361,31 +339,25 @@ void Player::on_btnPause_clicked() { pause(); }
 void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
 
 void Player::on_btnPrev_clicked() {
-  //this->setAutoAnnotation(false);
+  // this->setAutoAnnotation(false);
   videoplayer->prevFrame();
 }
 
-void Player::on_btnNext_clicked() {
-  videoplayer->nextFrame();
-}
+void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 
 ///#################################################################################################///
 
 void Player::reload() {
   emit requestReload();
   this->videoplayer->reload();
-  //TODO: reload annotations?
+  // TODO: reload annotations?
 }
-
 
 /**
  * update the video speed by a factor f in percent
  *
  */
-void Player::on_speedSpinBox_valueChanged(int f)
-{
-    //TODO: set proper framerate
-    videoplayer->setDelay( (100.f * videoplayer->getFrameRate()) / (float) f);
+void Player::on_speedSpinBox_valueChanged(int f) {
+  // TODO: set proper framerate
+  videoplayer->setDelay((100.f * videoplayer->getFrameRate()) / (float)f);
 }
-
-

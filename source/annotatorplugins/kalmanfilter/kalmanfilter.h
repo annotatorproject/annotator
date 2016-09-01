@@ -1,8 +1,8 @@
 #ifndef KALMANFILTER_H
 #define KALMANFILTER_H
 
-#include "widget.h"
 #include <annotator/plugins/plugin.h>
+#include "widget.h"
 
 #include <opencv2/core/mat.hpp>
 
@@ -22,7 +22,7 @@ class KalmanFilter : public Plugin {
   Q_PLUGIN_METADATA(IID "annotator.kalmanfilter" FILE "kalmanfilter.json")
   Q_INTERFACES(Annotator::Plugin)
 
-public:
+ public:
   KalmanFilter();
   ~KalmanFilter();
   QString getName() override;
@@ -37,7 +37,7 @@ public:
   void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame,
                  cv::Mat image);
 
-protected:
+ protected:
   AnnotatorLib::Annotation *lastAnnotation = nullptr;
   AnnotatorLib::Object *object = nullptr;
   AnnotatorLib::Session *session = nullptr;
@@ -51,4 +51,4 @@ protected:
 }
 }
 
-#endif // KALMANFILTER_H
+#endif  // KALMANFILTER_H
