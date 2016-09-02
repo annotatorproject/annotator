@@ -77,6 +77,8 @@ private:
     QAction* action_edit;
     QAction* action_del_obj;
     QAction* action_compress_obj;
+    QAction* action_goto_first;
+    QAction* action_goto_last;
 
 
     void setCornerPositions();
@@ -92,6 +94,8 @@ private slots:
     void removeObject();
     void editAnnotation();
     void compressObject();
+    void goToLast();
+    void goToFirst();
 
 };
 

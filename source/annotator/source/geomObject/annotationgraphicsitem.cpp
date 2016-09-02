@@ -49,6 +49,9 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
       new QAction(QString("Remove Object"), (QObject *)this->parentObject());
   action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
   action_compress_obj = new QAction(QString("Compress Track"), (QObject *)this->parentObject());
+  action_goto_first = new QAction(QString("Jump to first"), (QObject *)this->parentObject());
+  action_goto_last = new QAction(QString("Jump to last"), (QObject *)this->parentObject());
+
 
   QObject::connect(action_del, SIGNAL(triggered()), this,
                    SLOT(removeAnnotation()));
@@ -58,6 +61,10 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
                    SLOT(editAnnotation()));
   QObject::connect(action_compress_obj, SIGNAL(triggered()), this,
                      SLOT(compressObject()));
+  QObject::connect(action_goto_first, SIGNAL(triggered()), this,
+                     SLOT(goToFirst()));
+  QObject::connect(action_goto_last, SIGNAL(triggered()), this,
+                     SLOT(goToLast()));
 }
 
 AnnotationGraphicsItem::~AnnotationGraphicsItem() {
@@ -71,6 +78,8 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   delete action_del;
   delete action_edit;
   delete action_del_obj;
+  delete action_goto_first;
+  delete action_goto_last;
 }
 
 bool AnnotationGraphicsItem::isAnnotationSelected() const {
@@ -184,7 +193,7 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
 void AnnotationGraphicsItem::contextMenuEvent(
     QGraphicsSceneContextMenuEvent *event) {
 
-  // this->player->pause();
+  this->player->pause();
 
   // init context menu
   QMenu contextMenu("Context menu");
@@ -196,6 +205,8 @@ void AnnotationGraphicsItem::contextMenuEvent(
   }
 
   contextMenu.addAction(action_del_obj);
+  contextMenu.addAction(action_goto_first);
+  contextMenu.addAction(action_goto_last);
   contextMenu.addAction(action_compress_obj);
 
   action_edit->setData(event->screenPos());
@@ -208,6 +219,14 @@ void AnnotationGraphicsItem::removeObject() {
       new AnnotatorLib::Commands::RemoveObject(player->getSession(),
                                                annotation->getObject());
   CommandController::instance()->execute(cmd);
+}
+
+void AnnotationGraphicsItem::goToLast() {
+  player->jumpTo(annotation->getObject()->getLastAnnotation()->getFrame()->getFrameNumber());
+}
+
+void AnnotationGraphicsItem::goToFirst() {
+  player->jumpTo(annotation->getObject()->getFirstAnnotation()->getFrame()->getFrameNumber());
 }
 
 void AnnotationGraphicsItem::compressObject() {
