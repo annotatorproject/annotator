@@ -44,12 +44,12 @@ void AnnotationsWidget::addAnnotation(AnnotatorLib::Annotation *annotation,
 
 void AnnotationsWidget::addObject(AnnotatorLib::Object *object) {
   AnnotatorLib::Annotation *firstAnnotation = object->getFirstAnnotation();
-  if(firstAnnotation == nullptr) return;
+  if (firstAnnotation == nullptr) return;
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-  item->setText(
-      0, QString::fromStdString(object->getClass() ? object->getClass()->getName() : "unnamed") +
-             " (" + QString::number(object->getId()) +
-             ")");
+  item->setText(0, QString::fromStdString(object->getClass()
+                                              ? object->getClass()->getName()
+                                              : "unnamed") +
+                       " (" + QString::number(object->getId()) + ")");
   ui->treeWidget->addTopLevelItem(item);
   addAnnotation(firstAnnotation, item);
 }
@@ -61,7 +61,12 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
   if (item != nullptr) {
     emit objectSelected(item->getAnnotation()->getObject());
     if (item->getAnnotation()->getFrame() != nullptr)
-      emit frameSelected(item->getAnnotation()->getFrame()->getFrameNumber());  //TODO: jumps to wrong frame (shifted by -1)
+      emit frameSelected(
+          item->getAnnotation()->getFrame()->getFrameNumber());  // TODO: jumps
+                                                                 // to wrong
+                                                                 // frame
+                                                                 // (shifted by
+                                                                 // -1)
   }
 }
 

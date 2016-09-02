@@ -22,19 +22,19 @@ AnnotationItem::AnnotationItem(AnnotatorLib::Annotation *annotation,
 AnnotationItem::~AnnotationItem() { delete ui; }
 
 void AnnotationItem::reload() {
-  if(this->annotation->getFrame() != nullptr) {
-      this->ui->idLabel->setText(QString::number(this->annotation->getId()));
-      if (this->annotation->getObject()->getClass())
-        this->ui->objectNameLabel->setText(QString::fromStdString(
-            this->annotation->getObject()->getClass()->getName()));
-      this->ui->frameSpinBox->setValue(this->annotation->getFrame()->getFrameNumber());
-      this->ui->positionLabel->setText(QString::number(this->annotation->getX()) +
-                                       "x" +
-                                       QString::number(this->annotation->getY()));
+  if (this->annotation->getFrame() != nullptr) {
+    this->ui->idLabel->setText(QString::number(this->annotation->getId()));
+    if (this->annotation->getObject()->getClass())
+      this->ui->objectNameLabel->setText(QString::fromStdString(
+          this->annotation->getObject()->getClass()->getName()));
+    this->ui->frameSpinBox->setValue(
+        this->annotation->getFrame()->getFrameNumber());
+    this->ui->positionLabel->setText(QString::number(this->annotation->getX()) +
+                                     "x" +
+                                     QString::number(this->annotation->getY()));
   } else {
     this->setVisible(false);
   }
-
 }
 
 AnnotatorLib::Annotation *AnnotationItem::getAnnotation() {

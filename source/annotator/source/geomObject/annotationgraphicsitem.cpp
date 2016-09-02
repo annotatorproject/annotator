@@ -139,6 +139,7 @@ void AnnotationGraphicsItem::highlight( const int reason) {
   setCornerPositions();
   pen.setColor(borderColor);
 
+  brush = getGradient();
   idText.show();
   update();
 }

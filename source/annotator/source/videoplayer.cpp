@@ -61,8 +61,8 @@ bool Videoplayer::setInput(const std::string &fileName) {
  * @return the frame rate
  */
 double Videoplayer::getFrameRate() {
-  //TODO:
-  //return capture.get(CV_CAP_PROP_FPS);
+  // TODO:
+  // return capture.get(CV_CAP_PROP_FPS);
   return 25;
 }
 
@@ -156,7 +156,6 @@ bool Videoplayer::getNextFrame(cv::Mat &frame) {
  */
 void Videoplayer::setDelay(int d) { delay = d; }
 
-
 void Videoplayer::run() { playIt(); }
 
 /**
@@ -195,7 +194,7 @@ void Videoplayer::playIt() {
     // introduce a delay
     emit sleep(delay);
   }
-  //if video ended and not stopped jump to first frame
+  // if video ended and not stopped jump to first frame
   if (!isStop()) {
     emit revert();
   }
@@ -242,7 +241,7 @@ bool Videoplayer::jumpTo(long index) {
   return re;
 }
 
-void Videoplayer::reload() { jumpTo(this->curPos-1); }  //TODO: why -1?
+void Videoplayer::reload() { jumpTo(this->curPos - 1); }  // TODO: why -1?
 
 /**
  * pauseIt	-	pause playing
@@ -297,7 +296,6 @@ void Videoplayer::nextFrame() {
  *
  */
 void Videoplayer::prevFrame() {
-
   if (curPos >= 0) {
     curPos -= 2;
     jumpTo(curPos);

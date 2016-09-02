@@ -46,8 +46,7 @@ AnnotatorLib::Object *CamShift::getObject() { return object; }
 
 // second call
 void CamShift::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
-  if (annotation == nullptr || annotation->getObject() != object)
-    return;
+  if (annotation == nullptr || annotation->getObject() != object) return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
     return;

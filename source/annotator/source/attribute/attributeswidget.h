@@ -1,27 +1,26 @@
 #ifndef ATTRIBUTESWIDGET_H
 #define ATTRIBUTESWIDGET_H
 
-#include <QWidget>
 #include <AnnotatorLib/Session.h>
+#include <QWidget>
 
 namespace Ui {
 class AttributesWidget;
 }
 
-class AttributesWidget : public QWidget
-{
-    Q_OBJECT
+class AttributesWidget : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit AttributesWidget(QWidget *parent = 0);
-    ~AttributesWidget();
-    void setSession(AnnotatorLib::Session *session);
-    void reload();
+ public:
+  explicit AttributesWidget(QWidget *parent = 0);
+  ~AttributesWidget();
+  void setSession(AnnotatorLib::Session *session);
+  void reload();
 
-private:
-    Ui::AttributesWidget *ui;
+ private:
+  Ui::AttributesWidget *ui;
 
-    AnnotatorLib::Session *session = nullptr;
+  AnnotatorLib::Session *session = nullptr;
 };
 
-#endif // ATTRIBUTESWIDGET_H
+#endif  // ATTRIBUTESWIDGET_H

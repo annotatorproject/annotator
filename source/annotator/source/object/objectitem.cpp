@@ -29,6 +29,3 @@ AnnotatorLib::Object *ObjectItem::getObject()
 {
     return object;
 }
-
-
-

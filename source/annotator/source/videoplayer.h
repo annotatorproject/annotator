@@ -39,12 +39,12 @@ class Videoplayer : public QThread {
   bool isOpened();         // return is the player opened
   void playIt();           // play the frames of the sequence
   void setDelay(int d);    // set a delay between each frame in [ms]
-  //void setFrameRate(int r);// set a specific framerate
-  void pauseIt();          // pause the frames of the sequence
-  void stopIt();           // Stop playing
-  void close();            // close video
-  void nextFrame();        // display the next frame of the sequence
-  void prevFrame();        // display the prev frame of the sequence
+  // void setFrameRate(int r);// set a specific framerate
+  void pauseIt();    // pause the frames of the sequence
+  void stopIt();     // Stop playing
+  void close();      // close video
+  void nextFrame();  // display the next frame of the sequence
+  void prevFrame();  // display the prev frame of the sequence
 
   void setImageSet(AnnotatorLib::ImageSet *imageSet);
 
@@ -71,58 +71,59 @@ class Videoplayer : public QThread {
 
  signals:
 
-  void updateBtn();                       // update button status
-  void showFrame(cv::Mat frame);          // show a frame
+  void updateBtn();               // update button status
+  void showFrame(cv::Mat frame);  // show a frame
   void updateFrame(long frame);
-  void updateHorizontalSlider();          // update horizontal Slider
-  void sleep(int msecs);                  // sleep for a while
+  void updateHorizontalSlider();  // update horizontal Slider
+  void sleep(int msecs);          // sleep for a while
   void revert();
-  void imageJumpTo(long pos);             // jump to position for images
+  void imageJumpTo(long pos);  // jump to position for images
   void showImage(QPixmap img);
-  void setInputCoordinate(QPoint point);  // copy the image/video coordinate to main
+  void setInputCoordinate(
+      QPoint point);  // copy the image/video coordinate to main
 
  private:
-  int delay;      // delay between each frame processing
+  int delay;  // delay between each frame processing
 
-  long fnumber;   // number of processed frames
+  long fnumber;  // number of processed frames
 
-  long length;    // total number of frames
+  long length;  // total number of frames
 
-  bool stop;      // to stop the player
+  bool stop;  // to stop the player
 
-  bool modify;    // is the video modified
+  bool modify;  // is the video modified
 
-  long curPos;    // the current playing pos
+  long curPos;  // the current playing pos
 
-  int curIndex;   // current index for output images
+  int curIndex;  // current index for output images
 
-  int curLevel;   // current level of pyramid
+  int curLevel;  // current level of pyramid
 
-  int digits;     // number of digits in output image filename
+  int digits;  // number of digits in output image filename
 
-  std::string extension;     // extension of output images
+  std::string extension;  // extension of output images
 
-  int levels;                // level numbers of image pyramid
+  int levels;  // level numbers of image pyramid
 
-  float alpha;                // amplification factor
+  float alpha;  // amplification factor
 
-  float lambda_c;            // cut-off wave length
+  float lambda_c;  // cut-off wave length
 
-  float fl;                  // low cut-off
+  float fl;  // low cut-off
 
-  float fh;                   // high cut-off
+  float fh;  // high cut-off
 
-  float chromAttenuation;     // chromAttenuation
+  float chromAttenuation;  // chromAttenuation
 
-  float delta;                // delta
+  float delta;  // delta
 
   float exaggeration_factor;  // extraggon factor
 
-  float lambda;                      // lambda
+  float lambda;  // lambda
 
-  std::string tempFile;              // temp filename
+  std::string tempFile;  // temp filename
 
-  bool getNextFrame(cv::Mat &frame); // get the next frame if any
+  bool getNextFrame(cv::Mat &frame);  // get the next frame if any
 
   AnnotatorLib::ImageSet *imageSet = nullptr;
 };

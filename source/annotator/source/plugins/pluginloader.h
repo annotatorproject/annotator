@@ -3,41 +3,39 @@
 
 #include "plugin.h"
 
-#include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QObject>
 
-namespace Annotator{
+namespace Annotator {
 
-class PluginLoader : public QObject
-{
-    Q_OBJECT
-public:
-    ~PluginLoader();
+class PluginLoader : public QObject {
+  Q_OBJECT
+ public:
+  ~PluginLoader();
 
-    static void destroyInstance();
-    static PluginLoader& getInstance();
+  static void destroyInstance();
+  static PluginLoader &getInstance();
 
-    Plugin* getPlugin(QString name);
-    void setCurrent(QString name);
-    Plugin *getCurrent();
+  Plugin *getPlugin(QString name);
+  void setCurrent(QString name);
+  Plugin *getCurrent();
 
-    // InputPlugin
-    QList<Plugin *> getPlugins();
-    
-signals:
-    
-public slots:
+  // InputPlugin
+  QList<Plugin *> getPlugins();
 
-private:
-    explicit PluginLoader(QObject *parent = 0);
-    static PluginLoader* instance;
-    void loadPlugins();
-    QList<Plugin *> plugins;
-    void loadPlugins(QString dir);
-    void addPlugin(Plugin *plugin);
-    Plugin * current = nullptr;
+ signals:
+
+ public slots:
+
+ private:
+  explicit PluginLoader(QObject *parent = 0);
+  static PluginLoader *instance;
+  void loadPlugins();
+  QList<Plugin *> plugins;
+  void loadPlugins(QString dir);
+  void addPlugin(Plugin *plugin);
+  Plugin *current = nullptr;
 };
-
 }
 
-#endif // PLUGINLOADER_H
+#endif  // PLUGINLOADER_H

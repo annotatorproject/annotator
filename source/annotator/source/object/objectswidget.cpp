@@ -28,6 +28,7 @@ void ObjectsWidget::reload()
     for(AnnotatorLib::Object *object: session->getObjects())
     {
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+
         ObjectItem *objectItem = new ObjectItem(object);
         item->setSizeHint(objectItem->minimumSizeHint());
         ui->listWidget->setItemWidget(item, objectItem);

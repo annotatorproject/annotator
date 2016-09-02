@@ -78,6 +78,7 @@ private:
     QAction* action_del_obj;
     QAction* action_compress_obj;
 
+
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
     void changeAnnotationPosition(int x, int y);

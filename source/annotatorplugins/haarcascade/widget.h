@@ -7,33 +7,30 @@ namespace Ui {
 class Widget;
 }
 
-namespace Annotator{
-namespace Plugins{
-    class Haarcascade;
+namespace Annotator {
+namespace Plugins {
+class Haarcascade;
 }
 }
 
-class Widget : public QWidget
-{
-    Q_OBJECT
+class Widget : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit Widget(QWidget *parent = 0);
-    ~Widget();
-    void setHaarcascade(Annotator::Plugins::Haarcascade *haarcascade);
+ public:
+  explicit Widget(QWidget *parent = 0);
+  ~Widget();
+  void setHaarcascade(Annotator::Plugins::Haarcascade *haarcascade);
 
-private slots:
-    void on_pushButton_clicked();
+ private slots:
+  void on_pushButton_clicked();
 
-    void on_objectNameLineEdit_editingFinished();
+  void on_objectNameLineEdit_editingFinished();
 
-    void on_newObjectsCheckBox_toggled(bool checked);
+  void on_newObjectsCheckBox_toggled(bool checked);
 
-private:
-    Ui::Widget *ui;
-    Annotator::Plugins::Haarcascade *haarcascade = nullptr;
-
+ private:
+  Ui::Widget *ui;
+  Annotator::Plugins::Haarcascade *haarcascade = nullptr;
 };
 
-
-#endif // WIDGET_H
+#endif  // WIDGET_H

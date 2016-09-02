@@ -7,22 +7,21 @@ namespace Ui {
 class PluginsWidget;
 }
 
-class PluginsWidget : public QWidget
-{
-    Q_OBJECT
+class PluginsWidget : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit PluginsWidget(QWidget *parent = 0);
-    ~PluginsWidget();
+ public:
+  explicit PluginsWidget(QWidget *parent = 0);
+  ~PluginsWidget();
 
-    void reload();
+  void reload();
 
-private slots:
-    void on_comboBox_currentIndexChanged(const QString &arg1);
+ private slots:
+  void on_comboBox_currentIndexChanged(const QString &arg1);
 
-private:
-    Ui::PluginsWidget *ui;
-    QWidget *lastWidget = nullptr;
+ private:
+  Ui::PluginsWidget *ui;
+  QWidget *lastWidget = nullptr;
 };
 
-#endif // PLUGINSWIDGET_H
+#endif  // PLUGINSWIDGET_H

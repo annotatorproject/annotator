@@ -264,6 +264,8 @@ void Player::updateFrame(long frame_nmb) {
     }
   }
 
+  showAnnotationsOfFrame(f);
+
   this->scene->setCurrentFrame(frame_nmb);
   this->scene->update();
 }

@@ -42,8 +42,7 @@ void Haarcascade::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
 
 std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
   std::vector<AnnotatorLib::Commands::Command *> commands;
-  if (!this->newObjects)
-    return commands;
+  if (!this->newObjects) return commands;
   try {
     std::vector<cv::Rect> objects;
     cv::Mat frame_gray;
