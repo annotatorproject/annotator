@@ -126,6 +126,7 @@
      <string>Algorithm</string>
     </property>
     <addaction name="actionAuto_Annotate"/>
+    <addaction name="actionCompress_Session"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -160,7 +161,7 @@
   </widget>
   <action name="actionOpen_Project">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/open-or.png</normaloff>:/Icons/open-or.png</iconset>
    </property>
    <property name="text">
@@ -169,7 +170,7 @@
   </action>
   <action name="actionSave_Project">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/save-or.png</normaloff>:/Icons/save-or.png</iconset>
    </property>
    <property name="text">
@@ -178,7 +179,7 @@
   </action>
   <action name="actionSave_Project_As">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/save-or.png</normaloff>:/Icons/save-or.png</iconset>
    </property>
    <property name="text">
@@ -187,7 +188,7 @@
   </action>
   <action name="actionClose_Project">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/delet-or.png</normaloff>:/Icons/delet-or.png</iconset>
    </property>
    <property name="text">
@@ -196,7 +197,7 @@
   </action>
   <action name="actionNew_Project">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/edit-or.png</normaloff>:/Icons/edit-or.png</iconset>
    </property>
    <property name="text">
@@ -205,7 +206,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../resource/icons.qrc">
      <normaloff>:/Icons/quit-or.png</normaloff>:/Icons/quit-or.png</iconset>
    </property>
    <property name="text">
@@ -224,6 +225,9 @@
   </action>
   <action name="actionAuto_Annotate">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -250,8 +254,15 @@
     <string>Classes</string>
    </property>
   </action>
+  <action name="actionCompress_Session">
+   <property name="text">
+    <string>Compress Session</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../../resource/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

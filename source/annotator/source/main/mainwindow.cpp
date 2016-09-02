@@ -1,5 +1,7 @@
 #include "mainwindow.h"
+#include <string>
 #include <AnnotatorLib/Annotation.h>
+#include <AnnotatorLib/Commands/CompressSession.h>
 #include <QApplication>
 #include <QDebug>
 #include <QFileDialog>
@@ -205,10 +207,24 @@ void MainWindow::on_actionRedo_triggered() {
   }
 }
 
-void MainWindow::on_actionAuto_Annotate_triggered() {}
-
 void MainWindow::on_actionAuto_Annotate_toggled(bool arg1) {
   this->playerWidget.setAutoAnnotation(arg1);
+}
+
+void MainWindow::on_actionCompress_Session_triggered() {
+
+  //TODO: freeze window and show progress bar
+  int nmb_annotations_before = session->getAnnotations().size();
+  AnnotatorLib::Commands::CompressSession *cmd =
+      new AnnotatorLib::Commands::CompressSession(this->session);
+  CommandController::instance()->execute(cmd);
+  int nmb_annotations_after= session->getAnnotations().size();
+
+  QMessageBox::question( this, "",
+                         QString::fromStdString(std::string("Compression algorithm has removed ") +
+                          std::to_string(nmb_annotations_before - nmb_annotations_after)
+                          + std::string(" annotations.\n")),
+                          QMessageBox::Ok);
 }
 
 void MainWindow::on_actionAbout_triggered() {

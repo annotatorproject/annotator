@@ -64,9 +64,9 @@ class MainWindow : public QMainWindow {
 
   void on_actionRedo_triggered();
 
-  void on_actionAuto_Annotate_triggered();
-
   void on_actionAuto_Annotate_toggled(bool arg1);
+
+  void on_actionCompress_Session_triggered();
 
   void on_actionAbout_triggered();
 
