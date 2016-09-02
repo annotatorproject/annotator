@@ -11,41 +11,51 @@
 #include <QObject>
 
 // static
-static AnnotatorLib::Annotation *selected_annotation = nullptr;
+AnnotatorLib::Annotation* AnnotationGraphicsItem::selected_annotation = nullptr;
 
-AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() {
-  return annotation;
+void AnnotationGraphicsItem::updateSelectedAnnotation(AnnotationGraphicsItem* item) {
+
+  if (selected_annotation) {
+      if (selected_annotation->getObject() == item->getAnnotation()->getObject()) {
+          selected_annotation = item->getAnnotation();
+      }
+  } else {
+    selected_annotation = item->getAnnotation();
+  }
+}
+
+void AnnotationGraphicsItem::setSelectedAnnotation(AnnotatorLib::Annotation * a) {
+  AnnotationGraphicsItem::selected_annotation = a;
 }
 
 AnnotatorLib::Annotation *AnnotationGraphicsItem::getSelectedAnnotation() {
-  return selected_annotation;
+  return AnnotationGraphicsItem::selected_annotation;
 }
 
-void AnnotationGraphicsItem::setSelectedAnnotation(
-    AnnotatorLib::Annotation *annotation) {
-  selected_annotation = annotation;
-}
-
+//constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
     AnnotatorLib::Annotation *annotation)
     : QGraphicsItem::QGraphicsItem(nullptr), annotation(annotation) {
   assert(annotation);
   assert(annotation->getObject());
 
-  if (annotation->getObject() == nullptr)
-    borderColor = idToColor(annotation->getId());
-  else
-    borderColor = idToColor(annotation->getObject()->getId());
-
   setPos(annotation->getX(), annotation->getY());
   initCorners();
   initIdText();
+
+  updateSelectedAnnotation(this);
+
+  if (isAnnotationSelected()) {
+    borderColor = Qt::blue;
+  } else {
+    borderColor = idToColor(annotation->getObject()->getId());
+  }
+  originColor = borderColor;
 
   rectX = 0;
   rectY = 0;
   width = annotation->getWidth();
   height = annotation->getHeight();
-  originColor = borderColor;
 
   action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
   action_del_obj =
@@ -69,12 +79,22 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   }
   if (annotation->isInterpolated())
     delete annotation;
+
+  //delete actions
   delete action_del;
   delete action_edit;
   delete action_del_obj;
 }
 
-QColor AnnotationGraphicsItem::idToColor(long id) {
+bool AnnotationGraphicsItem::isAnnotationSelected() const {
+  return this->getAnnotation() == AnnotationGraphicsItem::selected_annotation;
+}
+
+AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() const {
+  return annotation;
+}
+
+QColor AnnotationGraphicsItem::idToColor(long id) const {
   static double r_ = (1 + sqrt(5)) / 2;
   static double g_ = (3 + sqrt(7)) / 2;
   static double b_ = (11 + sqrt(13)) / 2;
@@ -109,42 +129,41 @@ void AnnotationGraphicsItem::initIdText() {
   }
 }
 
-void AnnotationGraphicsItem::highLight() {
-  for (int i = 0; i < 4; ++i) {
-    corners[i]->setVisible(true);
-    corners[i]->installSceneEventFilter(this);
+void AnnotationGraphicsItem::changeAppearance( const int reason) {
+
+  switch(reason) {
+    case 0: //hovered
+      borderColor = Qt::green;
+      for (int i = 0; i < 4; ++i) {
+        corners[i]->setVisible(true);
+        corners[i]->installSceneEventFilter(this);
+      }
+      brush = getGradient();
+      break;
+    default:
+      for (int i = 0; i < 4; ++i) {
+        corners[i]->hide();
+      }
+      borderColor = originColor;
+      brush = Qt::NoBrush;
   }
-
-  borderColor = Qt::green;
-
-  brush = getGradient();
   idText.show();
   setCornerPositions();
-}
-
-void AnnotationGraphicsItem::hide() {
-  for (int i = 0; i < 4; ++i) {
-    corners[i]->hide();
-  }
-  borderColor = originColor;
-
-  brush = Qt::NoBrush;
-  idText.hide();
   update();
 }
 
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
-  if (this->player != nullptr && this->annotation != nullptr &&
-      this->annotation->getObject() != nullptr) {
-    setSelectedAnnotation(annotation);
-    this->player->selectObject(annotation->getObject());
+  if (this->annotation != nullptr) {
+    AnnotationGraphicsItem::setSelectedAnnotation(this->annotation);
+    this->player->selectObject(this->annotation->getObject());
+    this->player->reload();
   }
 }
 
 /**
- * Will be triggered when a
+ * Will be triggered when user presses right
  *
 */
 void AnnotationGraphicsItem::contextMenuEvent(
@@ -207,15 +226,17 @@ void AnnotationGraphicsItem::editAnnotation() {
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  highLight();
-  update();
+  changeAppearance(0);
 }
 
 /**
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  hide();
+  if (isSelected())
+    changeAppearance(1);
+  else
+    changeAppearance(-1);
 }
 
 /**

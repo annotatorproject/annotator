@@ -16,6 +16,7 @@
 
 
 class QAction;
+class Annotation;
 
 class AnnotationGraphicsItem : public QObject, public QGraphicsItem
 {
@@ -25,14 +26,16 @@ public:
     AnnotationGraphicsItem() = delete;
     AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
     virtual ~AnnotationGraphicsItem();
-    AnnotatorLib::Annotation *getAnnotation();
+    AnnotatorLib::Annotation *getAnnotation() const;
+
+    static void setSelectedAnnotation(AnnotatorLib::Annotation *);
     static AnnotatorLib::Annotation *getSelectedAnnotation();
-    static void setSelectedAnnotation(AnnotatorLib::Annotation *annotation);
 
-
-    QColor idToColor(long id);
+    QColor idToColor(long id) const;
 
     void setPlayer(Player *player);
+
+    bool isAnnotationSelected() const;
 
 signals:
     void objectSelected(AnnotatorLib::Object *object);
@@ -52,7 +55,6 @@ protected:
     qreal height;
     Corner*  corners[4];
 
-protected:
     QBrush getGradient();
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
@@ -64,13 +66,17 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
+    static AnnotatorLib::Annotation* selected_annotation;
+    static AnnotationGraphicsItem* selected_annotation_item;
+
+    static void updateSelectedAnnotation(AnnotationGraphicsItem* item);
+
     AnnotatorLib::Annotation *annotation;
 
     QAction* action_del;
     QAction* action_edit;
     QAction* action_del_obj;
     QAction* action_compress_obj;
-
 
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
@@ -80,16 +86,12 @@ private:
     void initIdText();
 
     /**
-     * @brief hightLight
-     * show id and corners
+     * @brief changeAppearance
+     * hover: 0
+     * selected: 1
+     * default: any other
      */
-    void highLight();
-
-    /**
-     * @brief hide
-     * hide id and corners (if highlighted)
-     */
-    void hide();
+    void changeAppearance(const int reason = -1);
 
 private slots:
     void removeAnnotation();

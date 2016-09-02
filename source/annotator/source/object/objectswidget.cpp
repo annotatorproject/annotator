@@ -1,6 +1,7 @@
 #include "objectswidget.h"
 #include "ui_objectswidget.h"
 
+#include <geomObject/annotationgraphicsitem.h>
 #include <AnnotatorLib/Session.h>
 
 #include "objectitem.h"
@@ -28,11 +29,12 @@ void ObjectsWidget::reload()
     for(AnnotatorLib::Object *object: session->getObjects())
     {
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
-
         ObjectItem *objectItem = new ObjectItem(object);
         item->setSizeHint(objectItem->minimumSizeHint());
         ui->listWidget->setItemWidget(item, objectItem);
     }
+    if (AnnotationGraphicsItem::getSelectedAnnotation())
+      selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
 }
 
 void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
@@ -48,7 +50,7 @@ void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
 void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
     ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
-    if(selectedItem != nullptr){
+    if(selectedItem != nullptr) {
         emit objectSelected(selectedItem->getObject());
     }
 }

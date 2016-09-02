@@ -2,7 +2,7 @@
 #include "newannotationdialog.h"
 #include "ui_newannotationdialog.h"
 #include "classesdialog.h"
-
+#include "geomObject/annotationgraphicsitem.h"
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
@@ -63,6 +63,7 @@ void NewAnnotationDialog::createAnnotation() {
     nA = new AnnotatorLib::Commands::NewAnnotation(
               session->getObject(id), frame, x, y, w, h, this->session, false);
   }
+  AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
   CommandController::instance()->execute(nA);
 
   Annotator::Plugin *plugin =

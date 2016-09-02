@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include "geomObject/annotationgraphicsitemfactory.h"
+#include <geomObject/annotationgraphicsitem.h>
 #include "plugins/pluginloader.h"
 #include "controller/commandcontroller.h"
 
@@ -241,15 +242,27 @@ void Player::showFrame(cv::Mat frame) {
 void Player::updateFrame(long frame_nmb) {
   AnnotatorLib::Frame *f = session->getFrame(frame_nmb);
 
+  showAnnotationsOfFrame(f);
+
   if (autoAnnotation) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
-    if (plugin) {
-        //plugin->calculate(AnnotationGraphicsItem::getSelectedAnnotation()->getObject(), f, currentFrame);
+
+    //TODO:
+    if (plugin &&
+        AnnotationGraphicsItem::getSelectedAnnotation() &&
+        AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() == f) {
+
+        plugin->setLastAnnotation(AnnotationGraphicsItem::getSelectedAnnotation());
+        plugin->setFrame(f, currentFrame);
+        plugin->setObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
+        //get commands and execute
+        std::vector<AnnotatorLib::Commands::Command*> cmds = plugin->getCommands();
+        for (auto it = cmds.begin(); it != cmds.end(); it++) {
+          CommandController::instance()->execute(*it);
+        }
     }
   }
-
-  showAnnotationsOfFrame(f);
 
   this->scene->setCurrentFrame(frame_nmb);
   this->scene->update();

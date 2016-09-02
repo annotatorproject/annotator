@@ -1,11 +1,10 @@
+#include <algorithm>
+#include <QDebug>
+#include <QSettings>
+
 #include "owngraphicscene.h"
 #include "graphic/owngraphicscene.h"
 #include "gui/newannotationdialog.h"
-
-#include <algorithm>
-
-#include <QDebug>
-#include <QSettings>
 
 OwnGraphicScene::OwnGraphicScene()
     : isDrawn(false), isLeftPressed(false), isItemMove(false) {
