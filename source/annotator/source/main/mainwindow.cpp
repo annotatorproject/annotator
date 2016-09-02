@@ -42,11 +42,11 @@ void MainWindow::connectSignalSlots() {
   connect(&annotationsWidget, SIGNAL(objectSelected(AnnotatorLib::Object *)),
           &objectsWidget, SLOT(selectObject(AnnotatorLib::Object *)));
 
-  connect(&playerWidget, SIGNAL(objectSelected(AnnotatorLib::Object *)),
-          &objectsWidget, SLOT(selectObject(AnnotatorLib::Object *)));
-
   connect(&annotationsWidget, SIGNAL(frameSelected(long)), &playerWidget,
           SLOT(jumpTo(long)));
+
+  connect(&playerWidget, SIGNAL(objectSelected(AnnotatorLib::Object *)),
+          &objectsWidget, SLOT(selectObject(AnnotatorLib::Object *)));
 
   connect(&playerWidget, SIGNAL(requestReload()), this, SLOT(reloadWidgets()));
 }

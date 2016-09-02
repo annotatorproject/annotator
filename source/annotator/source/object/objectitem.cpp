@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "objectitem.h"
 #include "ui_objectitem.h"
 #include <AnnotatorLib/Object.h>
@@ -8,6 +9,7 @@ ObjectItem::ObjectItem(AnnotatorLib::Object *object, QWidget *parent) :
     ui(new Ui::ObjectItem),
     object(object)
 {
+    assert(object != nullptr);
     ui->setupUi(this);
     reload();
 }
@@ -27,3 +29,6 @@ AnnotatorLib::Object *ObjectItem::getObject()
 {
     return object;
 }
+
+
+

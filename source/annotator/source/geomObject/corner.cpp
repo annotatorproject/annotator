@@ -1,11 +1,11 @@
 #include "corner.h"
 
-Corner::Corner(QGraphicsItem *parent,  int corner) :
+Corner::Corner(QGraphicsItem *parent,  int corner, int size) :
     QGraphicsItem(parent),
     cornerborderColor(Qt::green),
     cornerborderPen(),
-    cornerwidth(10),
-    cornerheight(10),
+    cornerwidth(size),
+    cornerheight(size),
     corner(corner),
     mouseButtonState(MouseReleased)
 {

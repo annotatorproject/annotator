@@ -15,7 +15,7 @@
 class Corner: public QGraphicsItem
 {
 public:
-    explicit Corner(QGraphicsItem *parent = 0,  int corner=0);
+    explicit Corner(QGraphicsItem *parent = 0,  int corner=0, int size = 10);
 
     int  getCorner();           //< allows the owner to find out which coner this is
     void setMouseState(int);    //< allows the owner to record the current mouse state

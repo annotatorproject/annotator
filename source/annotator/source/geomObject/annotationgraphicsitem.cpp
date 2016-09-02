@@ -12,17 +12,7 @@
 
 // static
 AnnotatorLib::Annotation* AnnotationGraphicsItem::selected_annotation = nullptr;
-
-void AnnotationGraphicsItem::updateSelectedAnnotation(AnnotationGraphicsItem* item) {
-
-  if (selected_annotation) {
-      if (selected_annotation->getObject() == item->getAnnotation()->getObject()) {
-          selected_annotation = item->getAnnotation();
-      }
-  } else {
-    selected_annotation = item->getAnnotation();
-  }
-}
+AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
 
 void AnnotationGraphicsItem::setSelectedAnnotation(AnnotatorLib::Annotation * a) {
   AnnotationGraphicsItem::selected_annotation = a;
@@ -39,23 +29,20 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   assert(annotation);
   assert(annotation->getObject());
 
-  setPos(annotation->getX(), annotation->getY());
-  initCorners();
-  initIdText();
-
-  updateSelectedAnnotation(this);
+  originColor = idToColor(annotation->getObject()->getId());
+  borderColor = originColor;
 
   if (isAnnotationSelected()) {
     borderColor = Qt::blue;
-  } else {
-    borderColor = idToColor(annotation->getObject()->getId());
   }
-  originColor = borderColor;
 
   rectX = 0;
   rectY = 0;
   width = annotation->getWidth();
   height = annotation->getHeight();
+  setPos(annotation->getX(), annotation->getY());
+  initCorners();
+  initIdText();
 
   action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
   action_del_obj =
@@ -111,7 +98,10 @@ void AnnotationGraphicsItem::setPlayer(Player *player) {
 
 void AnnotationGraphicsItem::initCorners() {
   for (int i = 0; i < 4; ++i) {
-    corners[i] = new Corner(this, i);
+    if (this->width < 20 || this->height < 20)
+      corners[i] = new Corner(this, i, 5);
+    else
+      corners[i] = new Corner(this, i);
     corners[i]->hide();
     // corners[i]->installSceneEventFilter(this);
   }
@@ -129,26 +119,47 @@ void AnnotationGraphicsItem::initIdText() {
   }
 }
 
-void AnnotationGraphicsItem::changeAppearance( const int reason) {
+void AnnotationGraphicsItem::highlight( const int reason) {
 
   switch(reason) {
     case 0: //hovered
       borderColor = Qt::green;
-      for (int i = 0; i < 4; ++i) {
-        corners[i]->setVisible(true);
-        corners[i]->installSceneEventFilter(this);
-      }
       brush = getGradient();
       break;
     default:
-      for (int i = 0; i < 4; ++i) {
-        corners[i]->hide();
-      }
-      borderColor = originColor;
-      brush = Qt::NoBrush;
+      hideHighlight();
+      return;
   }
-  idText.show();
+
+  for (int i = 0; i < 4; ++i) {
+    corners[i]->show();
+    corners[i]->installSceneEventFilter(this);
+  }
+
   setCornerPositions();
+  pen.setColor(borderColor);
+
+  idText.show();
+  update();
+}
+
+void AnnotationGraphicsItem::hideHighlight( ) {
+
+  for (int i = 0; i < 4; ++i) {
+    corners[i]->hide();
+  }
+
+  if (isAnnotationSelected())
+    borderColor = Qt::blue;
+  else
+    borderColor = originColor;
+
+  brush = Qt::NoBrush;
+
+  setCornerPositions();
+  pen.setColor(borderColor);
+
+  idText.show();
   update();
 }
 
@@ -156,9 +167,12 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
   if (this->annotation != nullptr) {
-    AnnotationGraphicsItem::setSelectedAnnotation(this->annotation);
-    this->player->selectObject(this->annotation->getObject());
-    this->player->reload();
+      AnnotationGraphicsItem::setSelectedAnnotation(this->annotation);
+      hideHighlight();
+      if (AnnotationGraphicsItem::selected_annotation_item)
+        AnnotationGraphicsItem::selected_annotation_item->hideHighlight(); //hide previous selection
+      AnnotationGraphicsItem::selected_annotation_item = this;
+      this->player->selectObject(this->annotation->getObject());
   }
 }
 
@@ -226,17 +240,14 @@ void AnnotationGraphicsItem::editAnnotation() {
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  changeAppearance(0);
+  highlight(0);
 }
 
 /**
  * change item setting: if mouse on hover
 */
 void AnnotationGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  if (isSelected())
-    changeAppearance(1);
-  else
-    changeAppearance(-1);
+  hideHighlight();
 }
 
 /**
@@ -351,7 +362,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
 
   if (corner && own_event) {
     switch (event->type()) {
-    // if the mouse pressed, save the (x,y) coordinates inside the corner
+    // if the mouse pressed, save igh (x,y) coordinates inside the corner
     // object
     case QEvent::GraphicsSceneMousePress: {
       corner->setMouseState(Corner::MouseDown);

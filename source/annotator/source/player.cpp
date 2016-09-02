@@ -100,7 +100,7 @@ QString Player::getRateValue() {
 }
 
 void Player::selectObject(AnnotatorLib::Object *object) {
-  if (object != nullptr) emit objectSelected(object);
+  emit objectSelected(object);
 }
 
 AnnotatorLib::Session *Player::getSession() { return this->session; }
@@ -271,15 +271,38 @@ void Player::updateFrame(long frame_nmb) {
 void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
   clearAnnotationsGraphics();
   if (frame != nullptr) {
+
     for (AnnotatorLib::Annotation *annotation :
          AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
              frame, this->session)) {
+
+      //update selected annotation
+      if (AnnotationGraphicsItem::getSelectedAnnotation() && AnnotationGraphicsItem::getSelectedAnnotation()->getObject() == annotation->getObject()) {
+        AnnotationGraphicsItem::setSelectedAnnotation(annotation);
+      }
+
       AnnotationGraphicsItem *graphicsItem =
           AnnotationGraphicsItemFactory::createItem(annotation);
 
+      if (AnnotationGraphicsItem::getSelectedAnnotation() == annotation) {
+        AnnotationGraphicsItem::selected_annotation_item = graphicsItem;
+      }
+
       graphicsItem->setPlayer(this);
-      scene->addItem(graphicsItem);      
+      scene->addItem(graphicsItem);
       annotationGraphics.push_back(graphicsItem);
+    }
+
+    //if nothing is selected take first annotation
+    if (AnnotationGraphicsItem::getSelectedAnnotation() == nullptr || AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() != frame) {
+      if (!annotationGraphics.empty()) {
+          AnnotationGraphicsItem::setSelectedAnnotation(annotationGraphics.front()->getAnnotation());
+          AnnotationGraphicsItem::selected_annotation_item = annotationGraphics.front();
+          AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
+          selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
+      } else {
+          selectObject(nullptr);
+      }
     }
   }
 }

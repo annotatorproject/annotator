@@ -23,6 +23,8 @@ class AnnotationGraphicsItem : public QObject, public QGraphicsItem
     Q_OBJECT
 
 public:
+    static AnnotationGraphicsItem* selected_annotation_item;
+
     AnnotationGraphicsItem() = delete;
     AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
     virtual ~AnnotationGraphicsItem();
@@ -31,11 +33,12 @@ public:
     static void setSelectedAnnotation(AnnotatorLib::Annotation *);
     static AnnotatorLib::Annotation *getSelectedAnnotation();
 
-    QColor idToColor(long id) const;
-
     void setPlayer(Player *player);
 
     bool isAnnotationSelected() const;
+
+    void highlight(const int reason = -1);
+    void hideHighlight();
 
 signals:
     void objectSelected(AnnotatorLib::Object *object);
@@ -53,7 +56,7 @@ protected:
     qreal rectY;
     qreal width;
     qreal height;
-    Corner*  corners[4];
+    Corner* corners[4];
 
     QBrush getGradient();
 
@@ -67,9 +70,6 @@ protected:
 
 private:
     static AnnotatorLib::Annotation* selected_annotation;
-    static AnnotationGraphicsItem* selected_annotation_item;
-
-    static void updateSelectedAnnotation(AnnotationGraphicsItem* item);
 
     AnnotatorLib::Annotation *annotation;
 
@@ -84,14 +84,7 @@ private:
     void changeAnnotationSize(int x, int y, int w, int h);
     void initCorners();
     void initIdText();
-
-    /**
-     * @brief changeAppearance
-     * hover: 0
-     * selected: 1
-     * default: any other
-     */
-    void changeAppearance(const int reason = -1);
+    QColor idToColor(long id) const;
 
 private slots:
     void removeAnnotation();

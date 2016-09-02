@@ -10,11 +10,11 @@ public:
     RectangleAnnotation(AnnotatorLib::Annotation *annotation);
 
     virtual QRectF boundingRect() const;
-    //virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 protected:
     void init();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+    //void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 
 

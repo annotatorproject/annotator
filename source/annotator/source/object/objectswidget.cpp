@@ -1,6 +1,5 @@
 #include "objectswidget.h"
 #include "ui_objectswidget.h"
-
 #include <geomObject/annotationgraphicsitem.h>
 #include <AnnotatorLib/Session.h>
 
@@ -39,6 +38,12 @@ void ObjectsWidget::reload()
 
 void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
 {
+    //if nothing is selected deselect all
+    if (object == nullptr) {
+        ui->listWidget->clearSelection();
+        ui->listWidget->clearFocus();
+      return;
+    }
     for(int i = 0; i < ui->listWidget->count(); ++i){
         ObjectItem * oi = (ObjectItem*) ui->listWidget->itemWidget(ui->listWidget->item(i));
         if(oi->getObject() == object){
@@ -50,7 +55,6 @@ void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
 void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
     ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
-    if(selectedItem != nullptr) {
+    if(selectedItem != nullptr)
         emit objectSelected(selectedItem->getObject());
-    }
 }

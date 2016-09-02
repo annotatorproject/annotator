@@ -64,6 +64,7 @@ void NewAnnotationDialog::createAnnotation() {
               session->getObject(id), frame, x, y, w, h, this->session, false);
   }
   AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
+  //TODO: emit objectSelected(nA->getAnnotation()->getObject());
   CommandController::instance()->execute(nA);
 
   Annotator::Plugin *plugin =
