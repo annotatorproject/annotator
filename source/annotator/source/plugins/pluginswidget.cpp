@@ -1,7 +1,8 @@
 #include "pluginswidget.h"
-#include "plugins/plugin.h"
 #include "plugins/pluginloader.h"
 #include "ui_pluginswidget.h"
+
+#include <annotator/plugins/plugin.h>
 
 PluginsWidget::PluginsWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::PluginsWidget) {

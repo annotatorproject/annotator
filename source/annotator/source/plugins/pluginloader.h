@@ -1,7 +1,7 @@
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
 
-#include "plugin.h"
+#include <annotator/plugins/plugin.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
