@@ -1,6 +1,6 @@
 #include "rectangleannotation.h"
 
-RectangleAnnotation::RectangleAnnotation(AnnotatorLib::Annotation *annotation)
+RectangleAnnotation::RectangleAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation)
     : AnnotationGraphicsItem::AnnotationGraphicsItem(annotation) {
   assert(annotation->getObject());
   init();
@@ -13,7 +13,7 @@ void RectangleAnnotation::init() {
 
   // idText->hide();
 
-  if (this->getAnnotation()->isInterpolated()) pen.setStyle(Qt::DashLine);
+  if (this->getAnnotation()->isTemporary()) pen.setStyle(Qt::DashLine);
 
   pen.setColor(borderColor);
   pen.setWidth(2);

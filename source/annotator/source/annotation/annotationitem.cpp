@@ -4,7 +4,7 @@
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Object.h>
 
-AnnotationItem::AnnotationItem(AnnotatorLib::Annotation *annotation,
+AnnotationItem::AnnotationItem(shared_ptr<AnnotatorLib::Annotation> annotation,
                                QWidget *parent)
     : QWidget(parent), ui(new Ui::AnnotationItem), annotation(annotation) {
   ui->setupUi(this);
@@ -37,6 +37,6 @@ void AnnotationItem::reload() {
   }
 }
 
-AnnotatorLib::Annotation *AnnotationItem::getAnnotation() {
+shared_ptr<AnnotatorLib::Annotation> AnnotationItem::getAnnotation() {
   return this->annotation;
 }

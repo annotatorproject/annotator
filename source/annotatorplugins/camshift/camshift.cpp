@@ -30,7 +30,7 @@ QString CamShift::getName() { return "CamShift"; }
 
 QWidget *CamShift::getWidget() { return &widget; }
 
-bool CamShift::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool CamShift::setFrame(shared_ptr<Frame> frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
@@ -38,14 +38,14 @@ bool CamShift::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
 }
 
 // first call
-void CamShift::setObject(AnnotatorLib::Object *object) {
+void CamShift::setObject(shared_ptr<Object> object) {
   this->object = object;
 }
 
-AnnotatorLib::Object *CamShift::getObject() { return object; }
+shared_ptr<Object> CamShift::getObject() { return object; }
 
 // second call
-void CamShift::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
+void CamShift::setLastAnnotation(shared_ptr<Annotation> annotation) {
   if (annotation == nullptr || annotation->getObject() != object) return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
@@ -58,8 +58,8 @@ void CamShift::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
   newSelection = true;
 }
 
-std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
-  std::vector<AnnotatorLib::Commands::Command *> commands;
+std::vector<shared_ptr<Commands::Command>> CamShift::getCommands() {
+  std::vector<shared_ptr<Commands::Command> > commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
       this->lastAnnotation == nullptr || frame == lastFrame)
     return commands;
@@ -73,10 +73,9 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
     int x = found_rect.x;
     int y = found_rect.y;
 
-    AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(lastAnnotation->getObject(),
-                                                  frame, x, y, w, h,
-                                                  this->session, false);
+    shared_ptr<Commands::NewAnnotation> nA =
+        std::make_shared<Commands::NewAnnotation>(this->session, lastAnnotation->getObject(),
+                                                  frame, x, y, w, h);
     commands.push_back(nA);
 
   } catch (std::exception &e) {
@@ -86,15 +85,15 @@ std::vector<AnnotatorLib::Commands::Command *> CamShift::getCommands() {
   return commands;
 }
 
-void CamShift::setSession(AnnotatorLib::Session *session) {
+void CamShift::setSession(Session *session) {
   this->session = session;
 }
 
-void CamShift::calculate(AnnotatorLib::Object *object,
-                         AnnotatorLib::Frame *frame, cv::Mat image) {
+void CamShift::calculate(shared_ptr<Object> object,
+                         shared_ptr<Frame> frame, cv::Mat image) {
   setObject(object);
   setFrame(frame, image);
-  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+  for (shared_ptr<Commands::Command> command : getCommands()) {
     session->execute(command);
   }
 }

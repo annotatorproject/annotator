@@ -15,7 +15,7 @@ void CommandController::setSession(AnnotatorLib::Session *session) {
   this->session = session;
 }
 
-void CommandController::execute(AnnotatorLib::Commands::Command *command,
+void CommandController::execute(shared_ptr<AnnotatorLib::Commands::Command> command,
                                 bool request_gui_reload) {
   bool success = session->execute(command);
   if (request_gui_reload && success) emit onCommandExecute();

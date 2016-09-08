@@ -25,11 +25,11 @@ void ObjectsWidget::setSession(AnnotatorLib::Session *session)
 void ObjectsWidget::reload()
 {
     ui->listWidget->clear();
-    for(AnnotatorLib::Object *object: session->getObjects())
+    for(auto& pair: session->getObjects())
     {
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
 
-        ObjectItem *objectItem = new ObjectItem(object);
+        ObjectItem *objectItem = new ObjectItem(pair.second);
         item->setSizeHint(objectItem->minimumSizeHint());
         ui->listWidget->setItemWidget(item, objectItem);
     }
@@ -37,10 +37,10 @@ void ObjectsWidget::reload()
       selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
 }
 
-void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
+void ObjectsWidget::selectObject(shared_ptr<AnnotatorLib::Object> object)
 {
     //if nothing is selected deselect all
-    if (object == nullptr) {
+    if (!object) {
         ui->listWidget->clearSelection();
         ui->listWidget->clearFocus();
       return;
@@ -56,6 +56,7 @@ void ObjectsWidget::selectObject(AnnotatorLib::Object *object)
 void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
     ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
-    if(selectedItem != nullptr)
-        emit objectSelected(selectedItem->getObject());
+    //TODO: here is a bug
+//    if( selectedItem != nullptr && !selectedItem->getObject() )
+//        emit objectSelected(selectedItem->getObject());
 }

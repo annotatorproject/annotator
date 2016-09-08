@@ -127,6 +127,7 @@
     </property>
     <addaction name="actionAuto_Annotate"/>
     <addaction name="actionCompress_Session"/>
+    <addaction name="actionClear_Session"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -257,6 +258,11 @@
   <action name="actionCompress_Session">
    <property name="text">
     <string>Compress Session</string>
+   </property>
+  </action>
+  <action name="actionClear_Session">
+   <property name="text">
+    <string>Clear Session</string>
    </property>
   </action>
  </widget>

@@ -3,7 +3,7 @@
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 
-AttributeItem::AttributeItem(AnnotatorLib::Attribute *attribute,
+AttributeItem::AttributeItem(shared_ptr<AnnotatorLib::Attribute> attribute,
                              QWidget *parent)
     : QWidget(parent), attribute(attribute), ui(new Ui::AttributeItem) {
   ui->setupUi(this);
@@ -11,6 +11,8 @@ AttributeItem::AttributeItem(AnnotatorLib::Attribute *attribute,
 }
 
 AttributeItem::~AttributeItem() { delete ui; }
+
+shared_ptr<AnnotatorLib::Attribute> AttributeItem::getAttribute() { return attribute; }
 
 void AttributeItem::reload() {
   this->ui->idLabel->setText(QString::number(this->attribute->getId()));

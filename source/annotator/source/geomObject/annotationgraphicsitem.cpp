@@ -2,6 +2,8 @@
 #include "controller/commandcontroller.h"
 #include "gui/editobjectdialog.h"
 #include "plugins/pluginloader.h"
+#include <AnnotatorLib/Annotation.h>
+#include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
@@ -11,20 +13,21 @@
 #include <QObject>
 
 // static
-AnnotatorLib::Annotation* AnnotationGraphicsItem::selected_annotation = nullptr;
+weak_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
+    weak_ptr<AnnotatorLib::Annotation>();
 AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
 
-void AnnotationGraphicsItem::setSelectedAnnotation(AnnotatorLib::Annotation * a) {
+void AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation> a) {
   AnnotationGraphicsItem::selected_annotation = a;
 }
 
-AnnotatorLib::Annotation *AnnotationGraphicsItem::getSelectedAnnotation() {
-  return AnnotationGraphicsItem::selected_annotation;
+shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getSelectedAnnotation() {
+  return AnnotationGraphicsItem::selected_annotation.lock();
 }
 
 //constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
-    AnnotatorLib::Annotation *annotation)
+    shared_ptr<AnnotatorLib::Annotation> annotation)
     : QGraphicsItem::QGraphicsItem(nullptr), annotation(annotation) {
   assert(annotation);
   assert(annotation->getObject());
@@ -71,8 +74,6 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   for (int i = 0; i < 4; ++i) {
     delete corners[i];
   }
-  if (annotation->isInterpolated())
-    delete annotation;
 
   //delete actions
   delete action_del;
@@ -83,10 +84,10 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
 }
 
 bool AnnotationGraphicsItem::isAnnotationSelected() const {
-  return this->getAnnotation() == AnnotationGraphicsItem::selected_annotation;
+  return this->getAnnotation() == AnnotationGraphicsItem::selected_annotation.lock();
 }
 
-AnnotatorLib::Annotation *AnnotationGraphicsItem::getAnnotation() const {
+shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getAnnotation() const {
   return annotation;
 }
 
@@ -199,7 +200,7 @@ void AnnotationGraphicsItem::contextMenuEvent(
   QMenu contextMenu("Context menu");
   contextMenu.addAction(action_edit);
 
-  if (!this->annotation->isInterpolated()) {
+  if (!this->annotation->isTemporary()) {
     contextMenu.addAction(
         action_del); // you cannot delete a temporary annotation
   }
@@ -215,9 +216,8 @@ void AnnotationGraphicsItem::contextMenuEvent(
 
 void AnnotationGraphicsItem::removeObject() {
 
-  AnnotatorLib::Commands::RemoveObject *cmd =
-      new AnnotatorLib::Commands::RemoveObject(player->getSession(),
-                                               annotation->getObject());
+  shared_ptr<AnnotatorLib::Commands::RemoveObject> cmd =
+      std::make_shared<AnnotatorLib::Commands::RemoveObject>(player->getSession(), annotation->getObject());
   CommandController::instance()->execute(cmd);
 }
 
@@ -231,16 +231,16 @@ void AnnotationGraphicsItem::goToFirst() {
 
 void AnnotationGraphicsItem::compressObject() {
 
-  AnnotatorLib::Commands::CompressObject *cmd =
-      new AnnotatorLib::Commands::CompressObject(player->getSession(),
+  shared_ptr<AnnotatorLib::Commands::CompressObject> cmd =
+      std::make_shared<AnnotatorLib::Commands::CompressObject>(player->getSession(),
                                                    annotation->getObject());
   CommandController::instance()->execute(cmd);
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {
   // TODO: remove rect permanently (works nnot everytime)
-  AnnotatorLib::Commands::RemoveAnnotation *cmd =
-      new AnnotatorLib::Commands::RemoveAnnotation(player->getSession(),
+  shared_ptr<AnnotatorLib::Commands::RemoveAnnotation> cmd =
+      std::make_shared<AnnotatorLib::Commands::RemoveAnnotation>(player->getSession(),
                                                    annotation);
   CommandController::instance()->execute(cmd);
 }
@@ -438,13 +438,12 @@ void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
 
 void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
 
-  AnnotatorLib::Commands::Command *nA;
-  if (annotation->isInterpolated()) {
-    nA = new AnnotatorLib::Commands::NewAnnotation(
-        annotation->getObject(), annotation->getFrame(), x, y, w, h,
-        player->getSession(), true);
+  shared_ptr<AnnotatorLib::Commands::Command> nA;
+  if (annotation->isTemporary()) {
+    nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
+          player->getSession(), annotation->getObject(), annotation->getFrame(), x, y, w, h);
   } else {
-    nA = new AnnotatorLib::Commands::UpdateAnnotation(annotation, x, y, w, h);
+    nA = std::make_shared<AnnotatorLib::Commands::UpdateAnnotation>(annotation, x, y, w, h);
   }
   CommandController::instance()->execute(nA);
 

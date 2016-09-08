@@ -10,12 +10,12 @@
 
 NewAnnotationDialog::NewAnnotationDialog(AnnotatorLib::Session *session,
                                  unsigned long frame_nmb,
-                                 AnnotatorLib::Object* selected_obj,
+                                 shared_ptr<AnnotatorLib::Object> selected_obj,
                                  QWidget *parent)
     : QDialog(parent), session(session), frame_nmb(frame_nmb), selected_obj(selected_obj), ui(new Ui::NewAnnotationDialog) {
 
   ui->setupUi(this);
-  if (selected_obj == nullptr || session->getFrame(frame_nmb)->getObject(selected_obj) != nullptr ) {
+  if ( !selected_obj || session->getObject(selected_obj->getId()) != nullptr ) {
     ui->radioButtonSelObj->setEnabled(false);
     ui->radioButtonSelObj->setChecked(false);
     ui->radioButtonNewObj->setChecked(true);
@@ -45,23 +45,24 @@ void NewAnnotationDialog::setDimensions(float x, float y, float w, float h) {
 
 void NewAnnotationDialog::createAnnotation() {
 
-  AnnotatorLib::Class * selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
+  shared_ptr<AnnotatorLib::Class> selClass = this->session->getClass(ui->objectClassComboBox->currentText().toStdString());
   if(selClass == nullptr){
       (void) QMessageBox::information(this, tr("Error"),
                                                           tr("No such class registered."), QMessageBox::Ok);
       return;
   }
 
-  AnnotatorLib::Frame *frame = session->getFrame(this->frame_nmb);
+  shared_ptr<AnnotatorLib::Frame> frame = session->getFrame(this->frame_nmb);
+  if (!frame) frame = std::make_shared<AnnotatorLib::Frame>(frame_nmb);
   unsigned long id = (unsigned long)ui->objectIdLineEdit->text().toULong();
 
-  AnnotatorLib::Commands::NewAnnotation *nA;
+  shared_ptr<AnnotatorLib::Commands::NewAnnotation> nA;
   if (this->ui->radioButtonNewObj->isChecked()) {
-    nA = new AnnotatorLib::Commands::NewAnnotation(
-            id, selClass, frame, x, y, w, h, this->session, false);
+    nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
+            id, selClass, this->session, frame, x, y, w, h);
   } else {
-    nA = new AnnotatorLib::Commands::NewAnnotation(
-              session->getObject(id), frame, x, y, w, h, this->session, false);
+    nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
+            this->session, session->getObject(id), frame, x, y, w, h);
   }
   AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
   //TODO: emit objectSelected(nA->getAnnotation()->getObject());
@@ -76,8 +77,8 @@ void NewAnnotationDialog::createAnnotation() {
 void NewAnnotationDialog::reloadClasses()
 {
     ui->objectClassComboBox->clear();
-    for(AnnotatorLib::Class * c: session->getClasses()){
-        ui->objectClassComboBox->addItem(QString::fromStdString(c->getName()));
+    for(auto& pair: session->getClasses()){
+        ui->objectClassComboBox->addItem(QString::fromStdString(pair.second->getName()));
     }
 }
 

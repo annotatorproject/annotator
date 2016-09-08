@@ -7,7 +7,7 @@
 class AnnotationGraphicsItemFactory {
  public:
   static AnnotationGraphicsItem *createItem(
-      AnnotatorLib::Annotation *annotation);
+      shared_ptr<AnnotatorLib::Annotation> annotation);
 };
 
 #endif  // ANNOTATIONGRAPHICSITEMFACTORY_H

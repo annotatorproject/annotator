@@ -8,6 +8,8 @@
 #include <QLabel>
 #include <list>
 
+#include <memory>
+
 // Graphics
 #include "graphic/owngraphicscene.h"
 #include "graphic/owngraphicview.h"
@@ -17,6 +19,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+using std::shared_ptr;
 
 namespace Ui {
 class Player;
@@ -42,7 +46,7 @@ class Player : public QWidget {
 
   QString getRateValue();
 
-  void selectObject(AnnotatorLib::Object *object);
+  void selectObject(shared_ptr<AnnotatorLib::Object> object);
 
   AnnotatorLib::Session *getSession();
 
@@ -51,16 +55,13 @@ class Player : public QWidget {
  public slots:
   void showFrame(cv::Mat frame);
   void updateFrame(long frame);
-  void showAnnotationsOfFrame(AnnotatorLib::Frame *frame);
-  //void showTrackedAnnotations(AnnotatorLib::Frame *frame);
+  void showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame);
   void setSliderValue(int newpos);
-
   void jumpTo(long index);  // Jump to a position
-
   void reload();
 
  signals:
-  void objectSelected(AnnotatorLib::Object *object);
+  void objectSelected(shared_ptr<AnnotatorLib::Object> object);
   void requestReload();
 
  protected:

@@ -6,7 +6,7 @@
 #include "ui_editobjectdialog.h"
 
 EditObjectDialog::EditObjectDialog(AnnotatorLib::Session* session,
-                                   AnnotatorLib::Object* obj, QWidget* parent)
+                                   shared_ptr<AnnotatorLib::Object> obj, QWidget* parent)
     : QDialog(parent),
       session(session),
       obj(obj),
@@ -25,7 +25,7 @@ EditObjectDialog::EditObjectDialog(AnnotatorLib::Session* session,
 EditObjectDialog::~EditObjectDialog() { delete ui; }
 
 void EditObjectDialog::updateObject() {
-  AnnotatorLib::Class* selClass = this->session->getClass(
+  shared_ptr<AnnotatorLib::Class> selClass = this->session->getClass(
       ui->objectClassComboBox->currentText().toStdString());
   if (selClass == nullptr) {
     (void)QMessageBox::information(
@@ -34,15 +34,15 @@ void EditObjectDialog::updateObject() {
   }
   if (selClass == obj->getClass()) return;
 
-  AnnotatorLib::Commands::UpdateObject* uO =
-      new AnnotatorLib::Commands::UpdateObject(obj, selClass);
+  shared_ptr<AnnotatorLib::Commands::UpdateObject> uO =
+      std::make_shared<AnnotatorLib::Commands::UpdateObject>(obj, selClass);
   CommandController::instance()->execute(uO);
 }
 
 void EditObjectDialog::reloadClasses() {
   ui->objectClassComboBox->clear();
-  for (AnnotatorLib::Class* c : session->getClasses()) {
-    ui->objectClassComboBox->addItem(QString::fromStdString(c->getName()));
+  for (auto& pair : session->getClasses()) {
+    ui->objectClassComboBox->addItem(QString::fromStdString(pair.second->getName()));
   }
 }
 

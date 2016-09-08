@@ -68,6 +68,8 @@ class MainWindow : public QMainWindow {
 
   void on_actionCompress_Session_triggered();
 
+  void on_actionClear_Session_triggered();
+
   void on_actionAbout_triggered();
 
   void on_actionClasses_triggered();

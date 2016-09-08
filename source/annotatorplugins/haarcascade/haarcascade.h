@@ -13,6 +13,9 @@
 #include <annotator/plugins/plugin.h>
 #include "widget.h"
 
+using namespace AnnotatorLib;
+using std::shared_ptr;
+
 namespace AnnotatorLib {
 class Session;
 }
@@ -31,13 +34,13 @@ class Haarcascade : public Plugin {
   QString getName() override;
   QWidget *getWidget() override;
 
-  bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
-  void setObject(AnnotatorLib::Object *object) override;
-  AnnotatorLib::Object *getObject() override;
-  void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
-  std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
-  void setSession(AnnotatorLib::Session *session) override;
-  void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame,
+  bool setFrame(shared_ptr<Frame> frame, cv::Mat image) override;
+  void setObject(shared_ptr<Object> object) override;
+  shared_ptr<Object> getObject() override;
+  void setLastAnnotation(shared_ptr<Annotation> annotation) override;
+  std::vector<shared_ptr<Commands::Command> > getCommands() override;
+  void setSession(Session *session) override;
+  void calculate(shared_ptr<Object> object, shared_ptr<Frame> frame,
                  cv::Mat image);
 
   void loadCascade(std::string cascadeFile);
@@ -45,11 +48,11 @@ class Haarcascade : public Plugin {
   void setObjectName(std::string name);
 
  protected:
-  AnnotatorLib::Frame *frame = 0;
-  AnnotatorLib::Frame *lastFrame = 0;
+  shared_ptr<Frame> frame = 0;
+  shared_ptr<Frame> lastFrame = 0;
 
-  AnnotatorLib::Annotation *lastAnnotation;
-  AnnotatorLib::Object *object;
+  shared_ptr<Annotation> lastAnnotation;
+  shared_ptr<Object> object;
 
   cv::Mat frameImg;
   unsigned int objectNr = 0;
@@ -58,7 +61,7 @@ class Haarcascade : public Plugin {
   std::string cascadeFile = ":/haarcascade/haarcascade_frontalface_default.xml";
   cv::CascadeClassifier cascade;
 
-  AnnotatorLib::Session *session = nullptr;
+  Session *session = nullptr;
 
   Widget widget;
 };

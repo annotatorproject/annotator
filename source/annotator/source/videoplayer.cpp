@@ -222,6 +222,7 @@ void Videoplayer::wait(int msecs) {
  * @return True if success. False otherwise
  */
 bool Videoplayer::jumpTo(long index) {
+  index -= 1;
   if (index > length) {
     return 1;
   } else if (index == length) {
@@ -234,7 +235,7 @@ bool Videoplayer::jumpTo(long index) {
     cv::Mat frame;
     getNextFrame(frame);
     emit showFrame(frame);
-    curPos = index;
+    curPos = index; //do we need this?
     emit updateFrame(getCurFrameNr());
   }
   start_Timer.restart();
@@ -286,7 +287,7 @@ void Videoplayer::close() {
  */
 void Videoplayer::nextFrame() {
   if (curPos < length) {
-    jumpTo(curPos);
+    jumpTo(curPos + 1);
   }
   emit updateHorizontalSlider();
 }
@@ -297,7 +298,7 @@ void Videoplayer::nextFrame() {
  */
 void Videoplayer::prevFrame() {
   if (curPos >= 0) {
-    curPos -= 2;
+    curPos -= 1;
     jumpTo(curPos);
   }
   emit updateHorizontalSlider();

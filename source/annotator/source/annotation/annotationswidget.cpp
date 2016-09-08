@@ -26,14 +26,14 @@ void AnnotationsWidget::reload() {
          << "Frame";
   ui->treeWidget->setHeaderLabels(labels);
 
-  for (AnnotatorLib::Object *object : session->getObjects()) {
-    addObject(object);
+  for (auto& pair : session->getObjects()) {
+    addObject(pair.second);
   }
 }
 
-void AnnotationsWidget::addAnnotation(AnnotatorLib::Annotation *annotation,
+void AnnotationsWidget::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
                                       QTreeWidgetItem *item) {
-  if (annotation == nullptr) return;
+  if (!annotation) return;
 
   AnnotationItem *annotationItem = new AnnotationItem(annotation);
   QTreeWidgetItem *childItem = new QTreeWidgetItem();
@@ -42,13 +42,11 @@ void AnnotationsWidget::addAnnotation(AnnotatorLib::Annotation *annotation,
   if (!annotation->isLast()) addAnnotation(annotation->getNext(), item);
 }
 
-void AnnotationsWidget::addObject(AnnotatorLib::Object *object) {
-  AnnotatorLib::Annotation *firstAnnotation = object->getFirstAnnotation();
-  if (firstAnnotation == nullptr) return;
+void AnnotationsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
+  shared_ptr<AnnotatorLib::Annotation> firstAnnotation = object->getFirstAnnotation();
+  if (!firstAnnotation) return;
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-  item->setText(0, QString::fromStdString(object->getClass()
-                                              ? object->getClass()->getName()
-                                              : "unnamed") +
+  item->setText(0, QString::fromStdString(object->getName()) +
                        " (" + QString::number(object->getId()) + ")");
   ui->treeWidget->addTopLevelItem(item);
   addAnnotation(firstAnnotation, item);
@@ -63,10 +61,10 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
     if (item->getAnnotation()->getFrame() != nullptr)
       emit frameSelected(
           item->getAnnotation()->getFrame()->getFrameNumber());  // TODO: jumps
-                                                                 // to wrong
-                                                                 // frame
-                                                                 // (shifted by
-                                                                 // -1)
+                                                                     // to wrong
+                                                                     // frame
+                                                                     // (shifted by
+                                                                     // -1)
   }
 }
 

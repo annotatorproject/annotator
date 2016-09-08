@@ -4,7 +4,7 @@
 #include "rectangleannotation.h"
 
 AnnotationGraphicsItem *AnnotationGraphicsItemFactory::createItem(
-    AnnotatorLib::Annotation *annotation) {
+    shared_ptr<AnnotatorLib::Annotation> annotation) {
   assert(annotation);
   if (annotation->getType() == AnnotatorLib::AnnotationType::ELLIPSE) {
     return new EllipseAnnotation(annotation);

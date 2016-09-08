@@ -2,6 +2,7 @@
 #include <string>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
+#include <AnnotatorLib/Commands/CleanSession.h>
 #include <QApplication>
 #include <QDebug>
 #include <QFileDialog>
@@ -41,14 +42,14 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::connectSignalSlots() {
-  connect(&annotationsWidget, SIGNAL(objectSelected(AnnotatorLib::Object *)),
-          &objectsWidget, SLOT(selectObject(AnnotatorLib::Object *)));
+  connect(&annotationsWidget, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(selectObject(shared_ptr<AnnotatorLib::Object>)));
 
   connect(&annotationsWidget, SIGNAL(frameSelected(long)), &playerWidget,
           SLOT(jumpTo(long)));
 
-  connect(&playerWidget, SIGNAL(objectSelected(AnnotatorLib::Object *)),
-          &objectsWidget, SLOT(selectObject(AnnotatorLib::Object *)));
+  connect(&playerWidget, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(selectObject(shared_ptr<AnnotatorLib::Object>)));
 
   connect(&playerWidget, SIGNAL(requestReload()), this, SLOT(reloadWidgets()));
 }
@@ -211,12 +212,26 @@ void MainWindow::on_actionAuto_Annotate_toggled(bool arg1) {
   this->playerWidget.setAutoAnnotation(arg1);
 }
 
+void MainWindow::on_actionClear_Session_triggered() {
+
+  QMessageBox::StandardButton resBtn = QMessageBox::question(
+      this, "", tr("This will delete everything! Are you sure?\n"),
+      QMessageBox::Cancel | QMessageBox::Yes,
+      QMessageBox::Yes);
+
+  if (resBtn == QMessageBox::Yes) {
+      shared_ptr<AnnotatorLib::Commands::CleanSession> cmd =
+         std::make_shared<AnnotatorLib::Commands::CleanSession>(this->session);
+      CommandController::instance()->execute(cmd);
+  }
+}
+
 void MainWindow::on_actionCompress_Session_triggered() {
 
   //TODO: freeze window and show progress bar
   int nmb_annotations_before = session->getAnnotations().size();
-  AnnotatorLib::Commands::CompressSession *cmd =
-      new AnnotatorLib::Commands::CompressSession(this->session);
+  shared_ptr<AnnotatorLib::Commands::CompressSession> cmd =
+     std::make_shared<AnnotatorLib::Commands::CompressSession>(this->session);
   CommandController::instance()->execute(cmd);
   int nmb_annotations_after= session->getAnnotations().size();
 

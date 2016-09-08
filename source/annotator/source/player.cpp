@@ -99,8 +99,8 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-void Player::selectObject(AnnotatorLib::Object *object) {
-  emit objectSelected(object);
+void Player::selectObject(shared_ptr<AnnotatorLib::Object> object) {
+  emit objectSelected(object);  //change to shared_ptr
 }
 
 AnnotatorLib::Session *Player::getSession() { return this->session; }
@@ -240,7 +240,8 @@ void Player::showFrame(cv::Mat frame) {
 }
 
 void Player::updateFrame(long frame_nmb) {
-  AnnotatorLib::Frame *f = session->getFrame(frame_nmb);
+  shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
+  if (!f) f = std::make_shared<AnnotatorLib::Frame>(frame_nmb); //create temporary frame
 
   showAnnotationsOfFrame(f);
 
@@ -257,56 +258,51 @@ void Player::updateFrame(long frame_nmb) {
         plugin->setFrame(f, currentFrame);
         plugin->setObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
         //get commands and execute
-        std::vector<AnnotatorLib::Commands::Command*> cmds = plugin->getCommands();
+        std::vector<shared_ptr<AnnotatorLib::Commands::Command>> cmds = plugin->getCommands();
         for (auto it = cmds.begin(); it != cmds.end(); it++) {
           CommandController::instance()->execute(*it);
         }
     }
   }
-
-  showAnnotationsOfFrame(f);
-
   this->scene->setCurrentFrame(frame_nmb);
   this->scene->update();
 }
 
-void Player::showAnnotationsOfFrame(AnnotatorLib::Frame *frame) {
+void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
   clearAnnotationsGraphics();
-  if (frame != nullptr) {
 
-    for (AnnotatorLib::Annotation *annotation :
-         AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
-             frame, this->session)) {
+  for (shared_ptr<AnnotatorLib::Annotation> annotation :
+       AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(this->session, frame)) {
 
-      //update selected annotation
-      if (AnnotationGraphicsItem::getSelectedAnnotation() && AnnotationGraphicsItem::getSelectedAnnotation()->getObject() == annotation->getObject()) {
-        AnnotationGraphicsItem::setSelectedAnnotation(annotation);
-      }
-
-      AnnotationGraphicsItem *graphicsItem =
-          AnnotationGraphicsItemFactory::createItem(annotation);
-
-      if (AnnotationGraphicsItem::getSelectedAnnotation() == annotation) {
-        AnnotationGraphicsItem::selected_annotation_item = graphicsItem;
-      }
-
-      graphicsItem->setPlayer(this);
-      scene->addItem(graphicsItem);
-      annotationGraphics.push_back(graphicsItem);
+    //update selected annotation
+    if (AnnotationGraphicsItem::getSelectedAnnotation() && AnnotationGraphicsItem::getSelectedAnnotation()->getObject() == annotation->getObject()) {
+      AnnotationGraphicsItem::setSelectedAnnotation(annotation);
     }
 
-    //if nothing is selected take first annotation
-    if (AnnotationGraphicsItem::getSelectedAnnotation() == nullptr || AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() != frame) {
-      if (!annotationGraphics.empty()) {
-          AnnotationGraphicsItem::setSelectedAnnotation(annotationGraphics.front()->getAnnotation());
-          AnnotationGraphicsItem::selected_annotation_item = annotationGraphics.front();
-          AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
-          selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
-      } else {
-          selectObject(nullptr);
-      }
+    AnnotationGraphicsItem *graphicsItem =
+        AnnotationGraphicsItemFactory::createItem(annotation);
+
+    if (AnnotationGraphicsItem::getSelectedAnnotation() == annotation) {
+      AnnotationGraphicsItem::selected_annotation_item = graphicsItem;
+    }
+
+    graphicsItem->setPlayer(this);
+    scene->addItem(graphicsItem);
+    annotationGraphics.push_back(graphicsItem);
+  }
+
+  //if nothing is selected take first annotation
+  if (AnnotationGraphicsItem::getSelectedAnnotation() == nullptr || AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() != frame) {
+    if (!annotationGraphics.empty()) {
+        AnnotationGraphicsItem::setSelectedAnnotation(annotationGraphics.front()->getAnnotation());
+        AnnotationGraphicsItem::selected_annotation_item = annotationGraphics.front();
+        AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
+        selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
+    } else {
+        selectObject(nullptr);
     }
   }
+
 }
 
 /**
@@ -338,7 +334,7 @@ void Player::setSliderValue(int newpos) {
 }
 
 void Player::jumpTo(long index) {
-  this->videoplayer->jumpTo(index - 1); //why -1?
+  this->videoplayer->jumpTo(index); //why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }

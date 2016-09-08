@@ -179,6 +179,6 @@ QPointF OwnGraphicScene::resetCoordinate(QPointF RectPos) {
                  ((RectPos.y() * this->height()) / inputCoordinate.y()));
 }
 
-void OwnGraphicScene::on_objectSelected(AnnotatorLib::Object *obj) {
+void OwnGraphicScene::on_objectSelected(shared_ptr<AnnotatorLib::Object> obj) {
   this->selected_obj = obj;
 }

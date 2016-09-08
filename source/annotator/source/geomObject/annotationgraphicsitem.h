@@ -1,9 +1,7 @@
 #ifndef ANNOTATIONGRAPHICSITEM_H
 #define ANNOTATIONGRAPHICSITEM_H
 
-#include <AnnotatorLib/Annotation.h>
-#include <AnnotatorLib/Object.h>
-
+#include <memory>
 #include <QGraphicsItem>
 #include <QColor>
 #include <QPen>
@@ -14,9 +12,11 @@
 #include "player.h"
 #include "corner.h"
 
+using std::weak_ptr;
 
 class QAction;
 class Annotation;
+class Object;
 
 class AnnotationGraphicsItem : public QObject, public QGraphicsItem
 {
@@ -26,12 +26,12 @@ public:
     static AnnotationGraphicsItem* selected_annotation_item;
 
     AnnotationGraphicsItem() = delete;
-    AnnotationGraphicsItem(AnnotatorLib::Annotation *annotation);
+    AnnotationGraphicsItem(shared_ptr<AnnotatorLib::Annotation> annotation);
     virtual ~AnnotationGraphicsItem();
-    AnnotatorLib::Annotation *getAnnotation() const;
+    shared_ptr<AnnotatorLib::Annotation> getAnnotation() const;
 
-    static void setSelectedAnnotation(AnnotatorLib::Annotation *);
-    static AnnotatorLib::Annotation *getSelectedAnnotation();
+    static void setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation>);
+    static shared_ptr<AnnotatorLib::Annotation> getSelectedAnnotation();
 
     void setPlayer(Player *player);
 
@@ -69,9 +69,9 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
-    static AnnotatorLib::Annotation* selected_annotation;
+    static weak_ptr<AnnotatorLib::Annotation> selected_annotation;
 
-    AnnotatorLib::Annotation *annotation;
+    shared_ptr<AnnotatorLib::Annotation> annotation;
 
     QAction* action_del;
     QAction* action_edit;

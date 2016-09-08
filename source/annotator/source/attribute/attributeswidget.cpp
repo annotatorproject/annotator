@@ -15,10 +15,10 @@ void AttributesWidget::setSession(AnnotatorLib::Session *session) {
 
 void AttributesWidget::reload() {
   ui->listWidget->clear();
-  for (AnnotatorLib::Attribute *attribute : session->getAttributes()) {
+  for (auto& pair : session->getAttributes()) {
     QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
 
-    AttributeItem *attributeItem = new AttributeItem(attribute);
+    AttributeItem *attributeItem = new AttributeItem(pair.second);
     item->setSizeHint(attributeItem->minimumSizeHint());
     ui->listWidget->setItemWidget(item, attributeItem);
   }

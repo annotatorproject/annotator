@@ -3,6 +3,9 @@
 
 #include <AnnotatorLib/Annotation.h>
 #include <QWidget>
+#include <memory>
+
+using std::shared_ptr;
 
 namespace Ui {
 class AnnotationItem;
@@ -12,15 +15,15 @@ class AnnotationItem : public QWidget {
   Q_OBJECT
 
  public:
-  explicit AnnotationItem(AnnotatorLib::Annotation *annotation,
+  explicit AnnotationItem(shared_ptr<AnnotatorLib::Annotation> annotation,
                           QWidget *parent = 0);
   ~AnnotationItem();
   void reload();
-  AnnotatorLib::Annotation *getAnnotation();
+  shared_ptr<AnnotatorLib::Annotation> getAnnotation();
 
  private:
   Ui::AnnotationItem *ui;
-  AnnotatorLib::Annotation *annotation;
+  shared_ptr<AnnotatorLib::Annotation> annotation;
 };
 
 #endif  // ANNOTATIONITEM_H

@@ -3,6 +3,7 @@
 
 #include <AnnotatorLib/Session.h>
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 class NewAnnotationDialog;
@@ -14,7 +15,7 @@ class NewAnnotationDialog : public QDialog {
  public:
   explicit NewAnnotationDialog(AnnotatorLib::Session *session,
                                unsigned long frame_nmb,
-                               AnnotatorLib::Object *sel_obj = nullptr,
+                               shared_ptr<AnnotatorLib::Object> sel_obj = shared_ptr<AnnotatorLib::Object>(nullptr),
                                QWidget *parent = 0);
   ~NewAnnotationDialog();
   void setDimensions(float x, float y, float w, float h);
@@ -26,7 +27,7 @@ class NewAnnotationDialog : public QDialog {
 
   AnnotatorLib::Session *session;
   const unsigned long frame_nmb = 0;
-  const AnnotatorLib::Object *selected_obj;
+  const shared_ptr<AnnotatorLib::Object> selected_obj;
   Ui::NewAnnotationDialog *ui;
   float x = 0;
   float y = 0;

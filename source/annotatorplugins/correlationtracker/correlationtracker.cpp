@@ -28,7 +28,7 @@ QString CorrelationTracker::getName() { return "CorrelationTracker"; }
 
 QWidget *CorrelationTracker::getWidget() { return &widget; }
 
-bool CorrelationTracker::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool CorrelationTracker::setFrame(shared_ptr<Frame> frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
@@ -36,15 +36,15 @@ bool CorrelationTracker::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
 }
 
 // first call
-void CorrelationTracker::setObject(AnnotatorLib::Object *object) {
+void CorrelationTracker::setObject(shared_ptr<Object> object) {
   this->object = object;
 }
 
-AnnotatorLib::Object *CorrelationTracker::getObject() { return object; }
+shared_ptr<Object> CorrelationTracker::getObject() { return object; }
 
 // second call
 void CorrelationTracker::setLastAnnotation(
-    AnnotatorLib::Annotation *annotation) {
+    shared_ptr<Annotation> annotation) {
   if (annotation == nullptr || annotation->getObject() != object) return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
@@ -65,9 +65,9 @@ void CorrelationTracker::setLastAnnotation(
   newSelection = true;
 }
 
-std::vector<AnnotatorLib::Commands::Command *>
+std::vector<shared_ptr<Commands::Command> >
 CorrelationTracker::getCommands() {
-  std::vector<AnnotatorLib::Commands::Command *> commands;
+  std::vector<shared_ptr<Commands::Command> > commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
       this->lastAnnotation == nullptr || lastFrame == frame)
     return commands;
@@ -81,10 +81,9 @@ CorrelationTracker::getCommands() {
     int x = found_rect.x;
     int y = found_rect.y;
 
-    AnnotatorLib::Commands::NewAnnotation *nA =
-        new AnnotatorLib::Commands::NewAnnotation(lastAnnotation->getObject(),
-                                                  this->frame, x, y, w, h,
-                                                  this->session, false);
+    shared_ptr<Commands::NewAnnotation> nA =
+        std::make_shared<Commands::NewAnnotation>(this->session, lastAnnotation->getObject(),
+                                                  this->frame, x, y, w, h);
     commands.push_back(nA);
 
   } catch (std::exception &e) {
@@ -94,15 +93,15 @@ CorrelationTracker::getCommands() {
   return commands;
 }
 
-void CorrelationTracker::setSession(AnnotatorLib::Session *session) {
+void CorrelationTracker::setSession(Session *session) {
   this->session = session;
 }
 
-void CorrelationTracker::calculate(AnnotatorLib::Object *object,
-                                   AnnotatorLib::Frame *frame, cv::Mat image) {
+void CorrelationTracker::calculate(shared_ptr<Object> object,
+                                   shared_ptr<Frame> frame, cv::Mat image) {
   setObject(object);
   setFrame(frame, image);
-  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+  for (shared_ptr<Commands::Command> command : getCommands()) {
     session->execute(command);
   }
 }

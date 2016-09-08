@@ -23,25 +23,25 @@ QString Haarcascade::getName() { return "Haarcascade"; }
 
 QWidget *Haarcascade::getWidget() { return &widget; }
 
-bool Haarcascade::setFrame(AnnotatorLib::Frame *frame, cv::Mat image) {
+bool Haarcascade::setFrame(shared_ptr<Frame> frame, cv::Mat image) {
   this->lastFrame = this->frame;
   this->frame = frame;
   this->frameImg = image;
   return lastFrame != frame;
 }
 
-void Haarcascade::setObject(AnnotatorLib::Object *object) {
+void Haarcascade::setObject(shared_ptr<Object> object) {
   this->object = object;
 }
 
-AnnotatorLib::Object *Haarcascade::getObject() { return this->object; }
+shared_ptr<Object> Haarcascade::getObject() { return this->object; }
 
-void Haarcascade::setLastAnnotation(AnnotatorLib::Annotation *annotation) {
+void Haarcascade::setLastAnnotation(shared_ptr<Annotation> annotation) {
   this->lastAnnotation = annotation;
 }
 
-std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
-  std::vector<AnnotatorLib::Commands::Command *> commands;
+std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
+  std::vector<shared_ptr<Commands::Command> > commands;
   if (!this->newObjects) return commands;
   try {
     std::vector<cv::Rect> objects;
@@ -60,9 +60,9 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
       float h = objects[i].height;
 
       // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
-      AnnotatorLib::Commands::NewAnnotation *nA =
-          new AnnotatorLib::Commands::NewAnnotation(this->object, frame, x, y,
-                                                    w, h, this->session, true);
+      shared_ptr<Commands::NewAnnotation> nA =
+          std::make_shared<Commands::NewAnnotation>(this->session, this->object, frame, x, y,
+                                                    w, h);
       commands.push_back(nA);
     }
 
@@ -73,15 +73,15 @@ std::vector<AnnotatorLib::Commands::Command *> Haarcascade::getCommands() {
   return commands;
 }
 
-void Haarcascade::setSession(AnnotatorLib::Session *session) {
+void Haarcascade::setSession(Session *session) {
   this->session = session;
 }
 
-void Haarcascade::calculate(AnnotatorLib::Object *object,
-                            AnnotatorLib::Frame *frame, cv::Mat image) {
+void Haarcascade::calculate(shared_ptr<Object> object,
+                            shared_ptr<Frame> frame, cv::Mat image) {
   setObject(object);
   setFrame(frame, image);
-  for (AnnotatorLib::Commands::Command *command : getCommands()) {
+  for (shared_ptr<Commands::Command> command : getCommands()) {
     session->execute(command);
   }
 }

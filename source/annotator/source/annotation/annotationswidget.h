@@ -18,12 +18,12 @@ class AnnotationsWidget : public QWidget {
 
   void setSession(AnnotatorLib::Session *session);
   void reload();
-  void addAnnotation(AnnotatorLib::Annotation *annotation,
+  void addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
                      QTreeWidgetItem *item);
-  void addObject(AnnotatorLib::Object *object);
+  void addObject(shared_ptr<AnnotatorLib::Object> object);
 
  signals:
-  void objectSelected(AnnotatorLib::Object *object);
+  void objectSelected(shared_ptr<AnnotatorLib::Object> object);
   void frameSelected(long frame);
 
  private slots:

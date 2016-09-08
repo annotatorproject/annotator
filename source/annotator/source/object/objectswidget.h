@@ -19,10 +19,10 @@ class ObjectsWidget : public QWidget {
   void reload();
 
  signals:
-  void objectSelected(AnnotatorLib::Object *object);
+  void objectSelected(shared_ptr<AnnotatorLib::Object> object);
 
  private slots:
-  void selectObject(AnnotatorLib::Object *object);
+  void selectObject(shared_ptr<AnnotatorLib::Object> object);
   void on_listWidget_itemSelectionChanged();
 
  private:

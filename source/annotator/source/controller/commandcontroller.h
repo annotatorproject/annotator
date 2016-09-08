@@ -21,7 +21,7 @@ class CommandController : public QObject {
   void onCommandUndo();
 
  public slots:
-  void execute(AnnotatorLib::Commands::Command *command,
+  void execute(shared_ptr<AnnotatorLib::Commands::Command> command,
                bool request_gui_reload = true);
   void redo();
   void undo();

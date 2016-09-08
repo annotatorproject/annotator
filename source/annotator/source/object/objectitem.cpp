@@ -4,7 +4,7 @@
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Class.h>
 
-ObjectItem::ObjectItem(AnnotatorLib::Object *object, QWidget *parent) :
+ObjectItem::ObjectItem(shared_ptr<AnnotatorLib::Object> object, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ObjectItem),
     object(object)
@@ -25,7 +25,7 @@ void ObjectItem::reload()
     this->ui->nameLineEdit->setText(QString::fromStdString(this->object->getName()));
 }
 
-AnnotatorLib::Object *ObjectItem::getObject()
+shared_ptr<AnnotatorLib::Object> ObjectItem::getObject()
 {
     return object;
 }

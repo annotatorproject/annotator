@@ -10,6 +10,9 @@
 #include <QtCore/QtPlugin>
 #include <QtGui/QIcon>
 
+using namespace AnnotatorLib;
+using std::shared_ptr;
+
 namespace AnnotatorLib {
 class Session;
 }
@@ -28,24 +31,24 @@ class KalmanFilter : public Plugin {
   QString getName() override;
   QWidget *getWidget() override;
 
-  bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) override;
-  void setObject(AnnotatorLib::Object *object) override;
-  AnnotatorLib::Object *getObject() override;
-  void setLastAnnotation(AnnotatorLib::Annotation *annotation) override;
-  std::vector<AnnotatorLib::Commands::Command *> getCommands() override;
-  void setSession(AnnotatorLib::Session *session) override;
-  void calculate(AnnotatorLib::Object *object, AnnotatorLib::Frame *frame,
+  bool setFrame(shared_ptr<Frame> frame, cv::Mat image) override;
+  void setObject(shared_ptr<Object> object) override;
+  shared_ptr<Object> getObject() override;
+  void setLastAnnotation(shared_ptr<Annotation> annotation) override;
+  std::vector<shared_ptr<Commands::Command> > getCommands() override;
+  void setSession(Session *session) override;
+  void calculate(shared_ptr<Object> object, shared_ptr<Frame> frame,
                  cv::Mat image);
 
  protected:
-  AnnotatorLib::Annotation *lastAnnotation = nullptr;
-  AnnotatorLib::Object *object = nullptr;
-  AnnotatorLib::Session *session = nullptr;
+  shared_ptr<Annotation> lastAnnotation = nullptr;
+  shared_ptr<Object> object = nullptr;
+  Session *session = nullptr;
 
   Widget widget;
 
-  AnnotatorLib::Frame *frame = nullptr;
-  AnnotatorLib::Frame *lastFrame = nullptr;
+  shared_ptr<Frame> frame = nullptr;
+  shared_ptr<Frame> lastFrame = nullptr;
   cv::Mat frameImg;
 };
 }

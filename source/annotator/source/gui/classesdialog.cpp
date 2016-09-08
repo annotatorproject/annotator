@@ -14,15 +14,15 @@ void ClassesDialog::on_closeButton_clicked() { this->close(); }
 void ClassesDialog::on_addNewButton_clicked() {
   if (!ui->newLineEdit->text().isEmpty()) {
     session->addClass(
-        new AnnotatorLib::Class(ui->newLineEdit->text().toStdString()));
+        std::make_shared<AnnotatorLib::Class>(ui->newLineEdit->text().toStdString()));
     reloadClasses();
   }
 }
 
 void ClassesDialog::reloadClasses() {
   ui->classesListWidget->clear();
-  for (AnnotatorLib::Class *c : session->getClasses()) {
-    ui->classesListWidget->addItem(QString::fromStdString(c->getName()));
+  for (auto& pair : session->getClasses()) {
+    ui->classesListWidget->addItem(QString::fromStdString(pair.second->getName()));
   }
 }
 

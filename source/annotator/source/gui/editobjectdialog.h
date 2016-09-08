@@ -13,7 +13,7 @@ class EditObjectDialog : public QDialog {
 
  public:
   explicit EditObjectDialog(AnnotatorLib::Session *session,
-                            AnnotatorLib::Object *obj, QWidget *parent = 0);
+                            shared_ptr<AnnotatorLib::Object> obj, QWidget *parent = 0);
   ~EditObjectDialog();
 
   void updateObject();
@@ -23,7 +23,7 @@ class EditObjectDialog : public QDialog {
   void reloadClasses();
 
   AnnotatorLib::Session *session;
-  AnnotatorLib::Object *obj;
+  shared_ptr<AnnotatorLib::Object> obj;
   Ui::EditObjectDialog *ui;
 
  private slots:
