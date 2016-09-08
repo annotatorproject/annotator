@@ -57,6 +57,6 @@ void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
     ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
     //TODO: here is a bug
-//    if( selectedItem != nullptr && !selectedItem->getObject() )
-//        emit objectSelected(selectedItem->getObject());
+    //if( selectedItem != nullptr && selectedItem->getObject().get() != nullptr )
+    //    emit objectSelected(selectedItem->getObject());
 }

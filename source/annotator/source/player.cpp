@@ -75,8 +75,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
 
-  connect(this, SIGNAL(objectSelected(AnnotatorLib::Object*)), scene,
-          SLOT(on_objectSelected(AnnotatorLib::Object*)));
+  connect(this, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)), scene,
+          SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
 
 }
 
@@ -100,7 +100,7 @@ QString Player::getRateValue() {
 }
 
 void Player::selectObject(shared_ptr<AnnotatorLib::Object> object) {
-  emit objectSelected(object);  //change to shared_ptr
+  emit objectSelected(object);
 }
 
 AnnotatorLib::Session *Player::getSession() { return this->session; }
@@ -251,7 +251,7 @@ void Player::updateFrame(long frame_nmb) {
 
     //TODO:
     if (plugin &&
-        AnnotationGraphicsItem::getSelectedAnnotation() &&
+        AnnotationGraphicsItem::getSelectedAnnotation().get() != nullptr &&
         AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() == f) {
 
         plugin->setLastAnnotation(AnnotationGraphicsItem::getSelectedAnnotation());
@@ -275,7 +275,8 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
        AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(this->session, frame)) {
 
     //update selected annotation
-    if (AnnotationGraphicsItem::getSelectedAnnotation() && AnnotationGraphicsItem::getSelectedAnnotation()->getObject() == annotation->getObject()) {
+    if (AnnotationGraphicsItem::getSelectedAnnotation().get()
+        && AnnotationGraphicsItem::getSelectedAnnotation()->getObject() == annotation->getObject()) {
       AnnotationGraphicsItem::setSelectedAnnotation(annotation);
     }
 

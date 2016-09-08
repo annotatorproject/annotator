@@ -58,13 +58,8 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
       (AnnotationItem *)ui->treeWidget->itemWidget(current, 1);
   if (item != nullptr) {
     emit objectSelected(item->getAnnotation()->getObject());
-    if (item->getAnnotation()->getFrame() != nullptr)
-      emit frameSelected(
-          item->getAnnotation()->getFrame()->getFrameNumber());  // TODO: jumps
-                                                                     // to wrong
-                                                                     // frame
-                                                                     // (shifted by
-                                                                     // -1)
+    if (item->getAnnotation()->getFrame().get() != nullptr)
+      emit frameSelected( item->getAnnotation()->getFrame()->getFrameNumber());
   }
 }
 

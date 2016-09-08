@@ -177,7 +177,7 @@ void AnnotationGraphicsItem::hideHighlight( ) {
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
-  if (this->annotation != nullptr) {
+  if ( annotation.get() != nullptr ) {
       AnnotationGraphicsItem::setSelectedAnnotation(this->annotation);
       hideHighlight();
       if (AnnotationGraphicsItem::selected_annotation_item)
