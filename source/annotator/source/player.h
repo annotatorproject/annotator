@@ -97,7 +97,7 @@ private slots:
 
   cv::Mat currentFrame;
 
-  std::list<AnnotationGraphicsItem *> annotationGraphics;
+  std::list<shared_ptr<AnnotationGraphicsItem>> annotationGraphics;
 
   void updateStatus(bool var);
   void updateTimeLabel();

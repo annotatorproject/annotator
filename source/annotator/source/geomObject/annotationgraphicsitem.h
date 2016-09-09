@@ -69,7 +69,7 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
-    static weak_ptr<AnnotatorLib::Annotation> selected_annotation;
+    static shared_ptr<AnnotatorLib::Annotation> selected_annotation;
 
     shared_ptr<AnnotatorLib::Annotation> annotation;
 

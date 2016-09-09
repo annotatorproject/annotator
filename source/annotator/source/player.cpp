@@ -139,10 +139,11 @@ void Player::loadVideo(QString fileName) {
 }
 
 void Player::clearAnnotationsGraphics() {
-  while(!annotationGraphics.empty()) {
-    delete annotationGraphics.front();  //delete graphic and annotation if interpolated
-    annotationGraphics.pop_front();
-  }
+  annotationGraphics.clear();
+//  while(!annotationGraphics.empty()) {
+//    delete annotationGraphics.front();  //delete graphic and annotation if interpolated
+//    annotationGraphics.pop_front();
+//  }
   scene->update();
 }
 
@@ -280,15 +281,15 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
       AnnotationGraphicsItem::setSelectedAnnotation(annotation);
     }
 
-    AnnotationGraphicsItem *graphicsItem =
-        AnnotationGraphicsItemFactory::createItem(annotation);
+    shared_ptr<AnnotationGraphicsItem> graphicsItem =
+        shared_ptr<AnnotationGraphicsItem>(AnnotationGraphicsItemFactory::createItem(annotation));
 
     if (AnnotationGraphicsItem::getSelectedAnnotation() == annotation) {
-      AnnotationGraphicsItem::selected_annotation_item = graphicsItem;
+      AnnotationGraphicsItem::selected_annotation_item = graphicsItem.get();
     }
 
     graphicsItem->setPlayer(this);
-    scene->addItem(graphicsItem);
+    scene->addItem(graphicsItem.get());
     annotationGraphics.push_back(graphicsItem);
   }
 
@@ -296,11 +297,9 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
   if (AnnotationGraphicsItem::getSelectedAnnotation() == nullptr || AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() != frame) {
     if (!annotationGraphics.empty()) {
         AnnotationGraphicsItem::setSelectedAnnotation(annotationGraphics.front()->getAnnotation());
-        AnnotationGraphicsItem::selected_annotation_item = annotationGraphics.front();
+        AnnotationGraphicsItem::selected_annotation_item = annotationGraphics.front().get();
         AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
         selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
-    } else {
-        selectObject(nullptr);
     }
   }
 
@@ -335,7 +334,7 @@ void Player::setSliderValue(int newpos) {
 }
 
 void Player::jumpTo(long index) {
-  this->videoplayer->jumpTo(index); //why -1?
+  this->videoplayer->jumpTo(index - 1); //why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }

@@ -13,16 +13,17 @@
 #include <QObject>
 
 // static
-weak_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
-    weak_ptr<AnnotatorLib::Annotation>();
+shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
+    shared_ptr<AnnotatorLib::Annotation>();
 AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
 
 void AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation> a) {
+  AnnotationGraphicsItem::selected_annotation.reset();
   AnnotationGraphicsItem::selected_annotation = a;
 }
 
 shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getSelectedAnnotation() {
-  return AnnotationGraphicsItem::selected_annotation.lock();
+  return AnnotationGraphicsItem::selected_annotation;
 }
 
 //constructor
@@ -36,7 +37,7 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   borderColor = originColor;
 
   if (isAnnotationSelected()) {
-    borderColor = Qt::blue;
+    borderColor = Qt::white;
   }
 
   rectX = 0;
@@ -84,7 +85,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
 }
 
 bool AnnotationGraphicsItem::isAnnotationSelected() const {
-  return this->getAnnotation() == AnnotationGraphicsItem::selected_annotation.lock();
+  return this->getAnnotation() == AnnotationGraphicsItem::getSelectedAnnotation();
 }
 
 shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getAnnotation() const {
@@ -109,7 +110,7 @@ void AnnotationGraphicsItem::setPlayer(Player *player) {
 void AnnotationGraphicsItem::initCorners() {
   for (int i = 0; i < 4; ++i) {
     if (this->width < 20 || this->height < 20)
-      corners[i] = new Corner(this, i, 5);
+      corners[i] = new Corner(this, i, 6);
     else
       corners[i] = new Corner(this, i);
     corners[i]->hide();
@@ -121,7 +122,7 @@ void AnnotationGraphicsItem::initCorners() {
 void AnnotationGraphicsItem::initIdText() {
   if (annotation) {
     idText.setParentItem(this);
-    idText.setDefaultTextColor(borderColor);
+    idText.setDefaultTextColor(Qt::black);
     idText.setPlainText(QString::number(annotation->getId()));
 
     idText.setPos(rectX, rectY - 20);
@@ -133,7 +134,7 @@ void AnnotationGraphicsItem::highlight( const int reason) {
 
   switch(reason) {
     case 0: //hovered
-      borderColor = Qt::green;
+      borderColor = Qt::yellow;
       brush = getGradient();
       break;
     default:
@@ -161,7 +162,7 @@ void AnnotationGraphicsItem::hideHighlight( ) {
   }
 
   if (isAnnotationSelected())
-    borderColor = Qt::blue;
+    borderColor = Qt::white;
   else
     borderColor = originColor;
 
@@ -388,7 +389,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       corner->setMouseState(Corner::MouseDown);
       corner->mouseDownX = own_event->pos().x();
       corner->mouseDownY = own_event->pos().y();
-      // this->setSelected(true);
+      //this->setSelected(true);
     } break;
 
     case QEvent::GraphicsSceneMouseRelease: {

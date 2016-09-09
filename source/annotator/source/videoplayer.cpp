@@ -222,7 +222,6 @@ void Videoplayer::wait(int msecs) {
  * @return True if success. False otherwise
  */
 bool Videoplayer::jumpTo(long index) {
-  index -= 1;
   if (index > length) {
     return 1;
   } else if (index == length) {
@@ -287,7 +286,7 @@ void Videoplayer::close() {
  */
 void Videoplayer::nextFrame() {
   if (curPos < length) {
-    jumpTo(curPos + 1);
+    jumpTo(curPos);
   }
   emit updateHorizontalSlider();
 }
@@ -298,8 +297,8 @@ void Videoplayer::nextFrame() {
  */
 void Videoplayer::prevFrame() {
   if (curPos >= 0) {
-    curPos -= 1;
-    jumpTo(curPos);
+      curPos -= 2;
+      jumpTo(curPos);
   }
   emit updateHorizontalSlider();
 }
