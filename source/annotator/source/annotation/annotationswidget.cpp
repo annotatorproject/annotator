@@ -1,6 +1,6 @@
 #include "annotationswidget.h"
 #include "ui_annotationswidget.h"
-
+#include <QLabel>
 #include <AnnotatorLib/Annotation.h>
 
 #include "annotation/annotationitem.h"
@@ -23,7 +23,7 @@ void AnnotationsWidget::resizeEvent(QResizeEvent *event) {
 }
 
 void AnnotationsWidget::reload() {
-  ui->treeWidget->clear();
+  ui->treeWidget->clear(); //deletes all childs
   ui->treeWidget->setColumnCount(3);
 
   QStringList labels;
@@ -39,12 +39,13 @@ void AnnotationsWidget::reload() {
 
 void AnnotationsWidget::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
                                       QTreeWidgetItem *item) {
-  if (!annotation) return;
+  if (!annotation || annotation->isTemporary()) return;
 
-  AnnotationItem *annotationItem = new AnnotationItem(annotation);
   QTreeWidgetItem *childItem = new QTreeWidgetItem();
   item->addChild(childItem);
-  ui->treeWidget->setItemWidget(childItem, 1, annotationItem);
+  ui->treeWidget->setItemWidget(childItem, 1, new QLabel(QString::number(annotation->getId())));
+  ui->treeWidget->setItemWidget(childItem, 2, new QLabel(QString::number(annotation->getFrame()->getFrameNumber())));
+
   if (!annotation->isLast()) addAnnotation(annotation->getNext(), item);
 }
 
