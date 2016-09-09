@@ -73,19 +73,6 @@ std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
   return commands;
 }
 
-void Haarcascade::setSession(Session *session) {
-  this->session = session;
-}
-
-void Haarcascade::calculate(shared_ptr<Object> object,
-                            shared_ptr<Frame> frame, cv::Mat image) {
-  setObject(object);
-  setFrame(frame, image);
-  for (shared_ptr<Commands::Command> command : getCommands()) {
-    session->execute(command);
-  }
-}
-
 void Haarcascade::loadCascade(std::string cascadeFile) {
   this->cascadeFile = cascadeFile;
   try {

@@ -85,19 +85,6 @@ std::vector<shared_ptr<Commands::Command>> CamShift::getCommands() {
   return commands;
 }
 
-void CamShift::setSession(Session *session) {
-  this->session = session;
-}
-
-void CamShift::calculate(shared_ptr<Object> object,
-                         shared_ptr<Frame> frame, cv::Mat image) {
-  setObject(object);
-  setFrame(frame, image);
-  for (shared_ptr<Commands::Command> command : getCommands()) {
-    session->execute(command);
-  }
-}
-
 cv::Rect CamShift::findObject() {
   cv::cvtColor(frameImg, hsv, cv::COLOR_BGR2HSV);
   cv::inRange(hsv, cv::Scalar(0, smin, std::min(vmin, vmax)),

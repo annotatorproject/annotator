@@ -52,16 +52,3 @@ std::vector<shared_ptr<Commands::Command> > KalmanFilter::getCommands() {
   std::vector<shared_ptr<Commands::Command> > commands;
   return commands;
 }
-
-void KalmanFilter::setSession(Session *session) {
-  this->session = session;
-}
-
-void KalmanFilter::calculate(shared_ptr<Object> object,
-                             shared_ptr<Frame> frame, cv::Mat image) {
-  setObject(object);
-  setFrame(frame, image);
-  for (shared_ptr<Commands::Command> command : getCommands()) {
-    session->execute(command);
-  }
-}

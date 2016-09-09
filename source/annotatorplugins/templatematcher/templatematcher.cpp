@@ -115,10 +115,3 @@ std::vector<shared_ptr<Commands::Command> > TemplateMatcher::getCommands() {
 
   return commands;
 }
-
-void TemplateMatcher::setSession(Session *session) {
-  this->session = session;
-}
-
-void Annotator::Plugins::TemplateMatcher::calculate(
-    shared_ptr<Object> object, shared_ptr<Frame> frame, cv::Mat image) {}

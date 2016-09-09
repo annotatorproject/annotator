@@ -10,8 +10,8 @@
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Frame.h>
 
-#include <annotator/plugins/plugin.h>
 #include "widget.h"
+#include <annotator/plugins/plugin.h>
 
 using namespace AnnotatorLib;
 using std::shared_ptr;
@@ -28,7 +28,7 @@ class Haarcascade : public Plugin {
   Q_PLUGIN_METADATA(IID "annotator.haarcascade" FILE "haarcascade.json")
   Q_INTERFACES(Annotator::Plugin)
 
- public:
+public:
   Haarcascade();
   ~Haarcascade();
   QString getName() override;
@@ -38,16 +38,13 @@ class Haarcascade : public Plugin {
   void setObject(shared_ptr<Object> object) override;
   shared_ptr<Object> getObject() override;
   void setLastAnnotation(shared_ptr<Annotation> annotation) override;
-  std::vector<shared_ptr<Commands::Command> > getCommands() override;
-  void setSession(Session *session) override;
-  void calculate(shared_ptr<Object> object, shared_ptr<Frame> frame,
-                 cv::Mat image);
+  std::vector<shared_ptr<Commands::Command>> getCommands() override;
 
   void loadCascade(std::string cascadeFile);
   void setNewObjects(bool newObjects);
   void setObjectName(std::string name);
 
- protected:
+protected:
   shared_ptr<Frame> frame = 0;
   shared_ptr<Frame> lastFrame = 0;
 
@@ -61,11 +58,9 @@ class Haarcascade : public Plugin {
   std::string cascadeFile = ":/haarcascade/haarcascade_frontalface_default.xml";
   cv::CascadeClassifier cascade;
 
-  Session *session = nullptr;
-
   Widget widget;
 };
 }
 }
 
-#endif  // HAARCASCADE_H
+#endif // HAARCASCADE_H
