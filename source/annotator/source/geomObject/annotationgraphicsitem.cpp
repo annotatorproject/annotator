@@ -9,6 +9,7 @@
 #include <AnnotatorLib/Commands/RemoveObject.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
+#include <gui/alert.h>
 #include <QMenu>
 #include <QObject>
 
@@ -232,10 +233,22 @@ void AnnotationGraphicsItem::goToFirst() {
 
 void AnnotationGraphicsItem::compressObject() {
 
+  shared_ptr<AnnotatorLib::Object> obj = annotation->getObject();
   shared_ptr<AnnotatorLib::Commands::CompressObject> cmd =
       std::make_shared<AnnotatorLib::Commands::CompressObject>(player->getSession(),
-                                                   annotation->getObject());
+                                                   obj);
+  int nmb_annotations_before = obj->getAnnotations().size();
   CommandController::instance()->execute(cmd);
+  int nmb_annotations_after = obj->getAnnotations().size();
+  Alert msgBox;
+  msgBox.setText(QString::fromStdString(std::string("Compression algorithm has removed ")
+                                        + std::to_string(nmb_annotations_before - nmb_annotations_after)
+                                        + std::string(" annotations.\n")));
+  msgBox.setIcon(QMessageBox::Information);
+  msgBox.setStandardButtons(0);
+  msgBox.setAutoClose(true);
+  msgBox.setTimeout(3); //Closes after three seconds
+  msgBox.exec();
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {

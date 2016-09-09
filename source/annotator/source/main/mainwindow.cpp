@@ -11,6 +11,7 @@
 #include "aboutdialog.h"
 #include "controller/commandcontroller.h"
 #include "gui/classesdialog.h"
+#include "gui/alert.h"
 #include "newprojectdialog.h"
 #include "plugins/pluginloader.h"
 #include "ui_mainwindow.h"
@@ -235,11 +236,15 @@ void MainWindow::on_actionCompress_Session_triggered() {
   CommandController::instance()->execute(cmd);
   int nmb_annotations_after= session->getAnnotations().size();
 
-  QMessageBox::question( this, "",
-                         QString::fromStdString(std::string("Compression algorithm has removed ") +
-                          std::to_string(nmb_annotations_before - nmb_annotations_after)
-                          + std::string(" annotations.\n")),
-                          QMessageBox::Ok);
+  Alert msgBox;
+  msgBox.setText(QString::fromStdString(std::string("Compression algorithm has removed ")
+                                        + std::to_string(nmb_annotations_before - nmb_annotations_after)
+                                        + std::string(" annotations.\n")));
+  msgBox.setIcon(QMessageBox::Information);
+  msgBox.setStandardButtons(0);
+  msgBox.setAutoClose(true);
+  msgBox.setTimeout(3); //Closes after three seconds
+  msgBox.exec();
 }
 
 void MainWindow::on_actionAbout_triggered() {
