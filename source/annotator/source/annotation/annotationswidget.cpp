@@ -21,7 +21,7 @@ void AnnotationsWidget::reload() {
   ui->treeWidget->setColumnCount(2);
   ui->treeWidget->setColumnWidth(0, 200);
   QStringList labels;
-  labels << "Object"
+  labels << "Object (id, count)"
          << "Annotation ID"
          << "Frame";
   ui->treeWidget->setHeaderLabels(labels);
@@ -46,8 +46,9 @@ void AnnotationsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
   shared_ptr<AnnotatorLib::Annotation> firstAnnotation = object->getFirstAnnotation();
   if (!firstAnnotation) return;
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-  item->setText(0, QString::fromStdString(object->getName()) +
-                       " (" + QString::number(object->getId()) + ")");
+  item->setText(0, QString::fromStdString(object->getName())
+                + " (" + QString::number(object->getId()) + ", "
+                + QString::number(object->getAnnotations().size()) + ")");
   ui->treeWidget->addTopLevelItem(item);
   addAnnotation(firstAnnotation, item);
 }
