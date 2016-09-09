@@ -244,16 +244,15 @@ void Player::updateFrame(long frame_nmb) {
   shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
   if (!f) f = std::make_shared<AnnotatorLib::Frame>(frame_nmb); //create temporary frame
 
+  this->scene->setCurrentFrame(frame_nmb);
   showAnnotationsOfFrame(f);
+  this->scene->update();
 
   if (autoAnnotation) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
-    //TODO:
-    if (plugin &&
-        AnnotationGraphicsItem::getSelectedAnnotation().get() != nullptr &&
-        AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() == f) {
+    if (plugin && AnnotationGraphicsItem::getSelectedAnnotation().get() != nullptr) {
 
         plugin->setLastAnnotation(AnnotationGraphicsItem::getSelectedAnnotation());
         plugin->setFrame(f, currentFrame);
@@ -265,8 +264,7 @@ void Player::updateFrame(long frame_nmb) {
         }
     }
   }
-  this->scene->setCurrentFrame(frame_nmb);
-  this->scene->update();
+
 }
 
 void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
