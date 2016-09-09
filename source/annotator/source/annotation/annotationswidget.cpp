@@ -3,8 +3,6 @@
 #include <QLabel>
 #include <AnnotatorLib/Annotation.h>
 
-#include "annotation/annotationitem.h"
-
 AnnotationsWidget::AnnotationsWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::AnnotationsWidget) {
   ui->setupUi(this);
