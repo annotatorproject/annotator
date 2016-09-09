@@ -82,7 +82,7 @@ std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
     int y = found_rect.y;
 
     shared_ptr<Commands::NewAnnotation> nA =
-        std::make_shared<Commands::NewAnnotation>(this->session,
+        std::make_shared<Commands::NewAnnotation>(project->getSession(),
                                                   lastAnnotation->getObject(),
                                                   this->frame, x, y, w, h);
     commands.push_back(nA);

@@ -5,6 +5,7 @@
 #include <AnnotatorLib/Commands/Command.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Project.h>
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 #include <QtWidgets/QWidget>
@@ -26,7 +27,7 @@ public:
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =
         getCommands();
     for (shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
-      getSession()->execute(command);
+      getProject()->getSession()->execute(command);
     }
     return commands;
   }
