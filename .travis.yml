@@ -84,13 +84,13 @@ before_script:
  - git submodule update --init --recursive
  - mkdir build
  - cd build
- - cmake ..
+ - cmake -DOPTION_BUILD_TESTS=0 ..
  - make
  - cd ../../
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DOPTION_BUILD_TESTS=0 ..
 script:
  - make -j4
 
