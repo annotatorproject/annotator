@@ -17,7 +17,6 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
   videoplayer = new Videoplayer;  // Creating an instance of class videoplayer
 
-  ui->horizontalSlider->setMaximum(9999);
   ui->btnNext->setAutoRepeat(true);
   ui->btnPrev->setAutoRepeat(true);
 
@@ -113,7 +112,11 @@ void Player::setProject(AnnotatorLib::Project *project) {
   this->project = project;
   this->session = project->getSession();
 
+    ui->horizontalSlider->setMaximum(project->getImageSet()->size());
+
   videoplayer->setImageSet(project->getImageSet());
+  ui->horizontalSlider->setMaximum(project->getImageSet()->size());
+
   cv::Mat firstImage = project->getImageSet()->next();
   project->getImageSet()->gotoPosition(0);
   scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
@@ -124,6 +127,7 @@ void Player::setProject(AnnotatorLib::Project *project) {
   updateBtn();
 
   overlay->setEnabled(true);
+
 
   updateTimeLabel();
 }
@@ -311,9 +315,7 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
  */
 void Player::updateHorizontalSlider() {
   // update the progress bar
-  ui->horizontalSlider->setValue((double)videoplayer->getCurFrameNr() *
-                                 ui->horizontalSlider->maximum() /
-                                 videoplayer->getTotalFrameNr() * 1.0);
+  ui->horizontalSlider->setValue(videoplayer->getCurFrameNr());
   updateTimeLabel();
 }
 
