@@ -18,6 +18,7 @@ class AnnotationsWidget : public QWidget {
 
   void setSession(AnnotatorLib::Session *session);
   void reload();
+  void resizeEvent(QResizeEvent *) override;
   void addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
                      QTreeWidgetItem *item);
   void addObject(shared_ptr<AnnotatorLib::Object> object);

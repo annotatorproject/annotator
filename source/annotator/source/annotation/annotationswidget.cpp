@@ -16,10 +16,16 @@ void AnnotationsWidget::setSession(AnnotatorLib::Session *session) {
   this->session = session;
 }
 
+void AnnotationsWidget::resizeEvent(QResizeEvent *event) {
+  for ( int i = 0; i < ui->treeWidget->columnCount() - 1; ++i)
+    ui->treeWidget->setColumnWidth(i, ui->treeWidget->width() / ui->treeWidget->columnCount());
+  QWidget::resizeEvent(event);
+}
+
 void AnnotationsWidget::reload() {
   ui->treeWidget->clear();
-  ui->treeWidget->setColumnCount(2);
-  ui->treeWidget->setColumnWidth(0, 200);
+  ui->treeWidget->setColumnCount(3);
+
   QStringList labels;
   labels << "Object (id, count)"
          << "Annotation ID"
