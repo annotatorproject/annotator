@@ -396,6 +396,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       corner->setMouseState(Corner::MouseReleased);
       changeAnnotationSize((int)this->x(), (int)this->y(), (int)this->width,
                            (int)this->height);
+      return true;
     } break;
 
     case QEvent::GraphicsSceneMouseMove: {
