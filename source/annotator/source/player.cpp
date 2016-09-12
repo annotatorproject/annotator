@@ -217,21 +217,18 @@ void Player::updateFrame(long frame_nmb) {
     f = std::make_shared<AnnotatorLib::Frame>(
         frame_nmb); // create temporary frame
 
-  this->scene->setCurrentFrame(frame_nmb);
-  showAnnotationsOfFrame(f);
-  this->scene->update();
-
   if (autoAnnotation) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin && SelectionController::instance()->getSelectedObject()) {
-
-      shared_ptr<AnnotatorLib::Frame> frame = f;
-      plugin->calculate(SelectionController::instance()->getSelectedObject(), frame, currentFrame);
-      reload();
+      plugin->calculate(SelectionController::instance()->getSelectedObject(), f, currentFrame);
     }
   }
+
+  this->scene->setCurrentFrame(frame_nmb);
+  showAnnotationsOfFrame(f);
+  this->scene->update();
 }
 
 void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
@@ -374,5 +371,9 @@ void Player::on_btnPrev_clicked() {
 void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 
 void Player::on_autoAnnotate(bool enabled) {
+  if (enabled)
+    this->ui->speedSpinBox->setValue(100);
+  else
+    this->ui->speedSpinBox->setValue(50);
   this->autoAnnotation = enabled;
 }

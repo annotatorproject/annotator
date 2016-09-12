@@ -21,14 +21,20 @@ public:
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
             shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) {
+    AnnotatorLib::Session* session = getProject()->getSession();
     setObject(object);
     setFrame(frame, image);
-    setLastAnnotation(object->getLastAnnotation());
+    shared_ptr<AnnotatorLib::Annotation> annotationAtFrame = session->getAnnotation(frame, object);  //find annotation at keyFrame
+
+    if (annotationAtFrame) {
+      setLastAnnotation(annotationAtFrame);
+      return std::vector<shared_ptr<AnnotatorLib::Commands::Command>>();
+    }
+
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =
         getCommands();
     for (shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
-      //TODO: Commands should be executed via the command controller...
-      getProject()->getSession()->execute(command);
+      session->execute(command);
     }
     return commands;
   }
