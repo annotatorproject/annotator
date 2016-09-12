@@ -1,15 +1,16 @@
 #include "objectswidget.h"
 #include "ui_objectswidget.h"
+#include <controller/selectioncontroller.h>
 #include <geomObject/annotationgraphicsitem.h>
 #include <AnnotatorLib/Session.h>
-
-#include "objectitem.h"
 
 ObjectsWidget::ObjectsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ObjectsWidget)
 {
     ui->setupUi(this);
+    ui->listWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 ObjectsWidget::~ObjectsWidget()
@@ -24,14 +25,14 @@ void ObjectsWidget::setSession(AnnotatorLib::Session *session)
 
 void ObjectsWidget::reload()
 {
+  objectIdToRowMap.clear();
+  objectRowToIdMap.clear();
   if (session) {
     ui->listWidget->clear();
     for(auto& pair: session->getObjects())
     {
         addObject(pair.second);
     }
-    if (AnnotationGraphicsItem::getSelectedAnnotation())
-      on_objectSelected(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
   }
 }
 
@@ -42,6 +43,8 @@ void ObjectsWidget::addObject(shared_ptr<AnnotatorLib::Object> object)
   ObjectItem *objectItem = new ObjectItem(object);
   item->setSizeHint(objectItem->minimumSizeHint());
   ui->listWidget->setItemWidget(item, objectItem);
+  objectIdToRowMap[object->getId()] = ui->listWidget->count() - 1;
+  objectRowToIdMap[ui->listWidget->count() - 1] = object->getId();
 }
 
 ///////////////////////SIGNALS////////////////////////
@@ -49,6 +52,14 @@ void ObjectsWidget::addObject(shared_ptr<AnnotatorLib::Object> object)
 
 void ObjectsWidget::on_refreshSession() {
   reload();
+}
+
+void ObjectsWidget::on_objectAdded(shared_ptr<AnnotatorLib::Object> object) {
+  addObject(object);
+}
+
+void ObjectsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object) {
+  delete ui->listWidget->item(objectIdToRowMap[object->getId()]);
 }
 
 void ObjectsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object)
@@ -59,27 +70,19 @@ void ObjectsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object)
         ui->listWidget->clearFocus();
       return;
     }
-    for(int i = 0; i < ui->listWidget->count(); ++i){
-        ObjectItem * oi = (ObjectItem*) ui->listWidget->itemWidget(ui->listWidget->item(i));
-        if(oi->getObject() == object){
-            ui->listWidget->setCurrentItem(ui->listWidget->item(i));
-        }
-    }
-}
-
-void ObjectsWidget::on_objectAdded(shared_ptr<AnnotatorLib::Object> object) {
-  addObject(object);
-}
-
-void ObjectsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object) {
-  //TODO: make this more efficient
-  reload();
+    int row = objectIdToRowMap[object->getId()];
+    QListWidgetItem *selected_item = ui->listWidget->item(row);
+    ui->listWidget->setCurrentItem(selected_item);
 }
 
 void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
-    ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
-    //TODO: here is a bug
-    //if( selectedItem != nullptr && selectedItem->getObject().get() != nullptr )
-    //    emit signal_objectSelection(selectedItem->getObject());
+  QItemSelectionModel *select = ui->listWidget->selectionModel();
+  if (select->hasSelection()) {
+      int row = select->selectedRows().front().row(); // return selected row(s)
+      unsigned long obj_id = objectRowToIdMap[row];
+      shared_ptr<AnnotatorLib::Object> obj = session->getObject(obj_id);
+      if( obj )
+          SelectionController::instance()->setSelectedObject(obj);
+  }
 }

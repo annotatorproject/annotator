@@ -7,6 +7,7 @@
 #include <AnnotatorLib/Commands/CompressSession.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
+#include "selectioncontroller.h"
 #include "commandcontroller.h"
 
 using namespace AnnotatorLib;
@@ -56,14 +57,15 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
   if (std::dynamic_pointer_cast<Commands::NewAnnotation>(command)) {
 
       if (!undo) {
-          if (std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->newObjectCreated())
-            emit signal_newObject(std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->getAnnotation()->getObject());
-          else
+          if (std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->newObjectCreated()) {
+            shared_ptr<Object> new_obj = std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->getAnnotation()->getObject();
+            emit signal_newObject(new_obj);
+            SelectionController::instance()->setSelectedObject(new_obj);
+          } else
             emit signal_newAnnotation(std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->getAnnotation());
       } else {
           emit signal_removedAnnotation(std::dynamic_pointer_cast<Commands::NewAnnotation>(command)->getAnnotation());
       }
-      //TODO: emit signal_selectObject
       emit signal_requestFrameRedraw();
       return;
   }

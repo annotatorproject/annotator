@@ -21,7 +21,7 @@ class ObjectItem : public QWidget {
  private:
   Ui::ObjectItem *ui;
 
-  shared_ptr<AnnotatorLib::Object> object;
+  const shared_ptr<AnnotatorLib::Object> object;
 };
 
 #endif  // OBJECTITEM_H

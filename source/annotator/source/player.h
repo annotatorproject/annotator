@@ -45,19 +45,16 @@ class Player : public QWidget {
   OwnGraphicView *overlay;
 
   QString getRateValue();
-
-  void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
-
   AnnotatorLib::Session *getSession();
-
-  void setAutoAnnotation(bool autoAnnotation);
 
  public slots:
   void showFrame(cv::Mat frame);
   void updateFrame(long frame);
   void showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame);
   void setSliderValue(int newpos);
+  //void on_objectSelected(shared_ptr<AnnotatorLib::Object> obj);
   void on_frameSelected(long index);  // Jump to a position
+  void on_autoAnnotate(bool);
   void reload();
 
  signals:
@@ -96,7 +93,7 @@ private slots:
 
   cv::Mat currentFrame;
 
-  std::list<shared_ptr<AnnotationGraphicsItem>> annotationGraphics;
+  std::list<AnnotationGraphicsItem*> annotationGraphics;
 
   void updateStatus(bool var);
   void updateTimeLabel();

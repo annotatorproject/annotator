@@ -64,7 +64,7 @@ void NewAnnotationDialog::createAnnotation() {
     nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
             this->session, session->getObject(id), frame, x, y, w, h);
   }
-  AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
+  //AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
   //TODO: emit signal_objectSelection(nA->getAnnotation()->getObject());
   CommandController::instance()->execute(nA);
 

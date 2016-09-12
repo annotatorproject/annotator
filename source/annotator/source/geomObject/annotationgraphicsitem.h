@@ -23,15 +23,10 @@ class AnnotationGraphicsItem : public QObject, public QGraphicsItem
     Q_OBJECT
 
 public:
-    static AnnotationGraphicsItem* selected_annotation_item;
-
     AnnotationGraphicsItem() = delete;
     AnnotationGraphicsItem(shared_ptr<AnnotatorLib::Annotation> annotation);
     virtual ~AnnotationGraphicsItem();
     shared_ptr<AnnotatorLib::Annotation> getAnnotation() const;
-
-    static void setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation>);
-    static shared_ptr<AnnotatorLib::Annotation> getSelectedAnnotation();
 
     void setPlayer(Player *player);
 
@@ -39,9 +34,6 @@ public:
 
     void highlight(const int reason = -1);
     void hideHighlight();
-
-signals:
-    void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
 protected:
     QPen pen;
@@ -69,8 +61,6 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
-    static shared_ptr<AnnotatorLib::Annotation> selected_annotation;
-
     shared_ptr<AnnotatorLib::Annotation> annotation;
 
     QAction* action_del;
@@ -81,6 +71,7 @@ private:
     QAction* action_goto_last;
 
 
+    void setSelected(bool b);
     void setCornerPositions();
     void getCornerPositions(Corner *corner, qreal x, qreal y);
     void changeAnnotationPosition(int x, int y);
@@ -88,6 +79,10 @@ private:
     void initCorners();
     void initIdText();
     QColor idToColor(long id) const;
+
+
+public slots:
+    void on_objectSelected(shared_ptr<AnnotatorLib::Object>);
 
 private slots:
     void removeAnnotation();

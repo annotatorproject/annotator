@@ -2,6 +2,7 @@
 #include "ui_annotationswidget.h"
 #include <QLabel>
 #include <AnnotatorLib/Annotation.h>
+#include <controller/selectioncontroller.h>
 
 AnnotationsWidget::AnnotationsWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::AnnotationsWidget) {
@@ -29,6 +30,9 @@ void AnnotationsWidget::initWidget() {
          << "Annotation ID"
          << "Frame";
   ui->treeWidget->setHeaderLabels(labels);
+
+  ui->treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+  ui->treeWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 void AnnotationsWidget::refreshHoleSession() {
@@ -92,11 +96,24 @@ void AnnotationsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object
   delete ui->treeWidget->topLevelItem(idx);
 }
 
+void AnnotationsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object) {
+  if (object) {
+    int idx = objectIndexMap[object->getId()];
+    ui->treeWidget->topLevelItem(idx)->setSelected(true);
+  } else {
+    for(auto item : ui->treeWidget->selectedItems())
+        item->setSelected(false);
+  }
+}
+
 void AnnotationsWidget::on_treeWidget_currentItemChanged(
     QTreeWidgetItem *current, QTreeWidgetItem *previous) {
-  if (!current) return;
+
+  if( previous) previous->setSelected(false);
+  if (!current || !current->parent()) return;
+
   unsigned long id = current->text(1).toULong();
   unsigned long frame_nmb = current->text(2).toULong();
-  emit signal_objectSelection(session->getAnnotation(id)->getObject());
+  SelectionController::instance()->setSelectedObject(session->getAnnotation(id)->getObject());
   emit signal_frameSelection( frame_nmb);
 }

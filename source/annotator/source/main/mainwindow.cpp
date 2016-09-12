@@ -10,6 +10,7 @@
 #include <QSettings>
 #include "aboutdialog.h"
 #include "controller/commandcontroller.h"
+#include "controller/selectioncontroller.h"
 #include "gui/classesdialog.h"
 #include "gui/alert.h"
 #include "newprojectdialog.h"
@@ -55,10 +56,12 @@ void MainWindow::connectSignalSlots() {
           SLOT(on_frameSelected(long)));
 
   // object selection
-  connect(&playerWidget, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+  connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
           &objectsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
-  connect(&annotationsWidget, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
-          &objectsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+  connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+          &annotationsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+  connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+          &pluginsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
 
   //upate annotations
   connect(CommandController::instance(), SIGNAL(signal_newAnnotation(shared_ptr<AnnotatorLib::Annotation>)),
@@ -74,6 +77,10 @@ void MainWindow::connectSignalSlots() {
           &objectsWidget, SLOT(on_objectAdded(shared_ptr<AnnotatorLib::Object>)));
   connect(CommandController::instance(), SIGNAL(signal_removedObject(shared_ptr<AnnotatorLib::Object>)),
           &objectsWidget, SLOT(on_objectRemoved(shared_ptr<AnnotatorLib::Object>)));
+
+  //autoAnnotate
+  connect(&pluginsWidget, SIGNAL(signal_autoAnnotate(bool)),
+          &playerWidget, SLOT(on_autoAnnotate(bool)));
 }
 
 void MainWindow::setRateValue(QString value) { rateLabel->setText(value); }
@@ -93,7 +100,7 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
     this->setRateValue(playerWidget.getRateValue());
     setWindowTitle(project);
 
-    reloadWidgets();
+    emit signal_refreshSession();
 
     for (Annotator::Plugin *p :
          Annotator::PluginLoader::getInstance().getPlugins()) {
@@ -135,10 +142,6 @@ void MainWindow::addRecentProject(QString projectfile) {
   recentProjects.prepend(projectfile);
   settings.setValue("RecentProjects", recentProjects);
   settings.setValue("LastProjectPath", projectfile);
-}
-
-void MainWindow::reloadWidgets() {
-  emit signal_refreshSession();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -228,10 +231,6 @@ void MainWindow::on_actionRedo_triggered() {
   if (this->project != nullptr) {
     CommandController::instance()->redo();
   }
-}
-
-void MainWindow::on_actionAuto_Annotate_toggled(bool arg1) {
-  this->playerWidget.setAutoAnnotation(arg1);
 }
 
 void MainWindow::on_actionClear_Session_triggered() {

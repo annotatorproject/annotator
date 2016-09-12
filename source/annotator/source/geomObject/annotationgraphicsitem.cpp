@@ -1,5 +1,6 @@
 #include "annotationgraphicsitem.h"
 #include "controller/commandcontroller.h"
+#include "controller/selectioncontroller.h"
 #include "gui/editobjectdialog.h"
 #include "plugins/pluginloader.h"
 #include <AnnotatorLib/Annotation.h>
@@ -14,18 +15,18 @@
 #include <QObject>
 
 // static
-shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
-    shared_ptr<AnnotatorLib::Annotation>();
-AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
+//shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
+//    shared_ptr<AnnotatorLib::Annotation>();
+//AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
 
-void AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation> a) {
-  AnnotationGraphicsItem::selected_annotation.reset();
-  AnnotationGraphicsItem::selected_annotation = a;
-}
+//void AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation> a) {
+//  AnnotationGraphicsItem::selected_annotation.reset();
+//  AnnotationGraphicsItem::selected_annotation = a;
+//}
 
-shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getSelectedAnnotation() {
-  return AnnotationGraphicsItem::selected_annotation;
-}
+//shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getSelectedAnnotation() {
+//  return AnnotationGraphicsItem::selected_annotation;
+//}
 
 //constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
@@ -34,12 +35,7 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   assert(annotation);
   assert(annotation->getObject());
 
-  originColor = idToColor(annotation->getObject()->getId());
-  borderColor = originColor;
-
-  if (isAnnotationSelected()) {
-    borderColor = Qt::white;
-  }
+  setSelected(isAnnotationSelected());
 
   rectX = 0;
   rectY = 0;
@@ -86,7 +82,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
 }
 
 bool AnnotationGraphicsItem::isAnnotationSelected() const {
-  return this->getAnnotation() == AnnotationGraphicsItem::getSelectedAnnotation();
+  return this->getAnnotation()->getObject() == SelectionController::instance()->getSelectedObject();
 }
 
 shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getAnnotation() const {
@@ -162,10 +158,7 @@ void AnnotationGraphicsItem::hideHighlight( ) {
     corners[i]->hide();
   }
 
-  if (isAnnotationSelected())
-    borderColor = Qt::white;
-  else
-    borderColor = originColor;
+  borderColor = originColor;
 
   brush = Qt::NoBrush;
 
@@ -176,16 +169,25 @@ void AnnotationGraphicsItem::hideHighlight( ) {
   update();
 }
 
+void AnnotationGraphicsItem::on_objectSelected(shared_ptr<AnnotatorLib::Object> o) {
+  setSelected(this->annotation->getObject() == o);
+  this->hideHighlight();
+}
+
+void AnnotationGraphicsItem::setSelected(bool b) {
+   if (b) {
+      originColor = Qt::white;
+   } else {
+       originColor = idToColor(annotation->getObject()->getId());
+  }
+  borderColor = originColor;
+}
+
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
-  if ( annotation.get() != nullptr ) {
-      AnnotationGraphicsItem::setSelectedAnnotation(this->annotation);
-      hideHighlight();
-      if (AnnotationGraphicsItem::selected_annotation_item)
-        AnnotationGraphicsItem::selected_annotation_item->hideHighlight(); //hide previous selection
-      AnnotationGraphicsItem::selected_annotation_item = this;
-      this->player->on_objectSelected(this->annotation->getObject());
+  if ( annotation ) {
+    SelectionController::instance()->setSelectedObject(annotation->getObject());
   }
 }
 

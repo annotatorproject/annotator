@@ -2,6 +2,7 @@
 #include "ui_player.h"
 
 #include "controller/commandcontroller.h"
+#include "controller/selectioncontroller.h"
 #include "geomObject/annotationgraphicsitemfactory.h"
 #include "plugins/pluginloader.h"
 #include <AnnotatorLib/Algo/InterpolateAnnotation.h>
@@ -74,15 +75,7 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-void Player::on_objectSelected(shared_ptr<AnnotatorLib::Object> object) {
-  emit signal_objectSelection(object);
-}
-
 AnnotatorLib::Session *Player::getSession() { return this->session; }
-
-void Player::setAutoAnnotation(bool autoAnnotation) {
-  this->autoAnnotation = autoAnnotation;
-}
 
 void Player::setProject(AnnotatorLib::Project *project) {
   this->project = project;
@@ -118,12 +111,10 @@ void Player::loadVideo(QString fileName) {
 }
 
 void Player::clearAnnotationsGraphics() {
-  annotationGraphics.clear();
-  //  while(!annotationGraphics.empty()) {
-  //    delete annotationGraphics.front();  //delete graphic and annotation if
-  //    interpolated
-  //    annotationGraphics.pop_front();
-  //  }
+  while(!annotationGraphics.empty()) {
+    delete annotationGraphics.front();
+    annotationGraphics.pop_front();
+  }
   scene->update();
 }
 
@@ -183,7 +174,7 @@ void Player::updateStatus(bool enable) {
   }
 }
 
-/**
+/**get()
  * updateBtn	-	update the button Play & Pause
  *
  */
@@ -234,14 +225,10 @@ void Player::updateFrame(long frame_nmb) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
-    if (plugin &&
-        AnnotationGraphicsItem::getSelectedAnnotation() != nullptr &&
-        AnnotationGraphicsItem::getSelectedAnnotation()->isTemporary()) {
+    if (plugin && SelectionController::instance()->getSelectedObject()) {
 
-      shared_ptr<AnnotatorLib::Object> object =
-          AnnotationGraphicsItem::getSelectedAnnotation()->getObject();
       shared_ptr<AnnotatorLib::Frame> frame = f;
-      plugin->calculate(object, frame, currentFrame);
+      plugin->calculate(SelectionController::instance()->getSelectedObject(), frame, currentFrame);
       reload();
     }
   }
@@ -254,38 +241,25 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
        AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
            this->session, frame)) {
 
-    // update selected annotation
-    if (AnnotationGraphicsItem::getSelectedAnnotation().get() &&
-        AnnotationGraphicsItem::getSelectedAnnotation()->getObject() ==
-            annotation->getObject()) {
-      AnnotationGraphicsItem::setSelectedAnnotation(annotation);
-    }
+    AnnotationGraphicsItem* graphicsItem =
+            AnnotationGraphicsItemFactory::createItem(annotation);
 
-    shared_ptr<AnnotationGraphicsItem> graphicsItem =
-        shared_ptr<AnnotationGraphicsItem>(
-            AnnotationGraphicsItemFactory::createItem(annotation));
-
-    if (AnnotationGraphicsItem::getSelectedAnnotation() == annotation) {
-      AnnotationGraphicsItem::selected_annotation_item = graphicsItem.get();
-    }
+    connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+            graphicsItem, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
 
     graphicsItem->setPlayer(this);
-    scene->addItem(graphicsItem.get());
+    scene->addItem(graphicsItem);
     annotationGraphics.push_back(graphicsItem);
   }
 
   // if nothing is selected take first annotation
-  if (AnnotationGraphicsItem::getSelectedAnnotation() == nullptr ||
-      AnnotationGraphicsItem::getSelectedAnnotation()->getFrame() != frame) {
-    if (!annotationGraphics.empty()) {
-      AnnotationGraphicsItem::setSelectedAnnotation(
-          annotationGraphics.front()->getAnnotation());
-      AnnotationGraphicsItem::selected_annotation_item =
-          annotationGraphics.front().get();
-      AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
-      on_objectSelected(
-          AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
-    }
+  if (!SelectionController::instance()->getSelectedObject()) {
+      if (annotationGraphics.empty()) {
+          SelectionController::instance()->setSelectedObject(nullptr);
+        } else {
+          SelectionController::instance()->setSelectedObject(
+                annotationGraphics.front()->getAnnotation()->getObject());
+        }
   }
 }
 
@@ -360,8 +334,6 @@ void Player::play() {
  */
 void Player::pause() { videoplayer->pauseIt(); }
 
-void Player::on_btnPlay_clicked() { play(); }
-
 /**
  * sleep	-	pause the video for several msecs
  *
@@ -369,16 +341,6 @@ void Player::on_btnPlay_clicked() { play(); }
  */
 void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 
-void Player::on_btnPause_clicked() { pause(); }
-
-void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
-
-void Player::on_btnPrev_clicked() {
-  // this->setAutoAnnotation(false);
-  videoplayer->prevFrame();
-}
-
-void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 
 ///#################################################################################################///
 
@@ -394,4 +356,23 @@ void Player::reload() {
 void Player::on_speedSpinBox_valueChanged(int f) {
   // TODO: set proper framerate
   videoplayer->setDelay((100.f * videoplayer->getFrameRate()) / (float)f);
+}
+
+///#########################################SLOTS###########################################///
+
+void Player::on_btnPlay_clicked() { play(); }
+
+void Player::on_btnPause_clicked() { pause(); }
+
+void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
+
+void Player::on_btnPrev_clicked() {
+  // this->setAutoAnnotation(false);
+  videoplayer->prevFrame();
+}
+
+void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
+
+void Player::on_autoAnnotate(bool enabled) {
+  this->autoAnnotation = enabled;
 }

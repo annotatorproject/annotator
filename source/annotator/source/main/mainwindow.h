@@ -48,8 +48,6 @@ class MainWindow : public QMainWindow {
   void signal_refreshSession();
 
  public slots:
-  void reloadWidgets();
-
   void closeEvent(QCloseEvent *event);
 
  private slots:
@@ -66,8 +64,6 @@ class MainWindow : public QMainWindow {
   void on_actionUndo_triggered();
 
   void on_actionRedo_triggered();
-
-  void on_actionAuto_Annotate_toggled(bool arg1);
 
   void on_actionCompress_Session_triggered();
 

@@ -3,6 +3,7 @@
 
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include "objectitem.h"
 #include <QWidget>
 
 namespace Ui {
@@ -21,9 +22,6 @@ class ObjectsWidget : public QWidget {
 protected:
   void addObject(shared_ptr<AnnotatorLib::Object> object);
 
- signals:
-  void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
-
  public slots:
   void on_refreshSession();
   void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
@@ -34,7 +32,8 @@ protected:
 
  private:
   Ui::ObjectsWidget *ui;
-
+  std::unordered_map<unsigned long, int> objectIdToRowMap;
+  std::unordered_map<int, unsigned long> objectRowToIdMap;
   AnnotatorLib::Session *session = nullptr;
 };
 
