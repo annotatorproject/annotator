@@ -60,13 +60,13 @@ void AnnotationsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
 
 void AnnotationsWidget::on_treeWidget_currentItemChanged(
     QTreeWidgetItem *current, QTreeWidgetItem *previous) {
-  AnnotationItem *item =
-      (AnnotationItem *)ui->treeWidget->itemWidget(current, 1);
-  if (item != nullptr) {
-    emit objectSelected(item->getAnnotation()->getObject());
-    if (item->getAnnotation()->getFrame().get() != nullptr)
-      emit frameSelected( item->getAnnotation()->getFrame()->getFrameNumber());
+  QLabel *item_id =
+      (QLabel *)ui->treeWidget->itemWidget(current, 1);
+  if (item_id != nullptr) {
+    emit signal_objectSelection(session->getAnnotation(item_id->text().toULong())->getObject());
+    emit signal_frameSelection( session->getAnnotation(item_id->text().toULong())->getFrame()->getFrameNumber());
   }
 }
 
+//TODO
 void AnnotationsWidget::on_refreshButton_clicked() { reload(); }
