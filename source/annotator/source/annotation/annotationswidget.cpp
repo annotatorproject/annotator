@@ -68,6 +68,3 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
     emit signal_frameSelection( sel_annotation->getFrame()->getFrameNumber());
   }
 }
-
-//TODO
-void AnnotationsWidget::on_refreshButton_clicked() { reload(); }

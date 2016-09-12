@@ -31,8 +31,8 @@ class AnnotationsWidget : public QWidget {
   void on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
                                         QTreeWidgetItem *previous);
 
-  void on_refreshButton_clicked();
   //TODO: slots for added or removed objects/annotations (we do not have to build the hole tree every time...)
+
 
  private:
   Ui::AnnotationsWidget *ui;
