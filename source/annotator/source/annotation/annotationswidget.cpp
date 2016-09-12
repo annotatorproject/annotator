@@ -63,8 +63,9 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
   QLabel *item_id =
       (QLabel *)ui->treeWidget->itemWidget(current, 1);
   if (item_id != nullptr) {
-    emit signal_objectSelection(session->getAnnotation(item_id->text().toULong())->getObject());
-    emit signal_frameSelection( session->getAnnotation(item_id->text().toULong())->getFrame()->getFrameNumber());
+    shared_ptr<AnnotatorLib::Annotation> sel_annotation = session->getAnnotation(item_id->text().toULong());
+    emit signal_objectSelection(sel_annotation->getObject());
+    emit signal_frameSelection( sel_annotation->getFrame()->getFrameNumber());
   }
 }
 
