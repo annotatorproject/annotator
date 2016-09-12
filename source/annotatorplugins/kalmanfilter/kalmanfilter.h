@@ -1,8 +1,8 @@
 #ifndef KALMANFILTER_H
 #define KALMANFILTER_H
 
-#include <annotator/plugins/plugin.h>
 #include "widget.h"
+#include <annotator/plugins/plugin.h>
 
 #include <opencv2/core/mat.hpp>
 
@@ -25,7 +25,7 @@ class KalmanFilter : public Plugin {
   Q_PLUGIN_METADATA(IID "annotator.kalmanfilter" FILE "kalmanfilter.json")
   Q_INTERFACES(Annotator::Plugin)
 
- public:
+public:
   KalmanFilter();
   ~KalmanFilter();
   QString getName() override;
@@ -35,15 +35,11 @@ class KalmanFilter : public Plugin {
   void setObject(shared_ptr<Object> object) override;
   shared_ptr<Object> getObject() override;
   void setLastAnnotation(shared_ptr<Annotation> annotation) override;
-  std::vector<shared_ptr<Commands::Command> > getCommands() override;
-  void setSession(Session *session) override;
-  void calculate(shared_ptr<Object> object, shared_ptr<Frame> frame,
-                 cv::Mat image);
+  std::vector<shared_ptr<Commands::Command>> getCommands() override;
 
- protected:
+protected:
   shared_ptr<Annotation> lastAnnotation = nullptr;
   shared_ptr<Object> object = nullptr;
-  Session *session = nullptr;
 
   Widget widget;
 
@@ -54,4 +50,4 @@ class KalmanFilter : public Plugin {
 }
 }
 
-#endif  // KALMANFILTER_H
+#endif // KALMANFILTER_H

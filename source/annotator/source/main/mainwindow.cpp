@@ -76,7 +76,7 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
 
     for (Annotator::Plugin *p :
          Annotator::PluginLoader::getInstance().getPlugins()) {
-      p->setSession(project->getSession());
+        p->setProject(project);
     }
 
     // save path to last opened project in settings

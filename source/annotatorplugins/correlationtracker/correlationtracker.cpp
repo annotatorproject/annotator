@@ -1,9 +1,10 @@
 #include "correlationtracker.h"
+#include "widget.h"
 
-#include <ctype.h>
-#include <dlib/opencv.h>
 #include <QDebug>
 #include <QtGui/QPainter>
+#include <ctype.h>
+#include <dlib/opencv.h>
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/video/tracking.hpp>
@@ -12,7 +13,6 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Session.h>
-#include "widget.h"
 
 using namespace Annotator::Plugins;
 
@@ -43,9 +43,9 @@ void CorrelationTracker::setObject(shared_ptr<Object> object) {
 shared_ptr<Object> CorrelationTracker::getObject() { return object; }
 
 // second call
-void CorrelationTracker::setLastAnnotation(
-    shared_ptr<Annotation> annotation) {
-  if (annotation == nullptr || annotation->getObject() != object) return;
+void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
+  if (annotation == nullptr || annotation->getObject() != object)
+    return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
     return;
@@ -54,7 +54,8 @@ void CorrelationTracker::setLastAnnotation(
   selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
                        lastAnnotation->getWidth(), lastAnnotation->getHeight());
 
-  if (this->frameImg.empty()) return;
+  if (this->frameImg.empty())
+    return;
   dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
   tracker.start_track(cvimg, dlib::rectangle(selection.x, selection.y,
                                              selection.x + selection.width,
@@ -65,9 +66,8 @@ void CorrelationTracker::setLastAnnotation(
   newSelection = true;
 }
 
-std::vector<shared_ptr<Commands::Command> >
-CorrelationTracker::getCommands() {
-  std::vector<shared_ptr<Commands::Command> > commands;
+std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
+  std::vector<shared_ptr<Commands::Command>> commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
       this->lastAnnotation == nullptr || lastFrame == frame)
     return commands;
@@ -82,7 +82,8 @@ CorrelationTracker::getCommands() {
     int y = found_rect.y;
 
     shared_ptr<Commands::NewAnnotation> nA =
-        std::make_shared<Commands::NewAnnotation>(this->session, lastAnnotation->getObject(),
+        std::make_shared<Commands::NewAnnotation>(project->getSession(),
+                                                  lastAnnotation->getObject(),
                                                   this->frame, x, y, w, h);
     commands.push_back(nA);
 
@@ -91,19 +92,6 @@ CorrelationTracker::getCommands() {
   }
 
   return commands;
-}
-
-void CorrelationTracker::setSession(Session *session) {
-  this->session = session;
-}
-
-void CorrelationTracker::calculate(shared_ptr<Object> object,
-                                   shared_ptr<Frame> frame, cv::Mat image) {
-  setObject(object);
-  setFrame(frame, image);
-  for (shared_ptr<Commands::Command> command : getCommands()) {
-    session->execute(command);
-  }
 }
 
 cv::Rect CorrelationTracker::findObject() {

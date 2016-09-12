@@ -40,7 +40,8 @@ shared_ptr<Object> TemplateMatcher::getObject() { return object; }
 
 // second call
 void TemplateMatcher::setLastAnnotation(shared_ptr<Annotation> annotation) {
-  if (annotation == nullptr || annotation->getObject() != object) return;
+  if (annotation == nullptr || annotation->getObject() != object)
+    return;
   if (lastAnnotation != nullptr &&
       annotation->getObject() == lastAnnotation->getObject())
     return;
@@ -55,8 +56,8 @@ void TemplateMatcher::setLastAnnotation(shared_ptr<Annotation> annotation) {
   }
 }
 
-std::vector<shared_ptr<Commands::Command> > TemplateMatcher::getCommands() {
-  std::vector<shared_ptr<Commands::Command> > commands;
+std::vector<shared_ptr<Commands::Command>> TemplateMatcher::getCommands() {
+  std::vector<shared_ptr<Commands::Command>> commands;
   if (object == nullptr || frame == nullptr || lastFrame == nullptr ||
       this->lastAnnotation == nullptr)
     return commands;
@@ -95,7 +96,8 @@ std::vector<shared_ptr<Commands::Command> > TemplateMatcher::getCommands() {
 
     shared_ptr<Commands::NewAnnotation> nA =
         std::make_shared<Commands::NewAnnotation>(
-            this->session, lastAnnotation->getObject(), this->frame, x, y, hradius, vradius);
+            project->getSession(), lastAnnotation->getObject(), this->frame, x,
+            y, hradius, vradius);
     commands.push_back(nA);
 
     /// Show me what you got
@@ -115,10 +117,3 @@ std::vector<shared_ptr<Commands::Command> > TemplateMatcher::getCommands() {
 
   return commands;
 }
-
-void TemplateMatcher::setSession(Session *session) {
-  this->session = session;
-}
-
-void Annotator::Plugins::TemplateMatcher::calculate(
-    shared_ptr<Object> object, shared_ptr<Frame> frame, cv::Mat image) {}

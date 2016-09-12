@@ -61,7 +61,7 @@ std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
 
       // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
       shared_ptr<Commands::NewAnnotation> nA =
-          std::make_shared<Commands::NewAnnotation>(this->session, this->object, frame, x, y,
+          std::make_shared<Commands::NewAnnotation>(project->getSession(), this->object, frame, x, y,
                                                     w, h);
       commands.push_back(nA);
     }
@@ -71,19 +71,6 @@ std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
   }
 
   return commands;
-}
-
-void Haarcascade::setSession(Session *session) {
-  this->session = session;
-}
-
-void Haarcascade::calculate(shared_ptr<Object> object,
-                            shared_ptr<Frame> frame, cv::Mat image) {
-  setObject(object);
-  setFrame(frame, image);
-  for (shared_ptr<Commands::Command> command : getCommands()) {
-    session->execute(command);
-  }
 }
 
 void Haarcascade::loadCascade(std::string cascadeFile) {
