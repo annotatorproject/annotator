@@ -15,13 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCommandLinkButton" name="refreshButton">
-     <property name="text">
-      <string>Refresh</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QTreeWidget" name="treeWidget">
      <property name="mouseTracking">
       <bool>true</bool>

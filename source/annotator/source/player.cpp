@@ -37,11 +37,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(updateHorizontalSlider()));
   connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
-
   // command controller
-  connect(CommandController::instance(), SIGNAL(onCommandExecute()), this,
-          SLOT(reload()));
-  connect(CommandController::instance(), SIGNAL(onCommandUndo()), this,
+  connect(CommandController::instance(), SIGNAL(signal_requestFrameRedraw()), this,
           SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
@@ -54,8 +51,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
 
-  connect(this, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)), scene,
-          SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+  connect(this, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)), scene,
+          SLOT(on_signal_objectSelection(shared_ptr<AnnotatorLib::Object>)));
 }
 
 Player::~Player() {
@@ -77,8 +74,8 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-void Player::selectObject(shared_ptr<AnnotatorLib::Object> object) {
-  emit objectSelected(object);
+void Player::on_objectSelected(shared_ptr<AnnotatorLib::Object> object) {
+  emit signal_objectSelection(object);
 }
 
 AnnotatorLib::Session *Player::getSession() { return this->session; }
@@ -238,13 +235,14 @@ void Player::updateFrame(long frame_nmb) {
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin &&
-        AnnotationGraphicsItem::getSelectedAnnotation().get() != nullptr &&
-        AnnotationGraphicsItem::getSelectedAnnotation().get()->isTemporary()) {
+        AnnotationGraphicsItem::getSelectedAnnotation() != nullptr &&
+        AnnotationGraphicsItem::getSelectedAnnotation()->isTemporary()) {
 
       shared_ptr<AnnotatorLib::Object> object =
           AnnotationGraphicsItem::getSelectedAnnotation()->getObject();
       shared_ptr<AnnotatorLib::Frame> frame = f;
       plugin->calculate(object, frame, currentFrame);
+      reload();
     }
   }
 }
@@ -285,7 +283,7 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
       AnnotationGraphicsItem::selected_annotation_item =
           annotationGraphics.front().get();
       AnnotationGraphicsItem::selected_annotation_item->hideHighlight();
-      selectObject(
+      on_objectSelected(
           AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
     }
   }
@@ -304,7 +302,7 @@ void Player::updateHorizontalSlider() {
 void Player::on_horizontalSlider_sliderMoved(int newpos) {
   long pos =
       newpos * videoplayer->getTotalFrameNr() / ui->horizontalSlider->maximum();
-  jumpTo(pos);
+  on_frameSelected(pos);
 }
 
 /**
@@ -316,8 +314,8 @@ void Player::setSliderValue(int newpos) {
   on_horizontalSlider_sliderMoved(newpos);
 }
 
-void Player::jumpTo(long index) {
-  this->videoplayer->jumpTo(index - 1); // why -1?
+void Player::on_frameSelected(long index) {
+  this->videoplayer->on_frameSelected(index - 1); // why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }
@@ -385,7 +383,6 @@ void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
 ///#################################################################################################///
 
 void Player::reload() {
-  emit requestReload();
   this->videoplayer->reload();
   // TODO: reload annotations?
 }

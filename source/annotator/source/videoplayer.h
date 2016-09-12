@@ -60,7 +60,7 @@ class Videoplayer : public QThread {
   double rate;  // video frame rate
 
  public slots:
-  bool jumpTo(long index);  // Jump to a position
+  bool on_frameSelected(long index);  // Jump to a position
   void reload();
 
  protected:
@@ -77,7 +77,7 @@ class Videoplayer : public QThread {
   void updateHorizontalSlider();  // update horizontal Slider
   void sleep(int msecs);          // sleep for a while
   void revert();
-  void imageJumpTo(long pos);  // jump to position for images
+  void imageon_frameSelected(long pos);  // jump to position for images
   void showImage(QPixmap img);
   void setInputCoordinate(
       QPoint point);  // copy the image/video coordinate to main

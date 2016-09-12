@@ -44,9 +44,9 @@ shared_ptr<Object> CorrelationTracker::getObject() { return object; }
 
 // second call
 void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
-  if (annotation == nullptr || annotation->getObject() != object)
+  if (!annotation || annotation->getObject() != object)
     return;
-  if (lastAnnotation != nullptr &&
+  if (lastAnnotation &&
       annotation->getObject() == lastAnnotation->getObject())
     return;
 
@@ -75,17 +75,20 @@ std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
   try {
     cv::Rect found_rect = findObject();
 
-    int w = found_rect.width;
-    int h = found_rect.height;
+    if (found_rect.width > 0) {
 
-    int x = found_rect.x;
-    int y = found_rect.y;
+      int w = found_rect.width;
+      int h = found_rect.height;
 
-    shared_ptr<Commands::NewAnnotation> nA =
-        std::make_shared<Commands::NewAnnotation>(project->getSession(),
-                                                  lastAnnotation->getObject(),
-                                                  this->frame, x, y, w, h);
-    commands.push_back(nA);
+      int x = found_rect.x;
+      int y = found_rect.y;
+
+      shared_ptr<Commands::NewAnnotation> nA =
+          std::make_shared<Commands::NewAnnotation>(project->getSession(),
+                                                    lastAnnotation->getObject(),
+                                                    this->frame, x, y, w, h);
+      commands.push_back(nA);
+    }
 
   } catch (std::exception &e) {
     qDebug() << e.what();

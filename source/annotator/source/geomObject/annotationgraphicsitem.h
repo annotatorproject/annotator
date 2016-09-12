@@ -41,7 +41,7 @@ public:
     void hideHighlight();
 
 signals:
-    void objectSelected(shared_ptr<AnnotatorLib::Object> object);
+    void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
 protected:
     QPen pen;

@@ -17,8 +17,14 @@ class CommandController : public QObject {
   void setSession(AnnotatorLib::Session *session);
 
  signals:
-  void onCommandExecute();
-  void onCommandUndo();
+  void signal_newObject(shared_ptr<AnnotatorLib::Object>);
+  void signal_newAnnotation(shared_ptr<AnnotatorLib::Annotation>);
+  void signal_updateAnnotation(shared_ptr<AnnotatorLib::Annotation>);
+  void signal_updateObject(shared_ptr<AnnotatorLib::Object>);
+  void signal_removedObject(shared_ptr<AnnotatorLib::Object>);
+  void signal_removedAnnotation(shared_ptr<AnnotatorLib::Annotation>);
+  void signal_requestFrameRedraw();
+  void signal_refreshSession();
 
  public slots:
   void execute(shared_ptr<AnnotatorLib::Commands::Command> command,
@@ -28,6 +34,8 @@ class CommandController : public QObject {
 
  protected:
   AnnotatorLib::Session *session = nullptr;
+
+  void send_signals(shared_ptr<AnnotatorLib::Commands::Command> command, bool undo);
 };
 
 #endif  // COMMANDCONTROLLER_H

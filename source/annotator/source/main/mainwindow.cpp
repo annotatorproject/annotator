@@ -43,16 +43,37 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::connectSignalSlots() {
-  connect(&annotationsWidget, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)),
-          &objectsWidget, SLOT(selectObject(shared_ptr<AnnotatorLib::Object>)));
 
-  connect(&annotationsWidget, SIGNAL(frameSelected(long)), &playerWidget,
-          SLOT(jumpTo(long)));
+  //session
+  connect(this, SIGNAL(signal_refreshSession()), &annotationsWidget,
+          SLOT(on_refreshSession()));
+  connect(this, SIGNAL(signal_refreshSession()), &objectsWidget,
+          SLOT(on_refreshSession()));
 
-  connect(&playerWidget, SIGNAL(objectSelected(shared_ptr<AnnotatorLib::Object>)),
-          &objectsWidget, SLOT(selectObject(shared_ptr<AnnotatorLib::Object>)));
+  // frames
+  connect(&annotationsWidget, SIGNAL(signal_frameSelection(long)), &playerWidget,
+          SLOT(on_frameSelected(long)));
 
-  connect(&playerWidget, SIGNAL(requestReload()), this, SLOT(reloadWidgets()));
+  // object selection
+  connect(&playerWidget, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+  connect(&annotationsWidget, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+
+  //upate annotations
+  connect(CommandController::instance(), SIGNAL(signal_newAnnotation(shared_ptr<AnnotatorLib::Annotation>)),
+          &annotationsWidget, SLOT(on_annotationAdded(shared_ptr<AnnotatorLib::Annotation>)));
+  connect(CommandController::instance(), SIGNAL(signal_removedAnnotation(shared_ptr<AnnotatorLib::Annotation>)),
+          &annotationsWidget, SLOT(on_annotationRemoved(shared_ptr<AnnotatorLib::Annotation>)));
+  //update objects
+  connect(CommandController::instance(), SIGNAL(signal_newObject(shared_ptr<AnnotatorLib::Object>)),
+          &annotationsWidget, SLOT(on_objectAdded(shared_ptr<AnnotatorLib::Object>)));
+  connect(CommandController::instance(), SIGNAL(signal_removedObject(shared_ptr<AnnotatorLib::Object>)),
+          &annotationsWidget, SLOT(on_objectRemoved(shared_ptr<AnnotatorLib::Object>)));
+  connect(CommandController::instance(), SIGNAL(signal_newObject(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(on_objectAdded(shared_ptr<AnnotatorLib::Object>)));
+  connect(CommandController::instance(), SIGNAL(signal_removedObject(shared_ptr<AnnotatorLib::Object>)),
+          &objectsWidget, SLOT(on_objectRemoved(shared_ptr<AnnotatorLib::Object>)));
 }
 
 void MainWindow::setRateValue(QString value) { rateLabel->setText(value); }
@@ -117,9 +138,7 @@ void MainWindow::addRecentProject(QString projectfile) {
 }
 
 void MainWindow::reloadWidgets() {
-  annotationsWidget.reload();
-  objectsWidget.reload();
-  attributesWidget.reload();
+  emit signal_refreshSession();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -158,6 +177,8 @@ void MainWindow::on_actionOpen_Project_triggered() {
     openProject(AnnotatorLib::Project::load(fileName.toStdString()));
     QApplication::restoreOverrideCursor();
   }
+
+  emit signal_refreshSession();
 }
 
 void MainWindow::on_actionClose_Project_triggered() {

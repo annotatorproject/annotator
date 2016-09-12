@@ -24,20 +24,34 @@ void ObjectsWidget::setSession(AnnotatorLib::Session *session)
 
 void ObjectsWidget::reload()
 {
+  if (session) {
     ui->listWidget->clear();
     for(auto& pair: session->getObjects())
     {
-        QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
-
-        ObjectItem *objectItem = new ObjectItem(pair.second);
-        item->setSizeHint(objectItem->minimumSizeHint());
-        ui->listWidget->setItemWidget(item, objectItem);
+        addObject(pair.second);
     }
     if (AnnotationGraphicsItem::getSelectedAnnotation())
-      selectObject(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
+      on_objectSelected(AnnotationGraphicsItem::getSelectedAnnotation()->getObject());
+  }
 }
 
-void ObjectsWidget::selectObject(shared_ptr<AnnotatorLib::Object> object)
+void ObjectsWidget::addObject(shared_ptr<AnnotatorLib::Object> object)
+{
+  QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+
+  ObjectItem *objectItem = new ObjectItem(object);
+  item->setSizeHint(objectItem->minimumSizeHint());
+  ui->listWidget->setItemWidget(item, objectItem);
+}
+
+///////////////////////SIGNALS////////////////////////
+
+
+void ObjectsWidget::on_refreshSession() {
+  reload();
+}
+
+void ObjectsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object)
 {
     //if nothing is selected deselect all
     if (!object) {
@@ -53,10 +67,19 @@ void ObjectsWidget::selectObject(shared_ptr<AnnotatorLib::Object> object)
     }
 }
 
+void ObjectsWidget::on_objectAdded(shared_ptr<AnnotatorLib::Object> object) {
+  addObject(object);
+}
+
+void ObjectsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object) {
+  //TODO: make this more efficient
+  reload();
+}
+
 void ObjectsWidget::on_listWidget_itemSelectionChanged()
 {
     ObjectItem * selectedItem = (ObjectItem*)ui->listWidget->currentItem();
     //TODO: here is a bug
     //if( selectedItem != nullptr && selectedItem->getObject().get() != nullptr )
-    //    emit objectSelected(selectedItem->getObject());
+    //    emit signal_objectSelection(selectedItem->getObject());
 }

@@ -30,7 +30,6 @@ public:
   ~CamShift();
   QString getName() override;
   QWidget *getWidget() override;
-
   bool setFrame(shared_ptr<Frame> frame, cv::Mat image) override;
   void setObject(shared_ptr<Object> object) override;
   shared_ptr<Object> getObject() override;

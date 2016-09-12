@@ -215,13 +215,13 @@ void Videoplayer::wait(int msecs) {
 }
 
 /**
- * jumpTo	-	Jump to a position
+ * on_frameSelected	-	Jump to a position
  *
  * @param index	-	frame index
  *
  * @return True if success. False otherwise
  */
-bool Videoplayer::jumpTo(long index) {
+bool Videoplayer::on_frameSelected(long index) {
   if (index > length) {
     return 1;
   } else if (index == length) {
@@ -241,7 +241,7 @@ bool Videoplayer::jumpTo(long index) {
   return re;
 }
 
-void Videoplayer::reload() { jumpTo(this->curPos - 1); }  // TODO: why -1?
+void Videoplayer::reload() { on_frameSelected(this->curPos - 1); }  // TODO: why -1?
 
 /**
  * pauseIt	-	pause playing
@@ -266,7 +266,7 @@ void Videoplayer::stopIt() {
  *
  */
 void Videoplayer::revertVideo() {
-  jumpTo(0);
+  on_frameSelected(0);
   emit updateHorizontalSlider();
 }
 
@@ -286,7 +286,7 @@ void Videoplayer::close() {
  */
 void Videoplayer::nextFrame() {
   if (curPos < length) {
-    jumpTo(curPos);
+    on_frameSelected(curPos);
   }
   emit updateHorizontalSlider();
 }
@@ -298,7 +298,7 @@ void Videoplayer::nextFrame() {
 void Videoplayer::prevFrame() {
   if (curPos >= 0) {
       curPos -= 2;
-      jumpTo(curPos);
+      on_frameSelected(curPos);
   }
   emit updateHorizontalSlider();
 }

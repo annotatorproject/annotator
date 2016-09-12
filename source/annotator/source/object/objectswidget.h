@@ -18,11 +18,18 @@ class ObjectsWidget : public QWidget {
   void setSession(AnnotatorLib::Session *session);
   void reload();
 
- signals:
-  void objectSelected(shared_ptr<AnnotatorLib::Object> object);
+protected:
+  void addObject(shared_ptr<AnnotatorLib::Object> object);
 
+ signals:
+  void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
+
+ public slots:
+  void on_refreshSession();
+  void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
+  void on_objectAdded(shared_ptr<AnnotatorLib::Object> object);
+  void on_objectRemoved(shared_ptr<AnnotatorLib::Object> object);
  private slots:
-  void selectObject(shared_ptr<AnnotatorLib::Object> object);
   void on_listWidget_itemSelectionChanged();
 
  private:

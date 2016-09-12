@@ -44,6 +44,9 @@ class MainWindow : public QMainWindow {
    */
   void addRecentProject(QString projectfile);
 
+ signals:
+  void signal_refreshSession();
+
  public slots:
   void reloadWidgets();
 

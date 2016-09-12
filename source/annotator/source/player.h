@@ -46,7 +46,7 @@ class Player : public QWidget {
 
   QString getRateValue();
 
-  void selectObject(shared_ptr<AnnotatorLib::Object> object);
+  void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
 
   AnnotatorLib::Session *getSession();
 
@@ -57,12 +57,11 @@ class Player : public QWidget {
   void updateFrame(long frame);
   void showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame);
   void setSliderValue(int newpos);
-  void jumpTo(long index);  // Jump to a position
+  void on_frameSelected(long index);  // Jump to a position
   void reload();
 
  signals:
-  void objectSelected(shared_ptr<AnnotatorLib::Object> object);
-  void requestReload();
+  void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
  protected:
   void loadVideo(QString fileName);

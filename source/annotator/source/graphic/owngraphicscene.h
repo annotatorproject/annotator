@@ -32,7 +32,7 @@ class OwnGraphicScene : public QGraphicsScene {
 
  private slots:
   // void on_btnPause_clicked();
-  void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
+  void on_signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
  signals:
   void on_btnPause_clicked();

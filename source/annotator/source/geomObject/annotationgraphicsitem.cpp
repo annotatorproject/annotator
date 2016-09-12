@@ -185,7 +185,7 @@ void AnnotationGraphicsItem::mouseDoubleClickEvent(
       if (AnnotationGraphicsItem::selected_annotation_item)
         AnnotationGraphicsItem::selected_annotation_item->hideHighlight(); //hide previous selection
       AnnotationGraphicsItem::selected_annotation_item = this;
-      this->player->selectObject(this->annotation->getObject());
+      this->player->on_objectSelected(this->annotation->getObject());
   }
 }
 
@@ -224,11 +224,11 @@ void AnnotationGraphicsItem::removeObject() {
 }
 
 void AnnotationGraphicsItem::goToLast() {
-  player->jumpTo(annotation->getObject()->getLastAnnotation()->getFrame()->getFrameNumber());
+  player->on_frameSelected(annotation->getObject()->getLastAnnotation()->getFrame()->getFrameNumber());
 }
 
 void AnnotationGraphicsItem::goToFirst() {
-  player->jumpTo(annotation->getObject()->getFirstAnnotation()->getFrame()->getFrameNumber());
+  player->on_frameSelected(annotation->getObject()->getFirstAnnotation()->getFrame()->getFrameNumber());
 }
 
 void AnnotationGraphicsItem::compressObject() {

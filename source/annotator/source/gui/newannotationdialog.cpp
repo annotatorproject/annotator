@@ -65,13 +65,13 @@ void NewAnnotationDialog::createAnnotation() {
             this->session, session->getObject(id), frame, x, y, w, h);
   }
   AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set the created annotation as selected
-  //TODO: emit objectSelected(nA->getAnnotation()->getObject());
+  //TODO: emit signal_objectSelection(nA->getAnnotation()->getObject());
   CommandController::instance()->execute(nA);
 
-  Annotator::Plugin *plugin =
-      Annotator::PluginLoader::getInstance().getCurrent();
-  plugin->setObject(nA->getAnnotation()->getObject());
-  plugin->setLastAnnotation(nA->getAnnotation());
+//  Annotator::Plugin *plugin =
+//      Annotator::PluginLoader::getInstance().getCurrent();
+//  plugin->setObject(nA->getAnnotation()->getObject());
+//  plugin->setLastAnnotation(nA->getAnnotation());
 }
 
 void NewAnnotationDialog::reloadClasses()

@@ -6,6 +6,7 @@
 AnnotationsWidget::AnnotationsWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::AnnotationsWidget) {
   ui->setupUi(this);
+  initWidget();
 }
 
 AnnotationsWidget::~AnnotationsWidget() { delete ui; }
@@ -20,8 +21,7 @@ void AnnotationsWidget::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
 }
 
-void AnnotationsWidget::reload() {
-  ui->treeWidget->clear(); //deletes all childs
+void AnnotationsWidget::initWidget() {
   ui->treeWidget->setColumnCount(3);
 
   QStringList labels;
@@ -29,10 +29,37 @@ void AnnotationsWidget::reload() {
          << "Annotation ID"
          << "Frame";
   ui->treeWidget->setHeaderLabels(labels);
+}
 
-  for (auto& pair : session->getObjects()) {
-    addObject(pair.second);
+void AnnotationsWidget::refreshHoleSession() {
+  objectIndexMap.clear();
+  ui->treeWidget->clear(); //deletes all childs
+
+  if (session != nullptr) {
+    for (auto& pair : session->getObjects()) {
+      addObject(pair.second);
+    }
   }
+}
+
+
+///////////////SIGNALS////////////////////
+
+void AnnotationsWidget::on_refreshSession() {
+  refreshHoleSession();
+}
+
+void AnnotationsWidget::on_annotationAdded(shared_ptr<AnnotatorLib::Annotation> a) {
+  int idx = objectIndexMap[a->getObject()->getId()];
+  //update annonation counter
+  ui->treeWidget->topLevelItem(idx)->setText(0, QString::fromStdString(a->getObject()->getName())
+                + " (" + QString::number(a->getObject()->getId()) + ", "
+                + QString::number(a->getObject()->getAnnotations().size()) + ")");
+  addAnnotation(a, ui->treeWidget->topLevelItem(idx));
+}
+
+void AnnotationsWidget::on_annotationRemoved(shared_ptr<AnnotatorLib::Annotation> a) {
+  refreshHoleSession(); //TODO: reload object only
 }
 
 void AnnotationsWidget::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
@@ -40,31 +67,36 @@ void AnnotationsWidget::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annot
   if (!annotation || annotation->isTemporary()) return;
 
   QTreeWidgetItem *childItem = new QTreeWidgetItem();
-  item->addChild(childItem);
-  ui->treeWidget->setItemWidget(childItem, 1, new QLabel(QString::number(annotation->getId())));
-  ui->treeWidget->setItemWidget(childItem, 2, new QLabel(QString::number(annotation->getFrame()->getFrameNumber())));
-
-  if (!annotation->isLast()) addAnnotation(annotation->getNext(), item);
+  childItem->setText(0, QString(""));
+  childItem->setText(1, QString::number(annotation->getId()));
+  childItem->setText(2, QString::number(annotation->getFrame()->getFrameNumber()));
+  item->addChild( childItem);
 }
 
 void AnnotationsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
-  shared_ptr<AnnotatorLib::Annotation> firstAnnotation = object->getFirstAnnotation();
-  if (!firstAnnotation) return;
+  if (!object) return;
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
   item->setText(0, QString::fromStdString(object->getName())
                 + " (" + QString::number(object->getId()) + ", "
                 + QString::number(object->getAnnotations().size()) + ")");
+  objectIndexMap[object->getId()] = ui->treeWidget->topLevelItemCount() - 1;
   ui->treeWidget->addTopLevelItem(item);
-  addAnnotation(firstAnnotation, item);
+
+  for (auto& pair : object->getAnnotations()) {
+    addAnnotation(pair.second.lock(), item);
+  }
+}
+
+void AnnotationsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object) {
+  int idx = objectIndexMap[object->getId()];
+  delete ui->treeWidget->topLevelItem(idx);
 }
 
 void AnnotationsWidget::on_treeWidget_currentItemChanged(
     QTreeWidgetItem *current, QTreeWidgetItem *previous) {
-  QLabel *item_id =
-      (QLabel *)ui->treeWidget->itemWidget(current, 1);
-  if (item_id != nullptr) {
-    shared_ptr<AnnotatorLib::Annotation> sel_annotation = session->getAnnotation(item_id->text().toULong());
-    emit signal_objectSelection(sel_annotation->getObject());
-    emit signal_frameSelection( sel_annotation->getFrame()->getFrameNumber());
-  }
+  if (!current) return;
+  unsigned long id = current->text(1).toULong();
+  unsigned long frame_nmb = current->text(2).toULong();
+  emit signal_objectSelection(session->getAnnotation(id)->getObject());
+  emit signal_frameSelection( frame_nmb);
 }
