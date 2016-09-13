@@ -53,7 +53,7 @@ void MainWindow::connectSignalSlots() {
           SLOT(on_refreshSession()));
 
   // frames
-  connect(&annotationsWidget, SIGNAL(signal_frameSelection(long)), &playerWidget,
+  connect(SelectionController::instance(), SIGNAL(signal_frameSelection(long)), &playerWidget,
           SLOT(on_frameSelected(long)));
 
   // object selection

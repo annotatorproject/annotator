@@ -17,8 +17,12 @@ class SelectionController : public QObject {
   void setSelectedObject(shared_ptr<AnnotatorLib::Object> obj);
   shared_ptr<AnnotatorLib::Object> getSelectedObject() const;
 
+  void setSelectedFrame(shared_ptr<AnnotatorLib::Frame> f);
+  void setSelectedFrame(long nmb);
+
 signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
+  void signal_frameSelection(long nmb);
 
  protected:
   shared_ptr<AnnotatorLib::Object> object;

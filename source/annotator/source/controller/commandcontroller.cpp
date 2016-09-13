@@ -81,6 +81,10 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
   if (std::dynamic_pointer_cast<Commands::RemoveObject>(command)) {
       if (!undo) {
           emit signal_removedObject(std::dynamic_pointer_cast<Commands::RemoveObject>(command)->getObject());
+          if (SelectionController::instance()->getSelectedObject() ==
+              std::dynamic_pointer_cast<Commands::RemoveObject>(command)->getObject()) {
+                SelectionController::instance()->setSelectedObject(nullptr);
+          }
       } else {
           emit signal_newObject(std::dynamic_pointer_cast<Commands::RemoveObject>(command)->getObject());
       }

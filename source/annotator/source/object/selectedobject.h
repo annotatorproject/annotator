@@ -26,9 +26,18 @@ public slots:
 private:
     Ui::SelectedObject *ui;
 
+    QPixmap getImgCrop(shared_ptr<AnnotatorLib::Annotation> annotation, int size) const;
+
 protected:
     std::shared_ptr<AnnotatorLib::Object> object;
     AnnotatorLib::Project *project = nullptr;
+
+    void resizeEvent(QResizeEvent* event) override;
+private slots:
+    void on_commandLinkButtonLast_clicked();
+
+private slots:
+    void on_commandLinkButtonFirst_clicked();
 };
 
 #endif // SELECTEDOBJECT_H

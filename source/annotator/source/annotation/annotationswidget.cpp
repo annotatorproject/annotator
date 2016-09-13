@@ -115,5 +115,5 @@ void AnnotationsWidget::on_treeWidget_currentItemChanged(
   unsigned long id = current->text(1).toULong();
   unsigned long frame_nmb = current->text(2).toULong();
   SelectionController::instance()->setSelectedObject(session->getAnnotation(id)->getObject());
-  emit signal_frameSelection( frame_nmb);
+  SelectionController::instance()->setSelectedFrame(frame_nmb);
 }
