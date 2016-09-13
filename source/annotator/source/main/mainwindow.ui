@@ -36,13 +36,7 @@
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <layout class="QFormLayout" name="objectsLayout"/>
-        </item>
-        <item row="1" column="0">
-         <layout class="QFormLayout" name="attributesLayout"/>
-        </item>
-        <item row="2" column="0">
+        <item row="3" column="0">
          <layout class="QFormLayout" name="pluginsLayout">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
@@ -52,8 +46,17 @@
           </property>
          </layout>
         </item>
-        <item row="3" column="0">
+        <item row="1" column="0">
+         <layout class="QFormLayout" name="objectsLayout"/>
+        </item>
+        <item row="4" column="0">
          <layout class="QFormLayout" name="annotationsLayout"/>
+        </item>
+        <item row="2" column="0">
+         <layout class="QFormLayout" name="attributesLayout"/>
+        </item>
+        <item row="0" column="0">
+         <layout class="QFormLayout" name="selectedObjectLayout"/>
         </item>
        </layout>
       </widget>

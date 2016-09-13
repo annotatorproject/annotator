@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->PlayerLayout->addWidget(&playerWidget);
   ui->annotationsLayout->addWidget(&annotationsWidget);
   ui->objectsLayout->addWidget(&objectsWidget);
+  ui->selectedObjectLayout->addWidget(&selectedObject);
   // ui->attributesLayout->addWidget(&attributesWidget); // TODO
   ui->pluginsLayout->addWidget(&pluginsWidget);
 
@@ -58,6 +59,8 @@ void MainWindow::connectSignalSlots() {
   // object selection
   connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
           &objectsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+  connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+          &selectedObject, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
   connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
           &annotationsWidget, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
   connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
@@ -95,6 +98,7 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
 
     annotationsWidget.setSession(this->session);
     objectsWidget.setSession(this->session);
+    selectedObject.setProject(project);
     attributesWidget.setSession(this->session);
 
     this->setRateValue(playerWidget.getRateValue());

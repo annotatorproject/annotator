@@ -8,6 +8,7 @@
 #include "annotation/annotationswidget.h"
 #include "attribute/attributeswidget.h"
 #include "object/objectswidget.h"
+#include "object/selectedobject.h"
 #include "player.h"
 #include "plugins/pluginswidget.h"
 
@@ -77,6 +78,7 @@ class MainWindow : public QMainWindow {
   Player playerWidget;
   AnnotationsWidget annotationsWidget;
   ObjectsWidget objectsWidget;
+  SelectedObject selectedObject;
   AttributesWidget attributesWidget;
   PluginsWidget pluginsWidget;
 
