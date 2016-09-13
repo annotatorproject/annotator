@@ -39,8 +39,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
   // command controller
-  connect(CommandController::instance(), SIGNAL(signal_requestFrameRedraw()), this,
-          SLOT(reload()));
+  connect(CommandController::instance(), SIGNAL(signal_requestFrameRedraw()),
+          this, SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
   scene = new OwnGraphicScene();
@@ -52,12 +52,14 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(scene, SIGNAL(on_btnPause_clicked()), this,
           SLOT(on_btnPause_clicked()));
 
-  connect(this, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)), scene,
-          SLOT(on_signal_objectSelection(shared_ptr<AnnotatorLib::Object>)));
+  connect(
+      this, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+      scene, SLOT(on_signal_objectSelection(shared_ptr<AnnotatorLib::Object>)));
 }
 
 Player::~Player() {
   clearAnnotationsGraphics();
+  delete scene;
   delete ui;
 }
 
@@ -111,7 +113,7 @@ void Player::loadVideo(QString fileName) {
 }
 
 void Player::clearAnnotationsGraphics() {
-  while(!annotationGraphics.empty()) {
+  while (!annotationGraphics.empty()) {
     delete annotationGraphics.front();
     annotationGraphics.pop_front();
   }
@@ -222,7 +224,16 @@ void Player::updateFrame(long frame_nmb) {
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin && SelectionController::instance()->getSelectedObject()) {
-      plugin->calculate(SelectionController::instance()->getSelectedObject(), f, currentFrame);
+        // calculate only if object is not finished.
+      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
+      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
+      SelectionController::instance()
+          ->getSelectedObject()
+          ->findClosestKeyFrames(f, previousA, nextA);
+      if (previousA != SelectionController::instance()
+              ->getSelectedObject()->getLastAnnotation())
+        plugin->calculate(SelectionController::instance()->getSelectedObject(),
+                          f);
     }
   }
 
@@ -238,11 +249,13 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
        AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
            this->session, frame)) {
 
-    AnnotationGraphicsItem* graphicsItem =
-            AnnotationGraphicsItemFactory::createItem(annotation);
+    AnnotationGraphicsItem *graphicsItem =
+        AnnotationGraphicsItemFactory::createItem(annotation);
 
-    connect(SelectionController::instance(), SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
-            graphicsItem, SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
+    connect(SelectionController::instance(),
+            SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
+            graphicsItem,
+            SLOT(on_objectSelected(shared_ptr<AnnotatorLib::Object>)));
 
     graphicsItem->setPlayer(this);
     scene->addItem(graphicsItem);
@@ -251,12 +264,12 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
 
   // if nothing is selected take first annotation
   if (!SelectionController::instance()->getSelectedObject()) {
-      if (annotationGraphics.empty()) {
-          SelectionController::instance()->setSelectedObject(nullptr);
-        } else {
-          SelectionController::instance()->setSelectedObject(
-                annotationGraphics.front()->getAnnotation()->getObject());
-        }
+    if (annotationGraphics.empty()) {
+      SelectionController::instance()->setSelectedObject(nullptr);
+    } else {
+      SelectionController::instance()->setSelectedObject(
+          annotationGraphics.front()->getAnnotation()->getObject());
+    }
   }
 }
 
@@ -337,7 +350,6 @@ void Player::pause() { videoplayer->pauseIt(); }
  * @param msecs
  */
 void Player::sleep(int msecs) { videoplayer->wait(msecs); }
-
 
 ///#################################################################################################///
 

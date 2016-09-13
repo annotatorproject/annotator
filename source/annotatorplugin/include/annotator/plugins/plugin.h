@@ -1,14 +1,14 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include <QtCore/QObject>
-#include <QtCore/QtPlugin>
-#include <QtWidgets/QWidget>
 #include <AnnotatorLib/AnnotatorAlgoInterface.h>
 #include <AnnotatorLib/Commands/Command.h>
 #include <AnnotatorLib/Object.h>
-#include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Project.h>
+#include <AnnotatorLib/Session.h>
+#include <QtCore/QObject>
+#include <QtCore/QtPlugin>
+#include <QtWidgets/QWidget>
 
 namespace Annotator {
 
@@ -20,15 +20,25 @@ public:
 
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) {
-    AnnotatorLib::Session* session = getProject()->getSession();
+            shared_ptr<AnnotatorLib::Frame> frame) {
+    AnnotatorLib::Session *session = getProject()->getSession();
     setObject(object);
+    cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
     setFrame(frame, image);
-    shared_ptr<AnnotatorLib::Annotation> annotationAtFrame = session->getAnnotation(frame, object);  //find annotation at keyFrame
+
+    shared_ptr<AnnotatorLib::Annotation> annotationAtFrame =
+        session->getAnnotation(frame, object); // find annotation at keyFrame
+
+    if (!annotationAtFrame) {
+      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
+      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
+      object->findClosestKeyFrames(frame, previousA, nextA);
+      annotationAtFrame = previousA;
+    }
 
     if (annotationAtFrame) {
       setLastAnnotation(annotationAtFrame);
-      return std::vector<shared_ptr<AnnotatorLib::Commands::Command>>();
+      //return std::vector<shared_ptr<AnnotatorLib::Commands::Command>>();
     }
 
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =

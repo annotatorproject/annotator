@@ -58,5 +58,7 @@ void PluginsWidget::on_auto_annotate_checkBox_clicked(bool checked)
 {
   this->autoAnnotate = checked;
   this->ui->comboBox->setEnabled(checked);
+    if(this->lastWidget)
+        lastWidget->setEnabled(checked);
   emit signal_autoAnnotate(checked);
 }
