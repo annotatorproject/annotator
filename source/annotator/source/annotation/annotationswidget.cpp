@@ -99,12 +99,11 @@ void AnnotationsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object
 }
 
 void AnnotationsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object) {
+  for(auto item : ui->treeWidget->selectedItems())
+    item->setSelected(false);
   if (object) {
     int idx = objectIndexMap[object->getId()];
     ui->treeWidget->topLevelItem(idx)->setSelected(true);
-  } else {
-    for(auto item : ui->treeWidget->selectedItems())
-        item->setSelected(false);
   }
 }
 
