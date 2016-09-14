@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <AnnotatorLib/Object.h>
 
+using std::shared_ptr;
+
 namespace Ui {
 class PluginsWidget;
 }
@@ -23,7 +25,7 @@ class PluginsWidget : public QWidget {
   void signal_autoAnnotate(bool);
 
  public slots:
-  void on_objectSelected(std::shared_ptr<AnnotatorLib::Object>);
+  void on_objectSelected(shared_ptr<AnnotatorLib::Object>);
 
 private slots:
   void on_auto_annotate_checkBox_clicked(bool checked);
