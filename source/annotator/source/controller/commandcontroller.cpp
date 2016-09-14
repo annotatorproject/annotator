@@ -70,10 +70,13 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
       return;
   }
   if (std::dynamic_pointer_cast<Commands::RemoveAnnotation>(command)) {
-      if (!undo) {
-          emit signal_removedAnnotation(std::dynamic_pointer_cast<Commands::RemoveAnnotation>(command)->getAnnotation());
+      shared_ptr<Annotation> a = std::dynamic_pointer_cast<Commands::RemoveAnnotation>(command)->getAnnotation();
+      if (!undo) {          
+          emit signal_removedAnnotation(a);
+          if (a->getObject() == SelectionController::instance()->getSelectedObject() && a->getObject()->getAnnotations().size() == 0)
+            SelectionController::instance()->setSelectedObject(nullptr);
       } else {
-          emit signal_newAnnotation(std::dynamic_pointer_cast<Commands::RemoveAnnotation>(command)->getAnnotation());
+          emit signal_newAnnotation(a);
       }
       emit signal_requestFrameRedraw();
       return;
@@ -109,6 +112,7 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
       std::dynamic_pointer_cast<Commands::CleanSession>(command)) {
       emit signal_refreshSession();
       emit signal_requestFrameRedraw();
+      SelectionController::instance()->setSelectedObject(nullptr);
       return;
   }
 }
