@@ -41,7 +41,8 @@ void AnnotationsWidget::refreshHoleSession() {
 
   if (session != nullptr) {
     for (auto& pair : session->getObjects()) {
-      addObject(pair.second);
+      if (pair.second->getAnnotations().size() > 0)
+        addObject(pair.second);
     }
   }
 }
@@ -94,6 +95,7 @@ void AnnotationsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
 void AnnotationsWidget::on_objectRemoved(shared_ptr<AnnotatorLib::Object> object) {
   int idx = objectIndexMap[object->getId()];
   delete ui->treeWidget->topLevelItem(idx);
+  objectIndexMap.erase(object->getId());
 }
 
 void AnnotationsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object) {
