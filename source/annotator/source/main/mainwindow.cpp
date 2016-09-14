@@ -161,7 +161,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   if (resBtn == QMessageBox::Cancel) {
     event->ignore();
   } else {
-    if (resBtn == QMessageBox::Yes) project->saveSession();
+    if (resBtn == QMessageBox::Yes)
+      project->save();
+      //project->saveSession();
     event->accept();
   }
 }
@@ -195,7 +197,7 @@ void MainWindow::on_actionClose_Project_triggered() {
       QMessageBox::Yes);
   if (resBtn == QMessageBox::Cancel) {
   } else {
-    if (resBtn == QMessageBox::Yes) project->saveSession();
+    if (resBtn == QMessageBox::Yes) project->save();
     if (this->project != nullptr) {
       delete this->project;
     }

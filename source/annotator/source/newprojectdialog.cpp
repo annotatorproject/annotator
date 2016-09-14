@@ -39,7 +39,7 @@ void NewProjectDialog::on_buttonBox_accepted() {
         imageSetPath.toStdString(), storageType.toStdString(),
         storagePath.toStdString());
     project->setPath(ui->projectFileLineEdit->text().toStdString());
-    project->loadSession();
+    project->load();
     this->accept();
   } catch (std::exception &e) {
     QMessageBox::warning(this, "Error", QString::fromStdString(e.what()));
