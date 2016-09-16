@@ -6,7 +6,7 @@
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
-  ui->nameLineEdit->setEnabled(false);
+  ui->objectNameLineEdit->setEnabled(false);
 }
 
 Widget::~Widget() { delete ui; }
@@ -25,10 +25,10 @@ void Widget::on_pushButton_clicked() {
 }
 
 void Widget::on_objectNameLineEdit_editingFinished() {
-  haarcascade->setObjectName(ui->nameLineEdit->text().toStdString());
+  haarcascade->setObjectName(ui->objectNameLineEdit->text().toStdString());
 }
 
 void Widget::on_newObjectsCheckBox_toggled(bool checked) {
   haarcascade->setNewObjects(checked);
-  ui->nameLineEdit->setEnabled(checked);
+  ui->objectNameLineEdit->setEnabled(checked);
 }
