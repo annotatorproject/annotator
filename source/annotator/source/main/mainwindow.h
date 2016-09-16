@@ -88,6 +88,8 @@ class MainWindow : public QMainWindow {
 
   void enableDrawing(bool enable);
 
+  void closeProject();
+
 private slots:
   void on_actionLock_project_toggled(bool arg1);
 

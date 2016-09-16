@@ -151,12 +151,11 @@ void MainWindow::addRecentProject(QString projectfile) {
 
 
 void MainWindow::on_actionClose_Project_triggered() {
-  this->close();
+  closeProject();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+void MainWindow::closeProject() {
   if (this->project == nullptr) {
-    event->accept();
     return;
   }
   QCheckBox *cb_lock = new QCheckBox("Yes, lock this project. Labeling is completed now.");
@@ -181,14 +180,19 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   if(msgbox.exec() == QMessageBox::Yes){
     this->project->setActive(cb_lock->checkState() != Qt::Checked);
     project->save();
-    event->accept();
   }
+  this->setWindowTitle(nullptr);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  this->closeProject();
+  event->accept();
   QWidget::closeEvent(event);
 }
 
 void MainWindow::setWindowTitle(std::shared_ptr<AnnotatorLib::Project> project) {
   if (project == nullptr) {
-    QMainWindow::setWindowTitle(QApplication::applicationName());
+    QMainWindow::setWindowTitle(QApplication::applicationName() + " - No project opened.");
   } else {
     QMainWindow::setWindowTitle(QApplication::applicationName() + " - " +
                                 QString::fromStdString(project->getName()));
