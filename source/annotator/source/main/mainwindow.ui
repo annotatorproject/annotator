@@ -131,6 +131,7 @@
     </property>
     <addaction name="actionCompress_Session"/>
     <addaction name="actionClear_Session"/>
+    <addaction name="actionProject_Statistics"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -274,6 +275,11 @@
    </property>
    <property name="text">
     <string>Lock Project</string>
+   </property>
+  </action>
+  <action name="actionProject_Statistics">
+   <property name="text">
+    <string>Project Statistics</string>
    </property>
   </action>
  </widget>

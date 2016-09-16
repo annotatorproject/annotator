@@ -13,6 +13,7 @@
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "gui/classesdialog.h"
+#include "gui/statisticsdialog.h"
 #include "gui/alert.h"
 #include "newprojectdialog.h"
 #include "plugins/pluginloader.h"
@@ -316,4 +317,12 @@ void MainWindow::on_actionLock_project_toggled(bool b)
     msgBox.exec();
   }
 
+}
+
+void MainWindow::on_actionProject_Statistics_triggered()
+{
+  if (project) {
+    StatisticsDialog dialog(project, this);
+    dialog.exec();
+  }
 }

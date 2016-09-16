@@ -91,6 +91,9 @@ class MainWindow : public QMainWindow {
   void closeProject();
 
 private slots:
+  void on_actionProject_Statistics_triggered();
+
+private slots:
   void on_actionLock_project_toggled(bool arg1);
 
 private:
