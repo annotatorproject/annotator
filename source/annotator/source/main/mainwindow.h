@@ -86,7 +86,12 @@ class MainWindow : public QMainWindow {
   AnnotatorLib::Session *session = nullptr;
   QLabel *rateLabel;
 
- private:
+  void enableAllWidgets(bool enable);
+
+private slots:
+  void on_actionLock_project_toggled(bool arg1);
+
+private:
   Ui::MainWindow *ui;
 };
 

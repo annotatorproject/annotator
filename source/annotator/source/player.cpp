@@ -360,6 +360,11 @@ void Player::reload() {
   // TODO: reload annotations?
 }
 
+void Player::enableDrawing(bool enable)
+{
+  this->ui->scrollArea->setEnabled(enable);
+}
+
 /**
  * update the video speed by a factor f in percent
  *

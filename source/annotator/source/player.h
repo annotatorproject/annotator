@@ -56,6 +56,7 @@ class Player : public QWidget {
   void on_frameSelected(long index);  // Jump to a position
   void on_autoAnnotate(bool);
   void reload();
+  void enableDrawing(bool enable);
 
  signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);

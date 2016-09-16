@@ -282,5 +282,17 @@ void MainWindow::on_actionClasses_triggered() {
   if (session != nullptr) {
     ClassesDialog dialog(session, this);
     dialog.exec();
-  }
+    }
+}
+
+void MainWindow::enableAllWidgets(bool enable)
+{
+  this->pluginsWidget.setEnabled(enable);
+  this->playerWidget.enableDrawing(enable);
+}
+
+void MainWindow::on_actionLock_project_toggled(bool b)
+{
+  this->project->setActive(!b);
+  enableAllWidgets(!b);
 }

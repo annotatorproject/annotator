@@ -123,10 +123,11 @@
     <addaction name="actionRedo"/>
     <addaction name="separator"/>
     <addaction name="actionClasses"/>
+    <addaction name="actionLock_project"/>
    </widget>
    <widget class="QMenu" name="menuAlgorithm">
     <property name="title">
-     <string>Algorithm</string>
+     <string>Tools</string>
     </property>
     <addaction name="actionCompress_Session"/>
     <addaction name="actionClear_Session"/>
@@ -265,6 +266,14 @@
   <action name="actionClear_Session">
    <property name="text">
     <string>Clear Session</string>
+   </property>
+  </action>
+  <action name="actionLock_project">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Lock Project</string>
    </property>
   </action>
  </widget>
