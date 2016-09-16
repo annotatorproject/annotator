@@ -79,7 +79,7 @@ QString Player::getRateValue() {
 
 AnnotatorLib::Session *Player::getSession() { return this->session; }
 
-void Player::setProject(AnnotatorLib::Project *project) {
+void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   this->project = project;
   this->session = project->getSession();
 

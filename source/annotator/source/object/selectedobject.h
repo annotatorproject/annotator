@@ -18,7 +18,7 @@ public:
     ~SelectedObject();
     void update(std::shared_ptr<AnnotatorLib::Object> object);
     void updateImage();
-    void setProject(AnnotatorLib::Project *project);
+    void setProject(std::shared_ptr<AnnotatorLib::Project> project);
 
 public slots:
     void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
@@ -30,7 +30,7 @@ private:
 
 protected:
     std::shared_ptr<AnnotatorLib::Object> object;
-    AnnotatorLib::Project *project = nullptr;
+    std::shared_ptr<AnnotatorLib::Project> project = nullptr;
 
     void resizeEvent(QResizeEvent* event) override;
 private slots:

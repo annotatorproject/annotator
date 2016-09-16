@@ -39,9 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-  if (this->project != nullptr) {
-    delete this->project;
-  }
   delete ui;
 }
 
@@ -89,7 +86,7 @@ void MainWindow::connectSignalSlots() {
 
 void MainWindow::setRateValue(QString value) { rateLabel->setText(value); }
 
-void MainWindow::openProject(AnnotatorLib::Project *project) {
+void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
   if (project != nullptr) {
     this->project = project;
 
@@ -189,7 +186,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   QWidget::closeEvent(event);
 }
 
-void MainWindow::setWindowTitle(AnnotatorLib::Project *project) {
+void MainWindow::setWindowTitle(std::shared_ptr<AnnotatorLib::Project> project) {
   if (project == nullptr) {
     QMainWindow::setWindowTitle(QApplication::applicationName());
   } else {

@@ -15,7 +15,7 @@ class NewProjectDialog : public QDialog {
   explicit NewProjectDialog(QWidget *parent = 0);
   ~NewProjectDialog();
 
-  AnnotatorLib::Project *getProject();
+  std::shared_ptr<AnnotatorLib::Project> getProject();
   QString getStorageType();
   QString getImageSetType();
 
@@ -30,7 +30,7 @@ class NewProjectDialog : public QDialog {
 
  private:
   Ui::NewProjectDialog *ui;
-  AnnotatorLib::Project *project = nullptr;
+  std::shared_ptr<AnnotatorLib::Project> project = nullptr;
 };
 
 #endif  // NEWPROJECTDIALOG_H

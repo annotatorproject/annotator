@@ -25,11 +25,11 @@ class MainWindow : public QMainWindow {
 
   void connectSignalSlots();
 
-  void setWindowTitle(AnnotatorLib::Project *project);
+  void setWindowTitle(std::shared_ptr<AnnotatorLib::Project> project);
 
   void setRateValue(QString value);
 
-  void openProject(AnnotatorLib::Project *project);
+  void openProject(std::shared_ptr<AnnotatorLib::Project> project);
 
  protected:
   /**
@@ -82,7 +82,7 @@ class MainWindow : public QMainWindow {
   AttributesWidget attributesWidget;
   PluginsWidget pluginsWidget;
 
-  AnnotatorLib::Project *project = nullptr;
+  std::shared_ptr<AnnotatorLib::Project> project = nullptr;
   AnnotatorLib::Session *session = nullptr;
   QLabel *rateLabel;
 

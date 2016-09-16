@@ -48,7 +48,7 @@ void SelectedObject::updateImage()
     }
 }
 
-void SelectedObject::setProject(AnnotatorLib::Project *project)
+void SelectedObject::setProject(std::shared_ptr<AnnotatorLib::Project> project)
 {
     this->project = project;
 }
