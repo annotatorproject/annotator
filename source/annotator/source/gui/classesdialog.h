@@ -12,7 +12,7 @@ class ClassesDialog : public QDialog {
   Q_OBJECT
 
  public:
-  explicit ClassesDialog(AnnotatorLib::Session *session, QWidget *parent = 0);
+  explicit ClassesDialog(std::shared_ptr<AnnotatorLib::Session> session, QWidget *parent = 0);
   ~ClassesDialog();
 
  private slots:
@@ -27,7 +27,7 @@ class ClassesDialog : public QDialog {
    * @brief reloadClasses Clears classes list and recreates its content.
    */
   void reloadClasses();
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 
  private:
   Ui::ClassesDialog *ui;

@@ -21,7 +21,7 @@ CommandController *CommandController::instance() {
   return singleton;
 }
 
-void CommandController::setSession(Session *session) {
+void CommandController::setSession(std::shared_ptr<Session> session) {
   this->session = session;
 }
 

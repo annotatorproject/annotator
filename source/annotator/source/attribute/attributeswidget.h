@@ -14,13 +14,13 @@ class AttributesWidget : public QWidget {
  public:
   explicit AttributesWidget(QWidget *parent = 0);
   ~AttributesWidget();
-  void setSession(AnnotatorLib::Session *session);
+  void setSession(std::shared_ptr<AnnotatorLib::Session> session);
   void reload();
 
  private:
   Ui::AttributesWidget *ui;
 
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 };
 
 #endif  // ATTRIBUTESWIDGET_H

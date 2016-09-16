@@ -13,7 +13,7 @@ class NewAnnotationDialog : public QDialog {
   Q_OBJECT
 
  public:
-  explicit NewAnnotationDialog(AnnotatorLib::Session *session,
+  explicit NewAnnotationDialog(std::shared_ptr<AnnotatorLib::Session> session,
                                unsigned long frame_nmb,
                                shared_ptr<AnnotatorLib::Object> sel_obj = shared_ptr<AnnotatorLib::Object>(nullptr),
                                QWidget *parent = 0);
@@ -25,7 +25,7 @@ class NewAnnotationDialog : public QDialog {
   bool checkValues();
   void reloadClasses();
 
-  AnnotatorLib::Session *session;
+  std::shared_ptr<AnnotatorLib::Session> session;
   const unsigned long frame_nmb = 0;
   const shared_ptr<AnnotatorLib::Object> selected_obj;
   Ui::NewAnnotationDialog *ui;

@@ -77,7 +77,7 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-AnnotatorLib::Session *Player::getSession() { return this->session; }
+std::shared_ptr<AnnotatorLib::Session> Player::getSession() { return this->session; }
 
 void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   this->project = project;

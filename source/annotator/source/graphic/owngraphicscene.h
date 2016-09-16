@@ -20,7 +20,7 @@ class OwnGraphicScene : public QGraphicsScene {
   QPoint inputCoordinate;  // image/video coordinate
 
   void setCurrentFrame(int frame);
-  void setSession(AnnotatorLib::Session *session);
+  void setSession(std::shared_ptr<AnnotatorLib::Session> session);
 
  protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -39,7 +39,7 @@ class OwnGraphicScene : public QGraphicsScene {
 
  protected:
   unsigned long currentFrame = 0;
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   shared_ptr<AnnotatorLib::Object> selected_obj;
 
  private:

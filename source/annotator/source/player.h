@@ -45,7 +45,7 @@ class Player : public QWidget {
   OwnGraphicView *overlay;
 
   QString getRateValue();
-  AnnotatorLib::Session *getSession();
+  std::shared_ptr<AnnotatorLib::Session> getSession();
 
  public slots:
   void showFrame(cv::Mat frame);
@@ -89,7 +89,7 @@ private slots:
   bool autoAnnotation = false;
   Ui::Player *ui;
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   QLabel *rateLabel;
 
   cv::Mat currentFrame;

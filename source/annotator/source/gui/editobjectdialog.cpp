@@ -5,7 +5,7 @@
 #include "controller/commandcontroller.h"
 #include "ui_editobjectdialog.h"
 
-EditObjectDialog::EditObjectDialog(AnnotatorLib::Session* session,
+EditObjectDialog::EditObjectDialog(std::shared_ptr<AnnotatorLib::Session> session,
                                    shared_ptr<AnnotatorLib::Object> obj, QWidget* parent)
     : QDialog(parent),
       session(session),

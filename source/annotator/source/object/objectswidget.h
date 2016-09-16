@@ -16,7 +16,7 @@ class ObjectsWidget : public QWidget {
  public:
   explicit ObjectsWidget(QWidget *parent = 0);
   ~ObjectsWidget();
-  void setSession(AnnotatorLib::Session *session);
+  void setSession(std::shared_ptr<AnnotatorLib::Session> session);
   void reload();
 
 protected:
@@ -34,7 +34,7 @@ protected:
   Ui::ObjectsWidget *ui;
   std::unordered_map<unsigned long, int> objectIdToRowMap;
   std::unordered_map<int, unsigned long> objectRowToIdMap;
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 };
 
 #endif  // OBJECTSWIDGET_H

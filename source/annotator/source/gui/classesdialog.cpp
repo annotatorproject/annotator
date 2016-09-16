@@ -1,7 +1,7 @@
 #include "classesdialog.h"
 #include "ui_classesdialog.h"
 
-ClassesDialog::ClassesDialog(AnnotatorLib::Session *session, QWidget *parent)
+ClassesDialog::ClassesDialog(std::shared_ptr<AnnotatorLib::Session> session, QWidget *parent)
     : QDialog(parent), session(session), ui(new Ui::ClassesDialog) {
   ui->setupUi(this);
   reloadClasses();

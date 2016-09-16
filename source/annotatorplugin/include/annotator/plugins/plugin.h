@@ -21,7 +21,7 @@ public:
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
             shared_ptr<AnnotatorLib::Frame> frame) {
-    AnnotatorLib::Session *session = getProject()->getSession();
+    std::shared_ptr<AnnotatorLib::Session> session = getProject()->getSession();
     setObject(object);
     cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
     setFrame(frame, image);

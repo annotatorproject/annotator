@@ -17,7 +17,7 @@ class AnnotationsWidget : public QWidget {
   explicit AnnotationsWidget(QWidget *parent = 0);
   ~AnnotationsWidget();
 
-  void setSession(AnnotatorLib::Session *session);
+  void setSession(std::shared_ptr<AnnotatorLib::Session> session);
   void initWidget();
   void resizeEvent(QResizeEvent *) override;
 
@@ -39,7 +39,7 @@ class AnnotationsWidget : public QWidget {
  protected:
   Ui::AnnotationsWidget *ui;
   std::unordered_map<unsigned long, int> objectIndexMap;
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 
   void refreshHoleSession();
   void addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,

@@ -155,7 +155,7 @@ void OwnGraphicScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void OwnGraphicScene::setCurrentFrame(int frame) { this->currentFrame = frame; }
 
-void OwnGraphicScene::setSession(AnnotatorLib::Session *session) {
+void OwnGraphicScene::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
   this->session = session;
 }
 

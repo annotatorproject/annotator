@@ -12,7 +12,7 @@ AnnotationsWidget::AnnotationsWidget(QWidget *parent)
 
 AnnotationsWidget::~AnnotationsWidget() { delete ui; }
 
-void AnnotationsWidget::setSession(AnnotatorLib::Session *session) {
+void AnnotationsWidget::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
   this->session = session;
 }
 

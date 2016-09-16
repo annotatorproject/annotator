@@ -18,7 +18,7 @@ ObjectsWidget::~ObjectsWidget()
     delete ui;
 }
 
-void ObjectsWidget::setSession(AnnotatorLib::Session *session)
+void ObjectsWidget::setSession(std::shared_ptr<AnnotatorLib::Session> session)
 {
     this->session = session;
 }

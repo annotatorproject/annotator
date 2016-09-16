@@ -83,7 +83,7 @@ class MainWindow : public QMainWindow {
   PluginsWidget pluginsWidget;
 
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   QLabel *rateLabel;
 
   void enableDrawing(bool enable);

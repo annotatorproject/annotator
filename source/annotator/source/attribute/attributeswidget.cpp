@@ -9,7 +9,7 @@ AttributesWidget::AttributesWidget(QWidget *parent)
 
 AttributesWidget::~AttributesWidget() { delete ui; }
 
-void AttributesWidget::setSession(AnnotatorLib::Session *session) {
+void AttributesWidget::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
   this->session = session;
 }
 

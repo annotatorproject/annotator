@@ -8,7 +8,7 @@
 #include "controller/commandcontroller.h"
 
 
-NewAnnotationDialog::NewAnnotationDialog(AnnotatorLib::Session *session,
+NewAnnotationDialog::NewAnnotationDialog(std::shared_ptr<AnnotatorLib::Session> session,
                                  unsigned long frame_nmb,
                                  shared_ptr<AnnotatorLib::Object> selected_obj,
                                  QWidget *parent)

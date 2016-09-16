@@ -14,7 +14,7 @@ class CommandController : public QObject {
   explicit CommandController(QObject *parent = 0);
   static CommandController *instance();
 
-  void setSession(AnnotatorLib::Session *session);
+  void setSession(shared_ptr<AnnotatorLib::Session> session);
 
  signals:
   void signal_newObject(shared_ptr<AnnotatorLib::Object>);
@@ -33,7 +33,7 @@ class CommandController : public QObject {
   void undo();
 
  protected:
-  AnnotatorLib::Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 
   void send_signals(shared_ptr<AnnotatorLib::Commands::Command> command, bool undo);
 };
