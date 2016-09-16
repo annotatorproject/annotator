@@ -4,6 +4,7 @@
 #include <AnnotatorLib/Commands/CompressSession.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
 #include <QApplication>
+#include <QCheckBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -151,24 +152,41 @@ void MainWindow::addRecentProject(QString projectfile) {
   settings.setValue("LastProjectPath", projectfile);
 }
 
+
+void MainWindow::on_actionClose_Project_triggered() {
+  this->close();
+}
+
 void MainWindow::closeEvent(QCloseEvent *event) {
   if (this->project == nullptr) {
     event->accept();
     return;
   }
+  QCheckBox *cb_lock = new QCheckBox("Yes, lock this project. Labeling is completed now.");
+  cb_lock->setChecked(!project->isActive());
+  QMessageBox msgbox;
+  msgbox.setParent(this);
+  msgbox.setStyleSheet("color: black;"
+                        "background-color: white;"
+                        "selection-color: black;"
+                        "selection-background-color: black;");
+  msgbox.setText(tr("Save project before close?\n"));
+  msgbox.setIcon(QMessageBox::Icon::Question);
+  msgbox.addButton(QMessageBox::No);
+  msgbox.addButton(QMessageBox::Yes);
+  msgbox.setDefaultButton(QMessageBox::Yes);
+  QPalette p;
+  p.setColor(QPalette::WindowText, QColor("Black"));
+  p.setColor(QPalette::Window, QColor("White"));
+  msgbox.setPalette(p);
+  msgbox.setCheckBox(cb_lock);
 
-  QMessageBox::StandardButton resBtn = QMessageBox::question(
-      this, "", tr("Save project before quit?\n"),
-      QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-      QMessageBox::Yes);
-  if (resBtn == QMessageBox::Cancel) {
-    event->ignore();
-  } else {
-    if (resBtn == QMessageBox::Yes)
-      project->save();
-      //project->saveSession();
+  if(msgbox.exec() == QMessageBox::Yes){
+    this->project->setActive(cb_lock->checkState() != Qt::Checked);
+    project->save();
     event->accept();
   }
+  QWidget::closeEvent(event);
 }
 
 void MainWindow::setWindowTitle(AnnotatorLib::Project *project) {
@@ -193,19 +211,6 @@ void MainWindow::on_actionOpen_Project_triggered() {
   emit signal_refreshSession();
 }
 
-void MainWindow::on_actionClose_Project_triggered() {
-  QMessageBox::StandardButton resBtn = QMessageBox::question(
-      this, "", tr("Save project before close?\n"),
-      QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-      QMessageBox::Yes);
-  if (resBtn == QMessageBox::Cancel) {
-  } else {
-    if (resBtn == QMessageBox::Yes) project->save();
-    if (this->project != nullptr) {
-      delete this->project;
-    }
-  }
-}
 
 void MainWindow::on_actionNew_Project_triggered() {
   NewProjectDialog dialog;
