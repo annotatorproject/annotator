@@ -113,6 +113,9 @@ void MainWindow::openProject(AnnotatorLib::Project *project) {
 
     // save path to last opened project in settings
     addRecentProject(QString::fromStdString(project->getPath()));
+
+    //lock/unlock project
+    this->ui->actionLock_project->setChecked(!project->isActive());
   }
 }
 
@@ -285,7 +288,7 @@ void MainWindow::on_actionClasses_triggered() {
     }
 }
 
-void MainWindow::enableAllWidgets(bool enable)
+void MainWindow::enableDrawing(bool enable)
 {
   this->pluginsWidget.setEnabled(enable);
   this->playerWidget.enableDrawing(enable);
@@ -294,5 +297,17 @@ void MainWindow::enableAllWidgets(bool enable)
 void MainWindow::on_actionLock_project_toggled(bool b)
 {
   this->project->setActive(!b);
-  enableAllWidgets(!b);
+  enableDrawing(!b);
+
+  if (b) {
+    Alert msgBox;
+    msgBox.setToolTip("Warning");
+    msgBox.setText(QString::fromStdString(std::string("This project is locked. Unlock via the menu.")));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setStandardButtons(0);
+    msgBox.setAutoClose(true);
+    msgBox.setTimeout(3); //Closes after three seconds
+    msgBox.exec();
+  }
+
 }
