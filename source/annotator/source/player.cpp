@@ -235,15 +235,6 @@ void Player::updateFrame(long frame_nmb) {
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin) {
-//      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
-//      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
-//      SelectionController::instance()
-//          ->getSelectedObject()
-//          ->findClosestKeyFrames(f, previousA, nextA);
-//      if (previousA !=
-//          SelectionController::instance()
-//              ->getSelectedObject()
-//              ->getLastAnnotation())
         for (shared_ptr<AnnotatorLib::Commands::Command> command :
              plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
           CommandController::instance()->execute(command);
@@ -412,4 +403,7 @@ void Player::on_autoAnnotate(bool enabled) {
   else
     this->ui->speedSpinBox->setValue(50);
   this->autoAnnotation = enabled;
+  //don't allow to jump back and forth, when plugin is busy...
+  this->ui->trackbarWidget->setEnabled(!enabled);
+  this->ui->btnPrev->setEnabled(!enabled);
 }
