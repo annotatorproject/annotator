@@ -13,21 +13,24 @@ void StatisticsDialog::on_closeButton_clicked() { this->close(); }
 
 void StatisticsDialog::reload() {
 
-  ui->tableWidget->setRowCount(3);
+  ui->tableWidget->setRowCount(4);
   ui->tableWidget->setColumnCount(3);
 
-  tableHeader << "" << "Count" << "Time per [min]";
+  tableHeader << "" << "Count" << "Time per [s]";
   ui->tableWidget->setHorizontalHeaderLabels(tableHeader);
 
   ui->tableWidget->setItem(1, 0, new QTableWidgetItem("Project"));
-  ui->tableWidget->setItem(2, 0, new QTableWidgetItem("Annotation"));
+  ui->tableWidget->setItem(2, 0, new QTableWidgetItem("Object"));
+  ui->tableWidget->setItem(3, 0, new QTableWidgetItem("Annotation"));
 
   ui->tableWidget->setItem(1, 1, new QTableWidgetItem(""));
-  ui->tableWidget->setItem(2, 1, new QTableWidgetItem(QString::number(project->getSession()->getAnnotations().size())));
+  ui->tableWidget->setItem(2, 1, new QTableWidgetItem(QString::number(project->getSession()->getObjects().size())));
+  ui->tableWidget->setItem(3, 1, new QTableWidgetItem(QString::number(project->getSession()->getAnnotations().size())));
 
-  double duration_min = project->getDuration() /60.f;
-  ui->tableWidget->setItem(1, 2, new QTableWidgetItem(QString::number(duration_min)));
-  ui->tableWidget->setItem(2, 2, new QTableWidgetItem(QString::number(duration_min /(double) project->getSession()->getAnnotations().size())));
+  double duration_sec = project->getDuration();
+  ui->tableWidget->setItem(1, 2, new QTableWidgetItem(QString::number(duration_sec)));
+  ui->tableWidget->setItem(2, 2, new QTableWidgetItem(QString::number(duration_sec / (double) project->getSession()->getObjects().size())));
+  ui->tableWidget->setItem(3, 2, new QTableWidgetItem(QString::number(duration_sec / (double) project->getSession()->getAnnotations().size())));
 
   ui->tableWidget->resizeColumnsToContents();
   this->adjustSize();
