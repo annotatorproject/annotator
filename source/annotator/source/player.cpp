@@ -366,7 +366,7 @@ void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 void Player::reload() {
   //this->videoplayer->reload();
   // reload annotations?
-  this->showAnnotationsOfFrame(this->session->getFrame(this->videoplayer->getCurFrameNr()));
+  this->updateFrame(this->videoplayer->getCurFrameNr());
 }
 
 void Player::enableDrawing(bool enable)
