@@ -38,8 +38,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
   // command controller
-  //connect(CommandController::instance(), SIGNAL(signal_requestFrameRedraw()),
-  //        this, SLOT(reload()));
+  connect(CommandController::instance(), SIGNAL(signal_requestFrameRedraw()),
+          this, SLOT(reload()));
 
   // create graphicsview to be able to draw objects on screen.
   scene = new OwnGraphicScene();
@@ -365,7 +365,8 @@ void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 
 void Player::reload() {
   //this->videoplayer->reload();
-  // TODO: reload annotations?
+  // reload annotations?
+  this->showAnnotationsOfFrame(this->session->getFrame(this->videoplayer->getCurFrameNr()));
 }
 
 void Player::enableDrawing(bool enable)
