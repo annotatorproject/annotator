@@ -32,7 +32,6 @@ public:
   Haarcascade();
   ~Haarcascade();
   QString getName() override;
-  QWidget *getWidget() override;
 
   bool setFrame(shared_ptr<Frame> frame, cv::Mat image) override;
   void setObject(shared_ptr<Object> object) override;
@@ -44,6 +43,7 @@ public:
   void setNewObjects(bool newObjects);
   void setObjectName(std::string name);
 
+  QWidget *getWidget();
 protected:
   shared_ptr<Frame> frame = 0;
   shared_ptr<Frame> lastFrame = 0;

@@ -46,11 +46,15 @@ shared_ptr<Object> CorrelationTracker::getObject() const { return object; }
 void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
   if (!annotation || annotation->getObject() != object)
     return;
-  if (lastAnnotation &&
-      annotation->getObject() == lastAnnotation->getObject())
+
+  if (trackerStarted &&
+      annotation->getObject() == lastAnnotation->getObject() &&
+      *annotation > *lastAnnotation)
     return;
 
   this->lastAnnotation = annotation;
+  lastFrame = this->lastAnnotation->getFrame();
+
   selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
                        lastAnnotation->getWidth(), lastAnnotation->getHeight());
 
@@ -61,9 +65,8 @@ void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
                                              selection.x + selection.width,
                                              selection.y + selection.height));
 
-  lastFrame = this->lastAnnotation->getFrame();
+
   trackerStarted = true;
-  newSelection = true;
 }
 
 std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {

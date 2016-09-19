@@ -44,7 +44,6 @@ protected:
   shared_ptr<Annotation> lastAnnotation = nullptr;
   shared_ptr<Object> object = nullptr;
 
-  bool newSelection = false;
   cv::Rect trackWindow, selection;
   cv::Mat hsv, hist, hue, mask, backproj;
 
