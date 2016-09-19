@@ -1,6 +1,5 @@
 #include "player.h"
 #include "ui_player.h"
-
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "geomObject/annotationgraphicsitemfactory.h"
@@ -16,7 +15,7 @@
 
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
-  videoplayer = new Videoplayer; // Creating an instance of class videoplayer
+  videoplayer = new Videoplayer(); // Creating an instance of class videoplayer
 
   ui->btnNext->setAutoRepeat(true);
   ui->btnPrev->setAutoRepeat(true);
@@ -231,11 +230,11 @@ void Player::updateFrame(long frame_nmb) {
     f = std::make_shared<AnnotatorLib::Frame>(
         frame_nmb); // create temporary frame
 
-  if (autoAnnotation) {
+  if (autoAnnotation && SelectionController::instance()->getSelectedObject()) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
-    if (plugin && SelectionController::instance()->getSelectedObject()) {
+    if (plugin) {
 //      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
 //      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
 //      SelectionController::instance()
@@ -245,7 +244,10 @@ void Player::updateFrame(long frame_nmb) {
 //          SelectionController::instance()
 //              ->getSelectedObject()
 //              ->getLastAnnotation())
-        plugin->calculate(SelectionController::instance()->getSelectedObject(), f);
+        for (shared_ptr<AnnotatorLib::Commands::Command> command :
+             plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
+          CommandController::instance()->execute(command);
+        }
     }
   }
 

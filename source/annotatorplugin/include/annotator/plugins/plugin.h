@@ -20,7 +20,8 @@ public:
 
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame) {
+            shared_ptr<AnnotatorLib::Frame> frame,
+            bool execute_commands = true) {
     std::shared_ptr<AnnotatorLib::Session> session = getProject()->getSession();
     setObject(object);
     cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
@@ -43,8 +44,11 @@ public:
 
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =
         getCommands();
-    for (shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
-      session->execute(command);
+
+    if ( execute_commands) {
+      for (shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
+        session->execute(command);
+      }
     }
     return commands;
   }
