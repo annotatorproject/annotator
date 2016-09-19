@@ -35,6 +35,7 @@ class Player : public QWidget {
   explicit Player(QWidget *parent = 0);
   ~Player();
   void setRateLabel(QLabel *label);
+  void closeProject();
   void setProject(std::shared_ptr<AnnotatorLib::Project> project);
   bool LoadFile(const QString &fileName);
   void play();

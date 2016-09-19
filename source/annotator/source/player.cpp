@@ -59,6 +59,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
 
 Player::~Player() {
   clearAnnotationsGraphics();
+  delete videoplayer;
   delete scene;
   delete ui;
 }
@@ -79,26 +80,37 @@ QString Player::getRateValue() {
 
 std::shared_ptr<AnnotatorLib::Session> Player::getSession() { return this->session; }
 
+void Player::closeProject() {
+  this->currentFrame = cv::Mat();
+  setProject(nullptr);
+  this->videoplayer->close();
+  scene->setSession(nullptr);
+  updateStatus(false);           //disable ui
+}
+
 void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   this->project = project;
-  this->session = project->getSession();
 
-  ui->horizontalSlider->setMaximum(project->getImageSet()->size());
+  this->session = project ? project->getSession() : nullptr;
 
-  videoplayer->setImageSet(project->getImageSet());
-  ui->horizontalSlider->setMaximum(project->getImageSet()->size());
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size() : 0);
 
-  cv::Mat firstImage = project->getImageSet()->next();
-  project->getImageSet()->gotoPosition(0);
+  videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size() : 0);
+
+  cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
   scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
-  scene->setSession(session);
-  overlay->fitInView(scene->sceneRect());
+  scene->setSession(project ? session : nullptr);
+
+  this->setEnabled(project.get() != nullptr);
+
+  if (project) {
+    overlay->fitInView(scene->sceneRect());
+    project->getImageSet()->gotoPosition(0);
+  }
 
   updateStatus(true);
   updateBtn();
-
-  overlay->setEnabled(true);
-
   updateTimeLabel();
 }
 
@@ -107,7 +119,7 @@ void Player::loadVideo(QString fileName) {
     if (LoadFile(fileName)) {
       updateStatus(true);
       updateBtn();
-      overlay->setEnabled(true);
+      setEnabled(true);
     }
   }
 }
@@ -310,20 +322,28 @@ void Player::on_frameSelected(long index) {
  * updateTimeLabel	-	update Time Label
  */
 void Player::updateTimeLabel() {
+
+  double pos_ms = 0;
+  double length_ms = 0;
+  long cfn = 0;
+  long tfn = 0;
+  if (this->videoplayer->isOpened()) {
+    pos_ms = videoplayer->getPositionMS();
+    length_ms = videoplayer->getLengthMS();
+    cfn = videoplayer->getCurFrameNr();
+    tfn = videoplayer->getTotalFrameNr();
+  }
   QString curPos =
-      QDateTime::fromMSecsSinceEpoch(videoplayer->getPositionMS() - 3600000)
+      QDateTime::fromMSecsSinceEpoch(pos_ms - 3600000)
           .toString("hh:mm:ss");
 
   QString length =
-      QDateTime::fromMSecsSinceEpoch(videoplayer->getLengthMS() - 3600000)
+      QDateTime::fromMSecsSinceEpoch(length_ms - 3600000)
           .toString("hh:mm:ss");
 
   ui->timeLabel->setText(tr("<span style=' color:#FFCD00;'>"
                             "%1</span> / %2")
                              .arg(curPos, length));
-
-  long cfn = videoplayer->getCurFrameNr();
-  long tfn = videoplayer->getTotalFrameNr();
 
   ui->frameNrLabel->setText(
       tr("<span style=' color:#FFCD00;'>"

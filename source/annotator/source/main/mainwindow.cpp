@@ -156,13 +156,13 @@ void MainWindow::on_actionClose_Project_triggered() {
 }
 
 void MainWindow::closeProject() {
-  if (this->project == nullptr) {
+  if (!this->project) {
     return;
   }
   QCheckBox *cb_lock = new QCheckBox("Yes, lock this project. Labeling is completed now.");
   cb_lock->setChecked(!project->isActive());
   QMessageBox msgbox;
-  msgbox.setParent(this);
+  msgbox.setParent(0);
   msgbox.setStyleSheet("color: black;"
                         "background-color: white;"
                         "selection-color: black;"
@@ -183,12 +183,21 @@ void MainWindow::closeProject() {
     project->save();
   }
   this->setWindowTitle(nullptr);
+  this->project = nullptr;
+  playerWidget.closeProject();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
   this->closeProject();
   event->accept();
   QWidget::closeEvent(event);
+}
+
+void MainWindow::on_actionQuit_triggered() {
+  if (!playerWidget.videoplayer->isStop()) {
+    playerWidget.videoplayer->pauseIt();
+  }
+  this->close();
 }
 
 void MainWindow::setWindowTitle(std::shared_ptr<AnnotatorLib::Project> project) {
@@ -222,13 +231,6 @@ void MainWindow::on_actionNew_Project_triggered() {
     AnnotatorLib::Project::save(this->project, this->project->getPath());
     openProject(this->project);
   }
-}
-
-void MainWindow::on_actionQuit_triggered() {
-  if (!playerWidget.videoplayer->isStop()) {
-    playerWidget.videoplayer->pauseIt();
-  }
-  this->close();
 }
 
 void MainWindow::on_actionSave_Project_triggered() {

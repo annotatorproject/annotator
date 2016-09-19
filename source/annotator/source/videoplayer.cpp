@@ -274,7 +274,7 @@ void Videoplayer::revertVideo() {
  * close	-	close the video
  *
  */
-void Videoplayer::close() {
+void Videoplayer::close() {  
   rate = 0;
   length = 0;
   imageSet = nullptr;
