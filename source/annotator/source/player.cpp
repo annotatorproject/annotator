@@ -236,18 +236,16 @@ void Player::updateFrame(long frame_nmb) {
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin && SelectionController::instance()->getSelectedObject()) {
-      // calculate only if object is not finished.
-      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
-      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
-      SelectionController::instance()
-          ->getSelectedObject()
-          ->findClosestKeyFrames(f, previousA, nextA);
-      if (previousA !=
-          SelectionController::instance()
-              ->getSelectedObject()
-              ->getLastAnnotation())
-        plugin->calculate(SelectionController::instance()->getSelectedObject(),
-                          f);
+//      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
+//      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
+//      SelectionController::instance()
+//          ->getSelectedObject()
+//          ->findClosestKeyFrames(f, previousA, nextA);
+//      if (previousA !=
+//          SelectionController::instance()
+//              ->getSelectedObject()
+//              ->getLastAnnotation())
+        plugin->calculate(SelectionController::instance()->getSelectedObject(), f);
     }
   }
 
@@ -276,15 +274,12 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
     annotationGraphics.push_back(graphicsItem);
   }
 
-  // if nothing is selected take first annotation
-  if (!SelectionController::instance()->getSelectedObject()) {
-    if (annotationGraphics.empty()) {
-      SelectionController::instance()->setSelectedObject(nullptr);
-    } else {
-      SelectionController::instance()->setSelectedObject(
-          annotationGraphics.front()->getAnnotation()->getObject());
-    }
-  }
+//  // if nothing is selected take first annotation
+//  if (!SelectionController::instance()->getSelectedObject()) {
+//    if (annotationGraphics.empty()) {
+//      SelectionController::instance()->setSelectedObject(nullptr);
+//    }
+//  }
 }
 
 /**
