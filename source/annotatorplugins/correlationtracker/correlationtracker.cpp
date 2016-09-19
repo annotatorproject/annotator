@@ -40,7 +40,7 @@ void CorrelationTracker::setObject(shared_ptr<Object> object) {
   this->object = object;
 }
 
-shared_ptr<Object> CorrelationTracker::getObject() { return object; }
+shared_ptr<Object> CorrelationTracker::getObject() const { return object; }
 
 // second call
 void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {

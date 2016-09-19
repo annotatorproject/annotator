@@ -35,7 +35,7 @@ public:
 
   bool setFrame(shared_ptr<Frame> frame, cv::Mat image) override;
   void setObject(shared_ptr<Object> object) override;
-  shared_ptr<Object> getObject() override;
+  shared_ptr<Object> getObject() const override;
   void setLastAnnotation(shared_ptr<Annotation> annotation) override;
   std::vector<shared_ptr<Commands::Command>> getCommands() override;
 

@@ -34,7 +34,7 @@ void Haarcascade::setObject(shared_ptr<Object> object) {
   this->object = object;
 }
 
-shared_ptr<Object> Haarcascade::getObject() { return this->object; }
+shared_ptr<Object> Haarcascade::getObject() const { return this->object; }
 
 void Haarcascade::setLastAnnotation(shared_ptr<Annotation> annotation) {
   this->lastAnnotation = annotation;
