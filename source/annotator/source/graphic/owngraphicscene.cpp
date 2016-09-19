@@ -168,7 +168,9 @@ void OwnGraphicScene::setSession(std::shared_ptr<AnnotatorLib::Session> session)
  *
 */
 QPoint OwnGraphicScene::adjustCoordinate(QPointF MousePos) {
-  return QPoint(MousePos.x(), MousePos.y());
+  int x_adj = std::max(std::min((int)std::round(MousePos.x()), (int)this->width()), 0);
+  int y_adj = std::max(std::min((int)std::round(MousePos.y()), (int)this->height()), 0);
+  return QPoint(x_adj, y_adj);
   // I commented out because there was an offset. Without it works.
   // return QPoint(((MousePos.x() * inputCoordinate.x()) /
   // this->width()),((MousePos.y() * inputCoordinate.y())  / this->height()));
