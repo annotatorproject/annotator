@@ -69,7 +69,12 @@ void SelectedObject::resizeEvent(QResizeEvent* event)
 
 QPixmap SelectedObject::getImgCrop(shared_ptr<AnnotatorLib::Annotation> annotation, int size) const
 {
+  //TODO: getImage changes position, this is an unexpected behaviour...
+  //START ugly hack
+  long prev_pos = project->getImageSet()->getPosition();
   cv::Mat tmp = project->getImageSet()->getImage(annotation->getFrame()->getFrameNumber());
+  project->getImageSet()->gotoPosition(prev_pos);
+  //END ugly hack
   cv::Rect rect(annotation->getX(), annotation->getY(), annotation->getWidth(), annotation->getHeight());
 
   cv::Mat cropped;
