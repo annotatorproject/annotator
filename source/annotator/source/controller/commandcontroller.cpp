@@ -1,4 +1,7 @@
 #include <QMessageBox>
+//#include <QProgressBar>
+//#include <QMovie>
+//#include <QLabel>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
@@ -7,6 +10,7 @@
 #include <AnnotatorLib/Commands/CompressSession.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
+#include "gui/qtwaitingspinner/waitingspinnerwidget.h"
 #include "selectioncontroller.h"
 #include "commandcontroller.h"
 
@@ -25,9 +29,20 @@ void CommandController::setSession(std::shared_ptr<Session> session) {
   this->session = session;
 }
 
+void CommandController::setParentWidget(QWidget *parent)
+{
+  main_widget = parent;
+}
+
 void CommandController::execute(shared_ptr<Commands::Command> command,
-                                bool request_gui_reload) {
+                                bool request_gui_reload,
+                                bool show_busy_wheel) {
+
+
+  if (show_busy_wheel) enableBusySpinner(true);
   shared_ptr<Commands::Command> command_executed = session->execute(command);
+  if (show_busy_wheel) enableBusySpinner(false);
+
   if (request_gui_reload && command_executed) {
     send_signals(command_executed, false);
   }
@@ -47,8 +62,6 @@ void CommandController::undo() {
     if (command) send_signals(command, true);
   } catch (std::exception &e) {
   }
-
-
 }
 
 
@@ -114,5 +127,31 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
       emit signal_requestFrameRedraw();
       SelectionController::instance()->setSelectedObject(nullptr);
       return;
+    }
+}
+
+void CommandController::enableBusySpinner(bool enable) {
+  static WaitingSpinnerWidget* spinner;
+  if (enable) {
+    if (spinner == nullptr) {
+      if (main_widget != nullptr)
+        spinner = new WaitingSpinnerWidget(Qt::ApplicationModal, main_widget, true, true);
+      else
+        spinner = new WaitingSpinnerWidget(Qt::ApplicationModal);
+
+      spinner->setRoundness(70.0);
+      spinner->setMinimumTrailOpacity(25.0);
+      spinner->setTrailFadePercentage(70.0);
+      spinner->setNumberOfLines(12);
+      spinner->setLineLength(11);
+      spinner->setLineWidth(6);
+      spinner->setInnerRadius(11);
+      spinner->setRevolutionsPerSecond(1);
+      spinner->setColor(QColor(81, 81, 81));
+    }
+    spinner->start(); // starts spinning
+  } else {
+    spinner->stop();
   }
 }
+

@@ -15,6 +15,7 @@ class CommandController : public QObject {
   static CommandController *instance();
 
   void setSession(shared_ptr<AnnotatorLib::Session> session);
+  void setParentWidget(QWidget *parent);
 
  signals:
   void signal_newObject(shared_ptr<AnnotatorLib::Object>);
@@ -28,14 +29,16 @@ class CommandController : public QObject {
 
  public slots:
   void execute(shared_ptr<AnnotatorLib::Commands::Command> command,
-               bool request_gui_reload = true);
+               bool request_gui_reload = true, bool show_busy_wheel = false);
   void redo();
   void undo();
 
  protected:
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;
+  QWidget *main_widget = nullptr;
 
   void send_signals(shared_ptr<AnnotatorLib::Commands::Command> command, bool undo);
+  void enableBusySpinner(bool enable);
 };
 
 #endif  // COMMANDCONTROLLER_H
