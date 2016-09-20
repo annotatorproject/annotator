@@ -2,6 +2,7 @@
 #include "pluginloader.h"
 #include "ui_pluginrunner.h"
 
+#include "controller/commandcontroller.h"
 #include "object/objectitem.h"
 
 #include <opencv2/imgproc/imgproc.hpp>
@@ -14,9 +15,16 @@ PluginRunner::PluginRunner(std::shared_ptr<AnnotatorLib::Project> project,
   initPluginsList();
   initObjectsList();
 
+  ui->startFrameSlider->setMaximum(project->getImageSet()->size());
   ui->startFrameSpinBox->setMaximum(project->getImageSet()->size());
+  ui->startFrameSpinBox->setMinimum(1);
+  ui->startFrameSpinBox->setValue(1);
+
+  ui->endFrameSlider->setMaximum(project->getImageSet()->size());
   ui->endFrameSpinBox->setMaximum(project->getImageSet()->size());
+  ui->endFrameSpinBox->setMinimum(1);
   ui->endFrameSpinBox->setValue(project->getImageSet()->size());
+
   ui->objectsProgressBar->hide();
   ui->framesProgressBar->hide();
 }
@@ -78,18 +86,24 @@ void PluginRunner::addObject(shared_ptr<AnnotatorLib::Object> object) {
 void PluginRunner::calculate(shared_ptr<AnnotatorLib::Object> object,
                              Annotator::Plugin *plugin, int start, int end) {
   for (int i = start; i <= end; ++i) {
+    if (stopCalculation)
+      return;
+
     ui->framesProgressBar->setValue(i);
     shared_ptr<AnnotatorLib::Frame> f = project->getSession()->getFrame(i);
 
     if (!f)
-      f = std::make_shared<AnnotatorLib::Frame>(
-          i); // create new frame if it is not in session yet.
+      f = std::make_shared<AnnotatorLib::Frame>(i); // create new frame
 
     plugin->calculate(object, f, true);
   }
 }
 
 void PluginRunner::on_startButton_clicked() {
+  stopCalculation = !stopCalculation;
+
+  ui->startButton->setText(stopCalculation ? "Start" : "Stop");
+
   if (ui->pluginsListWidget->currentRow() == -1)
     return;
   Annotator::Plugin *plugin =
@@ -108,10 +122,11 @@ void PluginRunner::on_startButton_clicked() {
     int start = ui->startFrameSpinBox->value();
     int end = ui->endFrameSpinBox->value();
 
-    QItemSelectionModel *select = ui->objectsListWidget->selectionModel();
-    if (select->hasSelection()) {
-      int row = select->selectedRows().front().row();
-      ui->objectsProgressBar->setValue(row);
+    for (QListWidgetItem *item : ui->objectsListWidget->selectedItems()) {
+      if (stopCalculation)
+        break;
+      int row = ui->objectsListWidget->row(item);
+      ui->objectsProgressBar->setValue(row + 1);
       unsigned long obj_id = objectRowToIdMap[row];
       shared_ptr<AnnotatorLib::Object> obj =
           project->getSession()->getObject(obj_id);
@@ -121,6 +136,7 @@ void PluginRunner::on_startButton_clicked() {
 
   ui->objectsProgressBar->hide();
   ui->framesProgressBar->hide();
+  CommandController::instance()->doEmitRefreshSession();
 }
 
 void PluginRunner::on_selectAllObjectsButton_clicked() {

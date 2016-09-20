@@ -28,10 +28,17 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="1">
-       <widget class="QSpinBox" name="startFrameSpinBox"/>
+       <widget class="QSpinBox" name="startFrameSpinBox">
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QSlider" name="startFrameSlider">
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -54,10 +61,17 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="1">
-       <widget class="QSpinBox" name="endFrameSpinBox"/>
+       <widget class="QSpinBox" name="endFrameSpinBox">
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QSlider" name="endFrameSlider">
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -118,7 +132,7 @@
          <number>0</number>
         </property>
         <property name="format">
-         <string>%p</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -170,11 +184,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>139</x>
-     <y>232</y>
+     <y>414</y>
     </hint>
     <hint type="destinationlabel">
-     <x>237</x>
-     <y>236</y>
+     <x>176</x>
+     <y>418</y>
     </hint>
    </hints>
   </connection>
@@ -185,12 +199,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>374</x>
-     <y>223</y>
+     <x>373</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>499</x>
-     <y>233</y>
+     <x>439</x>
+     <y>415</y>
     </hint>
    </hints>
   </connection>
@@ -201,12 +215,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>232</x>
-     <y>228</y>
+     <x>171</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
-     <x>192</x>
-     <y>229</y>
+     <x>147</x>
+     <y>411</y>
     </hint>
    </hints>
   </connection>
@@ -217,12 +231,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>223</y>
+     <x>440</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>464</x>
-     <y>229</y>
+     <x>416</x>
+     <y>411</y>
     </hint>
    </hints>
   </connection>

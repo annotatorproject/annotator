@@ -31,7 +31,12 @@ void CommandController::setSession(std::shared_ptr<Session> session) {
 
 void CommandController::setParentWidget(QWidget *parent)
 {
-  main_widget = parent;
+    main_widget = parent;
+}
+
+void CommandController::doEmitRefreshSession()
+{
+    emit signal_refreshSession();
 }
 
 void CommandController::execute(shared_ptr<Commands::Command> command,

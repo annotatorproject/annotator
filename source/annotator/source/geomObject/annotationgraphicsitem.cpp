@@ -76,6 +76,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   //delete actions
   delete action_del;
   delete action_edit;
+  delete action_compress_obj;
   delete action_del_obj;
   delete action_goto_first;
   delete action_goto_last;
@@ -454,7 +455,6 @@ void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
 }
 
 void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
-
   shared_ptr<AnnotatorLib::Commands::Command> nA;
   if (annotation->isTemporary()) {
     nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
@@ -463,12 +463,4 @@ void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
     nA = std::make_shared<AnnotatorLib::Commands::UpdateAnnotation>(annotation, x, y, w, h);
   }
   CommandController::instance()->execute(nA);
-
-  // update position of last annotation in automation plugin
-  Annotator::Plugin *plugin =
-      Annotator::PluginLoader::getInstance().getCurrent();
-  if (plugin) {
-    // plugin->setObject(annotation->getObject());
-    // plugin->setLastAnnotation(annotation);
-  }
 }

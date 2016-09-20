@@ -17,6 +17,8 @@ class CommandController : public QObject {
   void setSession(shared_ptr<AnnotatorLib::Session> session);
   void setParentWidget(QWidget *parent);
 
+  void doEmitRefreshSession();
+
  signals:
   void signal_newObject(shared_ptr<AnnotatorLib::Object>);
   void signal_newAnnotation(shared_ptr<AnnotatorLib::Annotation>);

@@ -33,6 +33,7 @@ private slots:
     void on_unselectAllObjectsButton_clicked();
 
 private:
+    bool stopCalculation = true;
     Ui::PluginRunner *ui;
     std::shared_ptr<AnnotatorLib::Project> project;
 
