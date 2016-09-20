@@ -132,6 +132,7 @@
     <addaction name="actionCompress_Session"/>
     <addaction name="actionClear_Session"/>
     <addaction name="actionProject_Statistics"/>
+    <addaction name="actionRun_Plugins_Dialog"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -280,6 +281,11 @@
   <action name="actionProject_Statistics">
    <property name="text">
     <string>Project Statistics</string>
+   </property>
+  </action>
+  <action name="actionRun_Plugins_Dialog">
+   <property name="text">
+    <string>Run Plugins Dialog</string>
    </property>
   </action>
  </widget>
