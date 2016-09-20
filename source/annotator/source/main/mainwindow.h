@@ -74,7 +74,13 @@ class MainWindow : public QMainWindow {
 
   void on_actionClasses_triggered();
 
- protected:
+  void on_actionProject_Statistics_triggered();
+
+  void on_actionLock_project_toggled(bool arg1);
+
+  void on_actionRun_Plugins_Dialog_triggered();
+
+protected:
   Player playerWidget;
   AnnotationsWidget annotationsWidget;
   ObjectsWidget objectsWidget;
@@ -89,12 +95,6 @@ class MainWindow : public QMainWindow {
   void enableDrawing(bool enable);
 
   void closeProject();
-
-private slots:
-  void on_actionProject_Statistics_triggered();
-
-private slots:
-  void on_actionLock_project_toggled(bool arg1);
 
 private:
   Ui::MainWindow *ui;

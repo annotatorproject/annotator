@@ -93,7 +93,6 @@ void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
     this->session = project->getSession();
     CommandController::instance()->setSession(session);
-    CommandController::instance()->setParentWidget(this);
     playerWidget.setProject(project);
 
     annotationsWidget.setSession(this->session);
@@ -272,7 +271,7 @@ void MainWindow::on_actionCompress_Session_triggered() {
   int nmb_annotations_before = session->getAnnotations().size();
   shared_ptr<AnnotatorLib::Commands::CompressSession> cmd =
      std::make_shared<AnnotatorLib::Commands::CompressSession>(this->session);
-  CommandController::instance()->execute(cmd, true, true);
+  CommandController::instance()->execute(cmd);
   int nmb_annotations_after= session->getAnnotations().size();
 
   Alert msgBox;
@@ -328,4 +327,9 @@ void MainWindow::on_actionProject_Statistics_triggered()
     StatisticsDialog dialog(project, this);
     dialog.exec();
   }
+}
+
+void MainWindow::on_actionRun_Plugins_Dialog_triggered() {
+  PluginRunner pluginRunner(project, this);
+  pluginRunner.exec();
 }
