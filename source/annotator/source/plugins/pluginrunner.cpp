@@ -78,8 +78,14 @@ void PluginRunner::addObject(shared_ptr<AnnotatorLib::Object> object) {
 void PluginRunner::calculate(shared_ptr<AnnotatorLib::Object> object,
                              Annotator::Plugin *plugin, int start, int end) {
   for (int i = start; i <= end; ++i) {
-      ui->framesProgressBar->setValue(i);
-      plugin->calculate(object, project->getSession()->getFrame(i), true);
+    ui->framesProgressBar->setValue(i);
+    shared_ptr<AnnotatorLib::Frame> f = project->getSession()->getFrame(i);
+
+    if (!f)
+      f = std::make_shared<AnnotatorLib::Frame>(
+          i); // create new frame if it is not in session yet.
+
+    plugin->calculate(object, f, true);
   }
 }
 
