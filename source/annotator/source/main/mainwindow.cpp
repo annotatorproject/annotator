@@ -17,6 +17,7 @@
 #include "gui/alert.h"
 #include "newprojectdialog.h"
 #include "plugins/pluginloader.h"
+#include "plugins/pluginrunner.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
