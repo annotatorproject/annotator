@@ -20,6 +20,9 @@ public:
     ~PluginRunner();
     QPixmap getImgCrop(long frame, int size);
 
+protected:
+    void updateStartSliderMinMax();
+    void updateEndSliderMinMax();
 private slots:
 
     void on_startFrameSpinBox_valueChanged(int arg1);

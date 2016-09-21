@@ -15,14 +15,9 @@ PluginRunner::PluginRunner(std::shared_ptr<AnnotatorLib::Project> project,
   initPluginsList();
   initObjectsList();
 
-  ui->startFrameSlider->setMaximum(project->getImageSet()->size());
-  ui->startFrameSpinBox->setMaximum(project->getImageSet()->size());
-  ui->startFrameSpinBox->setMinimum(1);
   ui->startFrameSpinBox->setValue(1);
-
-  ui->endFrameSlider->setMaximum(project->getImageSet()->size());
-  ui->endFrameSpinBox->setMaximum(project->getImageSet()->size());
-  ui->endFrameSpinBox->setMinimum(1);
+  updateEndSliderMinMax();
+  updateStartSliderMinMax();
   ui->endFrameSpinBox->setValue(project->getImageSet()->size());
 
   ui->objectsProgressBar->hide();
@@ -49,10 +44,12 @@ QPixmap PluginRunner::getImgCrop(long frame, int size) {
 
 void PluginRunner::on_startFrameSpinBox_valueChanged(int arg1) {
   ui->startFrameImageLabel->setPixmap(getImgCrop(arg1, 128));
+  updateEndSliderMinMax();
 }
 
 void PluginRunner::on_endFrameSpinBox_valueChanged(int arg1) {
   ui->endFrameImageLabel->setPixmap(getImgCrop(arg1, 128));
+  updateStartSliderMinMax();
 }
 
 void PluginRunner::initPluginsList() {
@@ -147,4 +144,20 @@ void PluginRunner::on_unselectAllObjectsButton_clicked() {
   for (QListWidgetItem *item : ui->objectsListWidget->selectedItems()) {
     item->setSelected(false);
   }
+}
+
+void PluginRunner::updateStartSliderMinMax() {
+  ui->startFrameSlider->setMaximum(ui->endFrameSlider->value());
+  ui->startFrameSpinBox->setMaximum(ui->endFrameSlider->value());
+  ui->startFrameSpinBox->setMinimum(1);
+  ui->startFrameSlider->setMinimum(1);
+}
+
+void PluginRunner::updateEndSliderMinMax() {
+
+  ui->endFrameSlider->setMaximum(project->getImageSet()->size());
+  ui->endFrameSpinBox->setMaximum(project->getImageSet()->size());
+  ui->endFrameSpinBox->setMinimum(ui->startFrameSlider->value());
+  ui->endFrameSlider->setMinimum(ui->startFrameSlider->value());
+
 }

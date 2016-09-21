@@ -14,10 +14,17 @@
    <string>Run Plugins</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="2">
+   <item row="3" column="1">
     <widget class="QPushButton" name="closeButton">
      <property name="text">
       <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="startButton">
+     <property name="text">
+      <string>Start</string>
      </property>
     </widget>
    </item>
@@ -87,19 +94,17 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>select Plugin</string>
+   <item row="4" column="0" colspan="2">
+    <widget class="QProgressBar" name="framesProgressBar">
+     <property name="value">
+      <number>0</number>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QListWidget" name="pluginsListWidget"/>
-      </item>
-     </layout>
+     <property name="format">
+      <string>%p%</string>
+     </property>
     </widget>
    </item>
-   <item row="0" column="0">
+   <item row="0" column="1">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>select Objects</string>
@@ -139,21 +144,16 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="startButton">
-     <property name="text">
-      <string>Start</string>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>select Plugin</string>
      </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QProgressBar" name="framesProgressBar">
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="format">
-      <string>%p%</string>
-     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QListWidget" name="pluginsListWidget"/>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
