@@ -65,6 +65,7 @@ class Player : public QWidget {
  protected:
   void loadVideo(QString fileName);
   void clearAnnotationsGraphics();
+  void runPlugin(shared_ptr<AnnotatorLib::Frame> f);
 
  protected slots:
   void setInputCoordinate(QPoint point);

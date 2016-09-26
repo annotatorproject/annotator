@@ -224,27 +224,34 @@ void Player::showFrame(cv::Mat frame) {
   scene->setBackgroundBrush(pim);
 }
 
+
+
 void Player::updateFrame(long frame_nmb) {
   shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
   if (!f)
     f = std::make_shared<AnnotatorLib::Frame>(
         frame_nmb); // create temporary frame
 
-  if (autoAnnotation && SelectionController::instance()->getSelectedObject()) {
+  if (autoAnnotation)
+    runPlugin(f);
+
+  this->scene->setCurrentFrame(frame_nmb);
+  showAnnotationsOfFrame(f);
+  this->scene->update();
+}
+
+void Player::runPlugin(shared_ptr<AnnotatorLib::Frame> f) {
+  if (SelectionController::instance()->getSelectedObject()) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin) {
         for (shared_ptr<AnnotatorLib::Commands::Command> command :
              plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
-          CommandController::instance()->execute(command);
+          CommandController::instance()->execute(command, false);  //TODO: reload widgets
         }
     }
   }
-
-  this->scene->setCurrentFrame(frame_nmb);
-  showAnnotationsOfFrame(f);
-  this->scene->update();
 }
 
 void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
@@ -267,12 +274,6 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
     annotationGraphics.push_back(graphicsItem);
   }
 
-//  // if nothing is selected take first annotation
-//  if (!SelectionController::instance()->getSelectedObject()) {
-//    if (annotationGraphics.empty()) {
-//      SelectionController::instance()->setSelectedObject(nullptr);
-//    }
-//  }
 }
 
 /**
