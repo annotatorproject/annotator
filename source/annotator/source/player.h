@@ -58,14 +58,14 @@ class Player : public QWidget {
   void on_autoAnnotate(bool);
   void reload();
   void enableDrawing(bool enable);
+  void on_nextFrame(long frame);
 
  signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
  protected:
-  void loadVideo(QString fileName);
   void clearAnnotationsGraphics();
-  void runPlugin(shared_ptr<AnnotatorLib::Frame> f);
+  void runPlugin(unsigned long f);
 
  protected slots:
   void setInputCoordinate(QPoint point);

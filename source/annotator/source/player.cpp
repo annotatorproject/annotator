@@ -25,6 +25,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   updateStatus(false); // set Status disable
   updateBtn();         // update the button Play & Pause
 
+  connect(videoplayer, SIGNAL(nextFrame(long)), this, SLOT(on_nextFrame(long)));
   connect(videoplayer, SIGNAL(showFrame(cv::Mat)), this,
           SLOT(showFrame(cv::Mat)));
   connect(videoplayer, SIGNAL(updateFrame(long)), this,
@@ -113,60 +114,12 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   updateTimeLabel();
 }
 
-void Player::loadVideo(QString fileName) {
-  if (!fileName.isEmpty()) {
-    if (LoadFile(fileName)) {
-      updateStatus(true);
-      updateBtn();
-      setEnabled(true);
-    }
-  }
-}
-
 void Player::clearAnnotationsGraphics() {
   while (!annotationGraphics.empty()) {
     delete annotationGraphics.front();
     annotationGraphics.pop_front();
   }
   scene->update();
-}
-
-/**
- * LoadFile	-	Open and load a video
- *
- * @param fileName	-	file Path
- *
- * @return true if the file is successfully loaded
- */
-bool Player::LoadFile(const QString &fileName) {
-  QFile file(fileName);
-  if (!file.open(QFile::ReadOnly)) {
-    QMessageBox::warning(this, tr("VideoPlayer"),
-                         tr("Unable to load file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-    return false;
-  }
-
-  // change the cursor
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-
-  // input file
-  if (!videoplayer->setInput(fileName.toStdString())) {
-    QMessageBox::warning(this, tr("VideoPlayer"),
-                         tr("Unable to load file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-    return false;
-  }
-
-  // restore the cursor
-  QApplication::restoreOverrideCursor();
-
-  // update the time label
-  updateTimeLabel();
-
-  return true;
 }
 
 /**
@@ -231,16 +184,17 @@ void Player::updateFrame(long frame_nmb) {
   if (!f)
     f = std::make_shared<AnnotatorLib::Frame>(
         frame_nmb); // create temporary frame
-
-  if (autoAnnotation)
-    runPlugin(f);
-
   this->scene->setCurrentFrame(frame_nmb);
   showAnnotationsOfFrame(f);
   this->scene->update();
 }
 
-void Player::runPlugin(shared_ptr<AnnotatorLib::Frame> f) {
+void Player::runPlugin(unsigned long frame_nmb) {
+    shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
+    if (!f)
+      f = std::make_shared<AnnotatorLib::Frame>(
+          frame_nmb); // create temporary frame
+
   if (SelectionController::instance()->getSelectedObject()) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
@@ -248,7 +202,7 @@ void Player::runPlugin(shared_ptr<AnnotatorLib::Frame> f) {
     if (plugin) {
         for (shared_ptr<AnnotatorLib::Commands::Command> command :
              plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
-          CommandController::instance()->execute(command, false);  //TODO: reload widgets
+          CommandController::instance()->execute(command);  //TODO: reload widgets
         }
     }
   }
@@ -372,7 +326,13 @@ void Player::reload() {
 
 void Player::enableDrawing(bool enable)
 {
-  this->ui->scrollArea->setEnabled(enable);
+    this->ui->scrollArea->setEnabled(enable);
+}
+
+void Player::on_nextFrame(long frame)
+{
+    if (autoAnnotation)
+      runPlugin(frame);
 }
 
 /**
@@ -397,7 +357,10 @@ void Player::on_btnPrev_clicked() {
   videoplayer->prevFrame();
 }
 
-void Player::on_btnNext_clicked() { videoplayer->nextFrame(); }
+void Player::on_btnNext_clicked() {
+    on_nextFrame(videoplayer->getCurFrameNr() + 1);
+    videoplayer->nextFrame();
+}
 
 void Player::on_autoAnnotate(bool enabled) {
   if (enabled)

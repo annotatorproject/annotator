@@ -184,6 +184,8 @@ void Videoplayer::playIt() {
 
     curPos = imageSet->getPosition();
 
+
+    emit nextFrame(getCurFrameNr());
     // display input frame
     emit showFrame(input);
     emit updateFrame(getCurFrameNr());
