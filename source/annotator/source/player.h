@@ -73,7 +73,7 @@ class Player : public QWidget {
 private slots:
   void on_horizontalSlider_sliderMoved(int pos);
   void on_speedSpinBox_valueChanged(int arg1);   //change video playback speed
-  void updateBtn();
+  void on_updateBtn();
   void on_btnPlay_clicked();
   void sleep(int msecs);  // sleep for a while
 
