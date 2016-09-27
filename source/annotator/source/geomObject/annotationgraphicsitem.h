@@ -64,6 +64,7 @@ private:
     shared_ptr<AnnotatorLib::Annotation> annotation;
 
     QAction* action_del;
+    QAction* action_del_range;
     QAction* action_edit;
     QAction* action_del_obj;
     QAction* action_compress_obj;
@@ -78,6 +79,7 @@ private:
     void changeAnnotationSize(int x, int y, int w, int h);
     void initCorners();
     void initIdText();
+    void initActions();
     QColor idToColor(long id) const;
 
 
@@ -86,6 +88,7 @@ public slots:
 
 private slots:
     void removeAnnotation();
+    void removeAnnotationRange();
     void removeObject();
     void editAnnotation();
     void compressObject();

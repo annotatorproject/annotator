@@ -2,33 +2,39 @@
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "gui/editobjectdialog.h"
+#include "gui/removeannotationdialog.h"
 #include "plugins/pluginloader.h"
 #include <AnnotatorLib/Annotation.h>
-#include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
-#include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
-#include <gui/alert.h>
+#include <AnnotatorLib/Object.h>
 #include <QMenu>
 #include <QObject>
+#include <gui/alert.h>
 
 // static
-//shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::selected_annotation =
+// shared_ptr<AnnotatorLib::Annotation>
+// AnnotationGraphicsItem::selected_annotation =
 //    shared_ptr<AnnotatorLib::Annotation>();
-//AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item = nullptr;
+// AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item =
+// nullptr;
 
-//void AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation> a) {
+// void
+// AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation>
+// a) {
 //  AnnotationGraphicsItem::selected_annotation.reset();
 //  AnnotationGraphicsItem::selected_annotation = a;
 //}
 
-//shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getSelectedAnnotation() {
+// shared_ptr<AnnotatorLib::Annotation>
+// AnnotationGraphicsItem::getSelectedAnnotation() {
 //  return AnnotationGraphicsItem::selected_annotation;
 //}
 
-//constructor
+// constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
     shared_ptr<AnnotatorLib::Annotation> annotation)
     : QGraphicsItem::QGraphicsItem(nullptr), annotation(annotation) {
@@ -44,28 +50,7 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   setPos(annotation->getX(), annotation->getY());
   initCorners();
   initIdText();
-
-  action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
-  action_del_obj =
-      new QAction(QString("Remove Object"), (QObject *)this->parentObject());
-  action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
-  action_compress_obj = new QAction(QString("Compress Track"), (QObject *)this->parentObject());
-  action_goto_first = new QAction(QString("Jump to first"), (QObject *)this->parentObject());
-  action_goto_last = new QAction(QString("Jump to last"), (QObject *)this->parentObject());
-
-
-  QObject::connect(action_del, SIGNAL(triggered()), this,
-                   SLOT(removeAnnotation()));
-  QObject::connect(action_del_obj, SIGNAL(triggered()), this,
-                   SLOT(removeObject()));
-  QObject::connect(action_edit, SIGNAL(triggered()), this,
-                   SLOT(editAnnotation()));
-  QObject::connect(action_compress_obj, SIGNAL(triggered()), this,
-                     SLOT(compressObject()));
-  QObject::connect(action_goto_first, SIGNAL(triggered()), this,
-                     SLOT(goToFirst()));
-  QObject::connect(action_goto_last, SIGNAL(triggered()), this,
-                     SLOT(goToLast()));
+  initActions();
 }
 
 AnnotationGraphicsItem::~AnnotationGraphicsItem() {
@@ -73,8 +58,9 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
     delete corners[i];
   }
 
-  //delete actions
+  // delete actions
   delete action_del;
+  delete action_del_range;
   delete action_edit;
   delete action_compress_obj;
   delete action_del_obj;
@@ -83,10 +69,12 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
 }
 
 bool AnnotationGraphicsItem::isAnnotationSelected() const {
-  return this->getAnnotation()->getObject() == SelectionController::instance()->getSelectedObject();
+  return this->getAnnotation()->getObject() ==
+         SelectionController::instance()->getSelectedObject();
 }
 
-shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getAnnotation() const {
+shared_ptr<AnnotatorLib::Annotation>
+AnnotationGraphicsItem::getAnnotation() const {
   return annotation;
 }
 
@@ -128,16 +116,46 @@ void AnnotationGraphicsItem::initIdText() {
   }
 }
 
-void AnnotationGraphicsItem::highlight( const int reason) {
+void AnnotationGraphicsItem::initActions() {
+  action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
+  action_del_range =
+      new QAction(QString("Remove in range"), (QObject *)this->parentObject());
+  action_del_obj =
+      new QAction(QString("Remove Object"), (QObject *)this->parentObject());
+  action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
+  action_compress_obj =
+      new QAction(QString("Compress Track"), (QObject *)this->parentObject());
+  action_goto_first =
+      new QAction(QString("Jump to first"), (QObject *)this->parentObject());
+  action_goto_last =
+      new QAction(QString("Jump to last"), (QObject *)this->parentObject());
 
-  switch(reason) {
-    case 0: //hovered
-      borderColor = Qt::yellow;
-      brush = getGradient();
-      break;
-    default:
-      hideHighlight();
-      return;
+  QObject::connect(action_del, SIGNAL(triggered()), this,
+                   SLOT(removeAnnotation()));
+  QObject::connect(action_del_range, SIGNAL(triggered()), this,
+                   SLOT(removeAnnotationRange()));
+  QObject::connect(action_del_obj, SIGNAL(triggered()), this,
+                   SLOT(removeObject()));
+  QObject::connect(action_edit, SIGNAL(triggered()), this,
+                   SLOT(editAnnotation()));
+  QObject::connect(action_compress_obj, SIGNAL(triggered()), this,
+                   SLOT(compressObject()));
+  QObject::connect(action_goto_first, SIGNAL(triggered()), this,
+                   SLOT(goToFirst()));
+  QObject::connect(action_goto_last, SIGNAL(triggered()), this,
+                   SLOT(goToLast()));
+}
+
+void AnnotationGraphicsItem::highlight(const int reason) {
+
+  switch (reason) {
+  case 0: // hovered
+    borderColor = Qt::yellow;
+    brush = getGradient();
+    break;
+  default:
+    hideHighlight();
+    return;
   }
 
   for (int i = 0; i < 4; ++i) {
@@ -153,7 +171,7 @@ void AnnotationGraphicsItem::highlight( const int reason) {
   update();
 }
 
-void AnnotationGraphicsItem::hideHighlight( ) {
+void AnnotationGraphicsItem::hideHighlight() {
 
   for (int i = 0; i < 4; ++i) {
     corners[i]->hide();
@@ -170,16 +188,17 @@ void AnnotationGraphicsItem::hideHighlight( ) {
   update();
 }
 
-void AnnotationGraphicsItem::on_objectSelected(shared_ptr<AnnotatorLib::Object> o) {
+void AnnotationGraphicsItem::on_objectSelected(
+    shared_ptr<AnnotatorLib::Object> o) {
   setSelected(this->annotation->getObject() == o);
   this->hideHighlight();
 }
 
 void AnnotationGraphicsItem::setSelected(bool b) {
-   if (b) {
-      originColor = Qt::white;
-   } else {
-       originColor = idToColor(annotation->getObject()->getId());
+  if (b) {
+    originColor = Qt::white;
+  } else {
+    originColor = idToColor(annotation->getObject()->getId());
   }
   borderColor = originColor;
 }
@@ -187,7 +206,7 @@ void AnnotationGraphicsItem::setSelected(bool b) {
 void AnnotationGraphicsItem::mouseDoubleClickEvent(
     QGraphicsSceneMouseEvent *event) {
   QGraphicsItem::mouseDoubleClickEvent(event);
-  if ( annotation ) {
+  if (annotation) {
     SelectionController::instance()->setSelectedObject(annotation->getObject());
   }
 }
@@ -209,6 +228,7 @@ void AnnotationGraphicsItem::contextMenuEvent(
     contextMenu.addAction(
         action_del); // you cannot delete a temporary annotation
   }
+  contextMenu.addAction(action_del_range);
 
   contextMenu.addAction(action_del_obj);
   contextMenu.addAction(action_goto_first);
@@ -222,44 +242,61 @@ void AnnotationGraphicsItem::contextMenuEvent(
 void AnnotationGraphicsItem::removeObject() {
 
   shared_ptr<AnnotatorLib::Commands::RemoveObject> cmd =
-      std::make_shared<AnnotatorLib::Commands::RemoveObject>(player->getSession(), annotation->getObject());
+      std::make_shared<AnnotatorLib::Commands::RemoveObject>(
+          player->getSession(), annotation->getObject());
   CommandController::instance()->execute(cmd);
 }
 
 void AnnotationGraphicsItem::goToLast() {
-  player->on_frameSelected(annotation->getObject()->getLastAnnotation()->getFrame()->getFrameNumber());
+  player->on_frameSelected(annotation->getObject()
+                               ->getLastAnnotation()
+                               ->getFrame()
+                               ->getFrameNumber());
 }
 
 void AnnotationGraphicsItem::goToFirst() {
-  player->on_frameSelected(annotation->getObject()->getFirstAnnotation()->getFrame()->getFrameNumber());
+  player->on_frameSelected(annotation->getObject()
+                               ->getFirstAnnotation()
+                               ->getFrame()
+                               ->getFrameNumber());
 }
 
 void AnnotationGraphicsItem::compressObject() {
 
   shared_ptr<AnnotatorLib::Object> obj = annotation->getObject();
   shared_ptr<AnnotatorLib::Commands::CompressObject> cmd =
-      std::make_shared<AnnotatorLib::Commands::CompressObject>(player->getSession(),
-                                                   obj);
+      std::make_shared<AnnotatorLib::Commands::CompressObject>(
+          player->getSession(), obj);
   int nmb_annotations_before = obj->getAnnotations().size();
   CommandController::instance()->execute(cmd);
   int nmb_annotations_after = obj->getAnnotations().size();
   Alert msgBox;
-  msgBox.setText(QString::fromStdString(std::string("Compression algorithm has removed ")
-                                        + std::to_string(nmb_annotations_before - nmb_annotations_after)
-                                        + std::string(" annotations.\n")));
+  msgBox.setText(QString::fromStdString(
+      std::string("Compression algorithm has removed ") +
+      std::to_string(nmb_annotations_before - nmb_annotations_after) +
+      std::string(" annotations.\n")));
   msgBox.setIcon(QMessageBox::Information);
   msgBox.setStandardButtons(0);
   msgBox.setAutoClose(true);
-  msgBox.setTimeout(3); //Closes after three seconds
+  msgBox.setTimeout(3); // Closes after three seconds
   msgBox.exec();
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {
   // TODO: remove rect permanently (works nnot everytime)
   shared_ptr<AnnotatorLib::Commands::RemoveAnnotation> cmd =
-      std::make_shared<AnnotatorLib::Commands::RemoveAnnotation>(player->getSession(),
-                                                   annotation);
+      std::make_shared<AnnotatorLib::Commands::RemoveAnnotation>(
+          player->getSession(), annotation);
   CommandController::instance()->execute(cmd);
+}
+
+void AnnotationGraphicsItem::removeAnnotationRange() {
+  RemoveAnnotationDialog raDialog(player->getSession(), annotation->getObject(),
+                                  annotation->getFrame()->getFrameNumber());
+  raDialog.exec();
+  if (raDialog.result() == QDialog::Accepted) {
+    CommandController::instance()->execute(raDialog.getCommand());
+  }
 }
 
 void AnnotationGraphicsItem::editAnnotation() {
@@ -405,7 +442,7 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
       corner->setMouseState(Corner::MouseDown);
       corner->mouseDownX = own_event->pos().x();
       corner->mouseDownY = own_event->pos().y();
-      //this->setSelected(true);
+      // this->setSelected(true);
     } break;
 
     case QEvent::GraphicsSceneMouseRelease: {
@@ -458,9 +495,11 @@ void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
   shared_ptr<AnnotatorLib::Commands::Command> nA;
   if (annotation->isTemporary()) {
     nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
-          player->getSession(), annotation->getObject(), annotation->getFrame(), x, y, w, h);
+        player->getSession(), annotation->getObject(), annotation->getFrame(),
+        x, y, w, h);
   } else {
-    nA = std::make_shared<AnnotatorLib::Commands::UpdateAnnotation>(annotation, x, y, w, h);
+    nA = std::make_shared<AnnotatorLib::Commands::UpdateAnnotation>(annotation,
+                                                                    x, y, w, h);
   }
   CommandController::instance()->execute(nA);
 }
