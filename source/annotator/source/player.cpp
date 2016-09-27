@@ -23,7 +23,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   videoplayer->setDelay(ui->speedSpinBox->value()); // get default value
 
   updateStatus(false); // set Status disable
-  updateBtn();         // update the button Play & Pause
+  on_updateBtn();         // update the button Play & Pause
 
   connect(videoplayer, SIGNAL(showFrame(cv::Mat)), this,
           SLOT(showFrame(cv::Mat)));
@@ -31,7 +31,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(updateFrame(long)));
   connect(ui->horizontalSlider, SIGNAL(sendClickPosition(int)), this,
           SLOT(setSliderValue(int)));
-  connect(videoplayer, SIGNAL(updateBtn()), this, SLOT(updateBtn()));
+  connect(videoplayer, SIGNAL(updateBtn_signal()), this, SLOT(on_updateBtn()));
   connect(videoplayer, SIGNAL(sleep(int)), this, SLOT(sleep(int)));
   connect(videoplayer, SIGNAL(updateHorizontalSlider()), this,
           SLOT(updateHorizontalSlider()));
@@ -109,7 +109,7 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   }
 
   updateStatus(true);
-  updateBtn();
+  on_updateBtn();
   updateTimeLabel();
 }
 
@@ -117,7 +117,7 @@ void Player::loadVideo(QString fileName) {
   if (!fileName.isEmpty()) {
     if (LoadFile(fileName)) {
       updateStatus(true);
-      updateBtn();
+      on_updateBtn();
       setEnabled(true);
     }
   }
@@ -191,7 +191,7 @@ void Player::updateStatus(bool enable) {
  * updateBtn	-	update the button Play & Pause
  *
  */
-void Player::updateBtn() {
+void Player::on_updateBtn() {
   bool isStop = videoplayer->isStop();
   ui->btnPause->setVisible(!isStop);
   ui->btnPlay->setVisible(isStop);

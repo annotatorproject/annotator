@@ -71,7 +71,7 @@ class Videoplayer : public QThread {
 
  signals:
 
-  void updateBtn();               // update button status
+  void updateBtn_signal();               // update button status
   void showFrame(cv::Mat frame);  // show a frame
   void updateFrame(long frame);
   void updateHorizontalSlider();  // update horizontal Slider

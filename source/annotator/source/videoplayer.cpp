@@ -50,7 +50,7 @@ bool Videoplayer::setInput(const std::string &fileName) {
   emit showFrame(input);
   emit updateFrame(getCurFrameNr());
 
-  emit updateBtn();
+  emit updateBtn_signal();
   return true;
 }
 
@@ -173,7 +173,7 @@ void Videoplayer::playIt() {
   setStop(false);
 
   // update buttons
-  emit updateBtn();
+  emit updateBtn_signal();
 
   while (!isStop()) {
     // capture time needed to process 1 frame.
@@ -249,7 +249,7 @@ void Videoplayer::reload() { on_frameSelected(this->curPos - 1); }  // TODO: why
  */
 void Videoplayer::pauseIt() {
   stop = true;
-  emit updateBtn();
+  emit updateBtn_signal();
 }
 
 /**
