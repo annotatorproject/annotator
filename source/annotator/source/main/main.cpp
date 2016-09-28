@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
   a.setApplicationName("Annotator");
   // a.setApplicationDisplayName("Annotation Tool");
   a.setApplicationVersion("Alpha");
-
   setStyleSheet(a, "annotator.qss");
 
   MainWindow w;

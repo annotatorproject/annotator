@@ -27,9 +27,9 @@ PluginRunner::PluginRunner(std::shared_ptr<AnnotatorLib::Project> project,
 PluginRunner::~PluginRunner() { delete ui; }
 
 QPixmap PluginRunner::getImgCrop(long frame, int size) {
-  long prev_pos = project->getImageSet()->getPosition();
+  //long prev_pos = project->getImageSet()->getPosition();
   cv::Mat tmp = project->getImageSet()->getImage(frame);
-  project->getImageSet()->gotoPosition(prev_pos);
+  //project->getImageSet()->gotoPosition(prev_pos);
 
   tmp.convertTo(tmp, CV_8U);
   cv::cvtColor(tmp, tmp, CV_BGR2RGB);
