@@ -329,7 +329,7 @@ void Player::enableDrawing(bool enable)
     this->ui->scrollArea->setEnabled(enable);
 }
 
-void Player::on_nextFrame(long frame)
+void Player::on_nextFrame(long frame)    //wrong frame number???
 {
     if (autoAnnotation)
       runPlugin(frame);
