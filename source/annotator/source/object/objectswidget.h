@@ -27,8 +27,8 @@ protected:
   void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
   void on_objectAdded(shared_ptr<AnnotatorLib::Object> object);
   void on_objectRemoved(shared_ptr<AnnotatorLib::Object> object);
- private slots:
-  void on_listWidget_itemSelectionChanged();
+private slots:
+  void on_listWidget_doubleClicked(const QModelIndex &index);
 
  private:
   Ui::ObjectsWidget *ui;

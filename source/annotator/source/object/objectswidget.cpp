@@ -75,14 +75,25 @@ void ObjectsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> object)
     ui->listWidget->setCurrentItem(selected_item);
 }
 
-void ObjectsWidget::on_listWidget_itemSelectionChanged()
+//void ObjectsWidget::on_listWidget_itemSelectionChanged()
+//{
+//  QItemSelectionModel *select = ui->listWidget->selectionModel();
+//  if (select->hasSelection()) {
+//      int row = select->selectedRows().front().row(); // return selected row(s)
+//      unsigned long obj_id = objectRowToIdMap[row];
+//      shared_ptr<AnnotatorLib::Object> obj = session->getObject(obj_id);
+//      if( obj )
+//          SelectionController::instance()->setSelectedObject(obj);
+//  }
+//}
+
+void ObjectsWidget::on_listWidget_doubleClicked(const QModelIndex &index)
 {
-  QItemSelectionModel *select = ui->listWidget->selectionModel();
-  if (select->hasSelection()) {
-      int row = select->selectedRows().front().row(); // return selected row(s)
-      unsigned long obj_id = objectRowToIdMap[row];
-      shared_ptr<AnnotatorLib::Object> obj = session->getObject(obj_id);
-      if( obj )
-          SelectionController::instance()->setSelectedObject(obj);
-  }
+    int row = index.row();
+    unsigned long obj_id = objectRowToIdMap[row];
+    shared_ptr<AnnotatorLib::Object> obj = session->getObject(obj_id);
+    if( obj ) {
+        SelectionController::instance()->setSelectedObject(obj);
+        SelectionController::instance()->setSelectedFrame(obj->getLastAnnotation()->getFrame()->getId());
+    }
 }
