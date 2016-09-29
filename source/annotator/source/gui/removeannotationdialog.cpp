@@ -29,8 +29,9 @@ RemoveAnnotationDialog::~RemoveAnnotationDialog()
 
 std::shared_ptr<AnnotatorLib::Commands::RemoveAnnotationRange> RemoveAnnotationDialog::getCommand()
 {
-    std::shared_ptr<AnnotatorLib::Frame> frame1 = session->getFrame(ui->startSpinBox->value());
-    std::shared_ptr<AnnotatorLib::Frame> frame2 = session->getFrame(ui->endSpinBox->value());
     return shared_ptr<AnnotatorLib::Commands::RemoveAnnotationRange>(
-                new AnnotatorLib::Commands::RemoveAnnotationRange(session, object, frame1, frame2));
+                new AnnotatorLib::Commands::RemoveAnnotationRange(session,
+                                                                  object,
+                                                                  (unsigned long) ui->startSpinBox->value(),
+                                                                  (unsigned long) ui->endSpinBox->value()));
 }
