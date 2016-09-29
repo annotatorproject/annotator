@@ -31,7 +31,8 @@ void ObjectsWidget::reload()
     ui->listWidget->clear();
     for(auto& pair: session->getObjects())
     {
-        addObject(pair.second);
+        if (pair.second->getAnnotations().size() > 0)
+          addObject(pair.second);
     }
   }
 }
