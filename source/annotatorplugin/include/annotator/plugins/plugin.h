@@ -23,23 +23,29 @@ public:
             shared_ptr<AnnotatorLib::Frame> frame,
             bool execute_commands = true) {
     std::shared_ptr<AnnotatorLib::Session> session = getProject()->getSession();
-    setObject(object);
     cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
     setFrame(frame, image);
 
-    shared_ptr<AnnotatorLib::Annotation> annotationAtFrame =
-        session->getAnnotation(frame, object); // find annotation at keyFrame
+    if (requiresObject()) {
+      if (!object) {
+        std::vector<shared_ptr<AnnotatorLib::Commands::Command>> empty;
+        return empty;
+      }
 
-    if (!annotationAtFrame) {
-      shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
-      shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
-      object->findClosestKeyFrames(frame, previousA, nextA);
-      annotationAtFrame = previousA;
-    }
+      setObject(object);
+      shared_ptr<AnnotatorLib::Annotation> annotationAtFrame =
+          session->getAnnotation(frame, object); // find annotation at keyFrame
 
-    if (annotationAtFrame) {
-      setLastAnnotation(annotationAtFrame);
-      //return std::vector<shared_ptr<AnnotatorLib::Commands::Command>>();
+      if (!annotationAtFrame) {
+        shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
+        shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
+        object->findClosestKeyFrames(frame, previousA, nextA);
+        annotationAtFrame = previousA;
+      }
+
+      if (annotationAtFrame) {
+        setLastAnnotation(annotationAtFrame);
+      }
     }
 
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =

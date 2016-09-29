@@ -195,17 +195,15 @@ void Player::runPlugin(unsigned long frame_nmb) {
       f = std::make_shared<AnnotatorLib::Frame>(
           frame_nmb); // create temporary frame
 
-  if (SelectionController::instance()->getSelectedObject()) {
     Annotator::Plugin *plugin =
         Annotator::PluginLoader::getInstance().getCurrent();
 
     if (plugin) {
         for (shared_ptr<AnnotatorLib::Commands::Command> command :
              plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
-          CommandController::instance()->execute(command);  //TODO: reload widgets
+          CommandController::instance()->execute(command);
         }
-    }
-  }
+    }  
 }
 
 void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
