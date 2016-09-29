@@ -13,7 +13,7 @@
 #include <AnnotatorLib/Object.h>
 
 #include "gui/editobjectdialog.h"
-#include "gui/removeannotationdialog.h"
+#include "gui/removerangedialog.h"
 #include "plugins/pluginloader.h"
 
 #include "controller/commandcontroller.h"
@@ -288,12 +288,9 @@ void AnnotationGraphicsItem::removeAnnotation() {
 }
 
 void AnnotationGraphicsItem::removeAnnotationRange() {
-  RemoveAnnotationDialog raDialog(player->getSession(), annotation->getObject(),
+  RemoveRangeDialog raDialog(player->getProject(), annotation->getObject(),
                                   annotation->getFrame()->getFrameNumber());
   raDialog.exec();
-  if (raDialog.result() == QDialog::Accepted) {
-    CommandController::instance()->execute(raDialog.getCommand());
-  }
 }
 
 void AnnotationGraphicsItem::editAnnotation() {
