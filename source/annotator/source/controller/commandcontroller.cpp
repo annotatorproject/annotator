@@ -7,6 +7,7 @@
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateObject.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
+#include <AnnotatorLib/Commands/RemoveAnnotationRange.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
@@ -127,10 +128,11 @@ void CommandController::send_signals(shared_ptr<Commands::Command> command, bool
       return;
   }
   if (std::dynamic_pointer_cast<Commands::CompressSession>(command) ||
-      std::dynamic_pointer_cast<Commands::CleanSession>(command)) {
+      std::dynamic_pointer_cast<Commands::CleanSession>(command) ||
+      std::dynamic_pointer_cast<Commands::RemoveAnnotationRange>(command)) {
       emit signal_refreshSession();
       emit signal_requestFrameRedraw();
-      SelectionController::instance()->setSelectedObject(nullptr);
+      SelectionController::instance()->setSelectedObject(nullptr); //TODO
       return;
     }
 }
