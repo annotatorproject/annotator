@@ -1,15 +1,16 @@
 #ifndef CORRELATIONTRACKER_H
 #define CORRELATIONTRACKER_H
 
-#include "widget.h"
-#include <annotator/plugins/plugin.h>
-
 #include <dlib/image_processing.h>
 #include <opencv2/core/mat.hpp>
 
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 #include <QtGui/QIcon>
+
+#include "widget.h"
+#include <annotator/plugins/plugin.h>
+
 
 using namespace AnnotatorLib;
 using std::shared_ptr;
@@ -47,7 +48,7 @@ protected:
   cv::Rect trackWindow, selection;
   cv::Mat hsv, hist, hue, mask, backproj;
 
-  cv::Rect findObject();
+  std::pair<cv::Rect, double> findObject();
 
   Widget widget;
 

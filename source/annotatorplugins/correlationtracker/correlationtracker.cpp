@@ -1,6 +1,7 @@
 #include "correlationtracker.h"
 #include "widget.h"
 
+#include <utility>
 #include <QDebug>
 #include <QtGui/QPainter>
 #include <ctype.h>
@@ -76,20 +77,20 @@ std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
     return commands;
 
   try {
-    cv::Rect found_rect = findObject();
+    auto res = findObject();
 
-    if (found_rect.width > 0) {
+    if (res.first.width > 0) {
 
-      int w = found_rect.width;
-      int h = found_rect.height;
+      int w = res.first.width;
+      int h = res.first.height;
 
-      int x = found_rect.x;
-      int y = found_rect.y;
+      int x = res.first.x;
+      int y = res.first.y;
 
       shared_ptr<Commands::NewAnnotation> nA =
           std::make_shared<Commands::NewAnnotation>(project->getSession(),
                                                     lastAnnotation->getObject(),
-                                                    this->frame, x, y, w, h);
+                                                    this->frame, x, y, w, h, res.second);
       commands.push_back(nA);
     }
 
@@ -100,17 +101,18 @@ std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
   return commands;
 }
 
-cv::Rect CorrelationTracker::findObject() {
+std::pair<cv::Rect, double> CorrelationTracker::findObject() {
   cv::Rect cvrect;
+  auto ret = std::make_pair(cvrect, 0.0);
   if (trackerStarted) {
     dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
     try {
-      tracker.update(cvimg);
+      ret.second = tracker.update(cvimg); //returns the peak to side-lobe ratio.  This is a number that measures how
       dlib::rectangle found = tracker.get_position();
-      cvrect =
+      ret.first =
           cv::Rect(found.left(), found.top(), found.width(), found.height());
     } catch (std::exception &e) {
     }
   }
-  return cvrect;
+  return ret;
 }
