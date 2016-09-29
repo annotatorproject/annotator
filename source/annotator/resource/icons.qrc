@@ -44,5 +44,7 @@
         <file>stop-or.png</file>
         <file>symbol14.png</file>
         <file>symbol140.png</file>
+        <file>exclamation.png</file>
+        <file>warning.png</file>
     </qresource>
 </RCC>

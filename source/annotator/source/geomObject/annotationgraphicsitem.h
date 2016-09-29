@@ -41,6 +41,7 @@ protected:
     QColor borderColor;
     QColor  originColor;
     QGraphicsTextItem idText;
+    QGraphicsPixmapItem imWarning;
 
     Player *player;
 
@@ -79,6 +80,7 @@ private:
     void changeAnnotationSize(int x, int y, int w, int h);
     void initCorners();
     void initIdText();
+    void initializeLowConfidenceWarningSign();
     void initActions();
     QColor idToColor(long id) const;
 

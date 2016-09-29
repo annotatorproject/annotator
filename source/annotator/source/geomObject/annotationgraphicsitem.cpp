@@ -1,9 +1,9 @@
 #include "annotationgraphicsitem.h"
-#include "controller/commandcontroller.h"
-#include "controller/selectioncontroller.h"
-#include "gui/editobjectdialog.h"
-#include "gui/removeannotationdialog.h"
-#include "plugins/pluginloader.h"
+
+#include <string>
+#include <QMenu>
+#include <QObject>
+
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
@@ -11,28 +11,14 @@
 #include <AnnotatorLib/Commands/RemoveObject.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <AnnotatorLib/Object.h>
-#include <QMenu>
-#include <QObject>
+
+#include "gui/editobjectdialog.h"
+#include "gui/removeannotationdialog.h"
+#include "plugins/pluginloader.h"
+
+#include "controller/commandcontroller.h"
+#include "controller/selectioncontroller.h"
 #include <gui/alert.h>
-
-// static
-// shared_ptr<AnnotatorLib::Annotation>
-// AnnotationGraphicsItem::selected_annotation =
-//    shared_ptr<AnnotatorLib::Annotation>();
-// AnnotationGraphicsItem* AnnotationGraphicsItem::selected_annotation_item =
-// nullptr;
-
-// void
-// AnnotationGraphicsItem::setSelectedAnnotation(shared_ptr<AnnotatorLib::Annotation>
-// a) {
-//  AnnotationGraphicsItem::selected_annotation.reset();
-//  AnnotationGraphicsItem::selected_annotation = a;
-//}
-
-// shared_ptr<AnnotatorLib::Annotation>
-// AnnotationGraphicsItem::getSelectedAnnotation() {
-//  return AnnotationGraphicsItem::selected_annotation;
-//}
 
 // constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
@@ -51,6 +37,8 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   initCorners();
   initIdText();
   initActions();
+  if (!annotation->isTemporary() && annotation->getConfidenceScore() < 0.3) //TODO
+    initializeLowConfidenceWarningSign();
 }
 
 AnnotationGraphicsItem::~AnnotationGraphicsItem() {
@@ -109,11 +97,20 @@ void AnnotationGraphicsItem::initIdText() {
   if (annotation) {
     idText.setParentItem(this);
     idText.setDefaultTextColor(Qt::black);
-    idText.setPlainText(QString::number(annotation->getId()));
-
+    idText.setScale(0.75);
+    idText.setPlainText(QString::fromStdString(annotation->getObject()->getName() + " #"+  std::to_string((annotation->getId()))));
     idText.setPos(rectX, rectY - 20);
-    idText.hide();
+    idText.show();
   }
+}
+
+void AnnotationGraphicsItem::initializeLowConfidenceWarningSign()
+{
+    imWarning.setParentItem(this);
+    imWarning.setPixmap(QPixmap(":/Icons/warning.png"));
+    imWarning.setScale(0.5);
+    imWarning.setPos(rectX + width - 18, rectY + height - 18);
+    imWarning.show();
 }
 
 void AnnotationGraphicsItem::initActions() {
