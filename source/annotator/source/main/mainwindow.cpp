@@ -47,9 +47,9 @@ MainWindow::~MainWindow() {
 void MainWindow::connectSignalSlots() {
 
   //session
-  connect(this, SIGNAL(signal_refreshSession()), &annotationsWidget,
+  connect(CommandController::instance(), SIGNAL(signal_refreshSession()), &annotationsWidget,
           SLOT(on_refreshSession()));
-  connect(this, SIGNAL(signal_refreshSession()), &objectsWidget,
+  connect(CommandController::instance(), SIGNAL(signal_refreshSession()), &objectsWidget,
           SLOT(on_refreshSession()));
 
   // frames
@@ -104,7 +104,7 @@ void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
     this->setRateValue(playerWidget.getRateValue());
     setWindowTitle(project);
 
-    emit signal_refreshSession();
+    CommandController::instance()->doEmitRefreshSession();
 
     for (Annotator::Plugin *p :
          Annotator::PluginLoader::getInstance().getPlugins()) {
@@ -220,7 +220,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
     QApplication::restoreOverrideCursor();
   }
 
-  emit signal_refreshSession();
+  CommandController::instance()->doEmitRefreshSession();
 }
 
 
