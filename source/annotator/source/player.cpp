@@ -78,7 +78,7 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-std::shared_ptr<AnnotatorLib::Session> Player::getSession() { return this->session; }
+std::shared_ptr<AnnotatorLib::Session> Player::getSession() const { return this->session; }
 
 void Player::closeProject() {
   this->currentFrame = cv::Mat();
@@ -86,6 +86,10 @@ void Player::closeProject() {
   this->videoplayer->close();
   scene->setSession(nullptr);
   updateStatus(false);           //disable ui
+}
+
+std::shared_ptr<AnnotatorLib::Project> Player::getProject() const {
+  return project;
 }
 
 void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
