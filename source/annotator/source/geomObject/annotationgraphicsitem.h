@@ -65,6 +65,7 @@ private:
     shared_ptr<AnnotatorLib::Annotation> annotation;
 
     QAction* action_del;
+    QAction* action_del_following;
     QAction* action_del_range;
     QAction* action_edit;
     QAction* action_del_obj;
@@ -90,6 +91,7 @@ public slots:
 
 private slots:
     void removeAnnotation();
+    void removeFollowingAnnotations();
     void removeAnnotationRange();
     void removeObject();
     void editAnnotation();

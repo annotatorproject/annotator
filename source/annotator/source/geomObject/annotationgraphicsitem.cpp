@@ -48,6 +48,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
 
   // delete actions
   delete action_del;
+  delete action_del_following;
   delete action_del_range;
   delete action_edit;
   delete action_compress_obj;
@@ -115,13 +116,15 @@ void AnnotationGraphicsItem::initializeLowConfidenceWarningSign()
 
 void AnnotationGraphicsItem::initActions() {
   action_del = new QAction(QString("Remove"), (QObject *)this->parentObject());
+  action_del_following =
+      new QAction(QString("Remove following"), (QObject *)this->parentObject());
   action_del_range =
-      new QAction(QString("Remove in range"), (QObject *)this->parentObject());
+      new QAction(QString("Remove range"), (QObject *)this->parentObject());
   action_del_obj =
-      new QAction(QString("Remove Object"), (QObject *)this->parentObject());
+      new QAction(QString("Remove object"), (QObject *)this->parentObject());
   action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
   action_compress_obj =
-      new QAction(QString("Compress Track"), (QObject *)this->parentObject());
+      new QAction(QString("Compress track"), (QObject *)this->parentObject());
   action_goto_first =
       new QAction(QString("Jump to first"), (QObject *)this->parentObject());
   action_goto_last =
@@ -129,6 +132,8 @@ void AnnotationGraphicsItem::initActions() {
 
   QObject::connect(action_del, SIGNAL(triggered()), this,
                    SLOT(removeAnnotation()));
+  QObject::connect(action_del_following, SIGNAL(triggered()), this,
+                   SLOT(removeFollowingAnnotations()));
   QObject::connect(action_del_range, SIGNAL(triggered()), this,
                    SLOT(removeAnnotationRange()));
   QObject::connect(action_del_obj, SIGNAL(triggered()), this,
@@ -221,10 +226,12 @@ void AnnotationGraphicsItem::contextMenuEvent(
   QMenu contextMenu("Context menu");
   contextMenu.addAction(action_edit);
 
-  if (!this->annotation->isTemporary()) {
-    contextMenu.addAction(
-        action_del); // you cannot delete a temporary annotation
-  }
+  if (!this->annotation->isTemporary())
+    contextMenu.addAction(action_del);
+
+  if (*this->annotation < *this->annotation->getObject()->getLastAnnotation())
+    contextMenu.addAction(action_del_following);
+
   contextMenu.addAction(action_del_range);
 
   contextMenu.addAction(action_del_obj);
@@ -280,11 +287,20 @@ void AnnotationGraphicsItem::compressObject() {
 }
 
 void AnnotationGraphicsItem::removeAnnotation() {
-  // TODO: remove rect permanently (works nnot everytime)
   shared_ptr<AnnotatorLib::Commands::RemoveAnnotation> cmd =
       std::make_shared<AnnotatorLib::Commands::RemoveAnnotation>(
           player->getSession(), annotation);
   CommandController::instance()->execute(cmd);
+}
+
+void AnnotationGraphicsItem::removeFollowingAnnotations()
+{
+  auto o = annotation->getObject();
+  CommandController::instance()->execute(shared_ptr<AnnotatorLib::Commands::RemoveAnnotationRange>(
+                                           new AnnotatorLib::Commands::RemoveAnnotationRange(player->getSession(),
+                                                                                             o,
+                                                                                             annotation->getFrame()->getFrameNumber() + 1,
+                                                                                             o->getLastAnnotation()->getFrame()->getFrameNumber())));
 }
 
 void AnnotationGraphicsItem::removeAnnotationRange() {
