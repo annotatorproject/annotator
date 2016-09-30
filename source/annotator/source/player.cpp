@@ -161,27 +161,28 @@ void Player::on_updateBtn() {
  *
  */
 void Player::showFrame(cv::Mat frame) {
-  currentFrame = frame;
-  cv::Mat tmp;
+    currentFrame = frame;
+//  cv::Mat tmp;
 
-  cv::Size size;
-  size.width = scene->sceneRect().width();
-  size.height = scene->sceneRect().height();
+//  cv::Size size;
+//  size.width = scene->sceneRect().width();
+//  size.height = scene->sceneRect().height();
 
-  tmp.convertTo(tmp, CV_8U);
-  cv::resize(currentFrame, tmp, size);
-  cvtColor(currentFrame, tmp, CV_BGR2RGB);
+//  tmp.convertTo(tmp, CV_8U);
+//  cv::resize(currentFrame, tmp, size);
+//  cvtColor(currentFrame, tmp, CV_BGR2RGB);
+//    QImage img = QImage((const unsigned char *)(tmp.data), tmp.cols, tmp.rows,
+//                        tmp.step, QImage::Format_RGB888);
 
-  QImage img = QImage((const unsigned char *)(tmp.data), tmp.cols, tmp.rows,
-                      tmp.step, QImage::Format_RGB888);
+  cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
+  QImage img = QImage((const unsigned char *)(frame.data), frame.cols, frame.rows,
+                      frame.step, QImage::Format_RGB888);
 
   scene->setSceneRect(img.rect());
   overlay->fitInView(img.rect());
   QPixmap pim = QPixmap::fromImage(img);
   scene->setBackgroundBrush(pim);
 }
-
-
 
 void Player::updateFrame(long frame_nmb) {
   shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
