@@ -12,7 +12,7 @@ RemoveRangeDialog::RemoveRangeDialog(std::shared_ptr<AnnotatorLib::Project> proj
   ui->setupUi(this);
 
   try{
-      ui->startFrameSpinBox->setValue(object->getFirstAnnotation()->getFrame()->getFrameNumber());
+      ui->startFrameSpinBox->setValue(currentFrame);
       ui->startFrameSpinBox->setMinimum(object->getFirstAnnotation()->getFrame()->getFrameNumber());
       ui->endFrameSpinBox->setMinimum(object->getFirstAnnotation()->getFrame()->getFrameNumber());
       ui->startFrameSpinBox->setMaximum(object->getLastAnnotation()->getFrame()->getFrameNumber());
