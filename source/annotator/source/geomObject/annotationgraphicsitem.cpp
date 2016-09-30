@@ -232,7 +232,8 @@ void AnnotationGraphicsItem::contextMenuEvent(
   if (*this->annotation < *this->annotation->getObject()->getLastAnnotation())
     contextMenu.addAction(action_del_following);
 
-  contextMenu.addAction(action_del_range);
+  if (this->annotation->getObject()->getAnnotations().size() > 1)
+    contextMenu.addAction(action_del_range);
 
   contextMenu.addAction(action_del_obj);
   contextMenu.addAction(action_goto_first);
