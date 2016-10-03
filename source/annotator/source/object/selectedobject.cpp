@@ -2,7 +2,7 @@
 #include "ui_selectedobject.h"
 #include "controller/selectioncontroller.h"
 #include <AnnotatorLib/Class.h>
-#include <opencv2/core.hpp>
+#include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
 SelectedObject::SelectedObject(QWidget *parent) :
