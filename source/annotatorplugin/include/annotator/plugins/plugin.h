@@ -23,8 +23,6 @@ public:
             shared_ptr<AnnotatorLib::Frame> frame,
             bool execute_commands = true) {
     std::shared_ptr<AnnotatorLib::Session> session = getProject()->getSession();
-    cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
-    setFrame(frame, image);
 
     if (requiresObject()) {
       if (!object) {
@@ -47,6 +45,9 @@ public:
         setLastAnnotation(annotationAtFrame);
       }
     }
+
+    cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
+    setFrame(frame, image);
 
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =
         getCommands();
