@@ -24,7 +24,13 @@ PluginRunner::PluginRunner(std::shared_ptr<AnnotatorLib::Project> project,
   ui->framesProgressBar->hide();
 }
 
-PluginRunner::~PluginRunner() { delete ui; }
+PluginRunner::~PluginRunner() {
+  if (lastWidget != nullptr) {
+    ui->gridLayout_6->removeWidget(lastWidget);
+    lastWidget->setParent(nullptr);
+  }
+  delete ui;
+}
 
 QPixmap PluginRunner::getImgCrop(long frame, int size) {
   //long prev_pos = project->getImageSet()->getPosition();
@@ -107,10 +113,11 @@ void PluginRunner::on_startButton_clicked() {
       Annotator::PluginLoader::getInstance().getPlugins().at(
           ui->pluginsListWidget->currentRow());
 
-  ui->objectsProgressBar->show();
-  ui->objectsProgressBar->setMaximum(objectRowToIdMap.size());
-  ui->objectsProgressBar->setValue(0);
-
+  if (plugin->requiresObject()) {
+      ui->objectsProgressBar->show();
+      ui->objectsProgressBar->setMaximum(objectRowToIdMap.size());
+      ui->objectsProgressBar->setValue(0);
+  }
   ui->framesProgressBar->show();
   ui->framesProgressBar->setMaximum(ui->endFrameSpinBox->value());
   ui->framesProgressBar->setValue(0);
