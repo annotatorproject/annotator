@@ -24,6 +24,9 @@ protected:
     void updateStartSliderMinMax();
     void updateEndSliderMinMax();
 private slots:
+    void on_pluginsListWidget_itemSelectionChanged();
+
+private slots:
 
     void on_startFrameSpinBox_valueChanged(int arg1);
 
@@ -36,9 +39,6 @@ private slots:
     void on_unselectAllObjectsButton_clicked();
 
 private:
-    bool stopCalculation = true;
-    Ui::PluginRunner *ui;
-    std::shared_ptr<AnnotatorLib::Project> project;
 
     void initPluginsList();
     void initObjectsList();
@@ -46,10 +46,15 @@ private:
     void addObject(shared_ptr<AnnotatorLib::Object> object);
     void calculate(shared_ptr<AnnotatorLib::Object> object, Annotator::Plugin *plugin, int start, int end);
 
+
+    bool stopCalculation = true;
+    Ui::PluginRunner *ui;
+    std::shared_ptr<AnnotatorLib::Project> project;
+
     std::unordered_map<unsigned long, int> objectIdToRowMap;
     std::unordered_map<int, unsigned long> objectRowToIdMap;
 
-
+    QWidget *lastWidget = nullptr;
 };
 
 #endif // PLUGINRUNNER_H

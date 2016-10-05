@@ -119,15 +119,19 @@ void PluginRunner::on_startButton_clicked() {
     int start = ui->startFrameSpinBox->value();
     int end = ui->endFrameSpinBox->value();
 
-    for (QListWidgetItem *item : ui->objectsListWidget->selectedItems()) {
-      if (stopCalculation)
-        break;
-      int row = ui->objectsListWidget->row(item);
-      ui->objectsProgressBar->setValue(row + 1);
-      unsigned long obj_id = objectRowToIdMap[row];
-      shared_ptr<AnnotatorLib::Object> obj =
-          project->getSession()->getObject(obj_id);
-      calculate(obj, plugin, start, end);
+    if (plugin->requiresObject()) {
+      for (QListWidgetItem *item : ui->objectsListWidget->selectedItems()) {
+        if (stopCalculation)
+          break;
+        int row = ui->objectsListWidget->row(item);
+        ui->objectsProgressBar->setValue(row + 1);
+        unsigned long obj_id = objectRowToIdMap[row];
+        shared_ptr<AnnotatorLib::Object> obj =
+            project->getSession()->getObject(obj_id);
+        calculate(obj, plugin, start, end);
+      }
+    } else {
+        calculate(nullptr, plugin, start, end);
     }
   }
 
@@ -160,4 +164,23 @@ void PluginRunner::updateEndSliderMinMax() {
   ui->endFrameSpinBox->setMinimum(ui->startFrameSlider->value());
   ui->endFrameSlider->setMinimum(ui->startFrameSlider->value());
 
+}
+
+void PluginRunner::on_pluginsListWidget_itemSelectionChanged()
+{
+  ui->startButton->setEnabled(ui->pluginsListWidget->selectedItems().size() > 0);
+  Annotator::Plugin *plugin =
+      Annotator::PluginLoader::getInstance().getPlugins().at(
+          ui->pluginsListWidget->currentRow());
+
+  if (plugin) {
+    ui->groupBox_2->setEnabled(plugin->requiresObject());
+
+    if (lastWidget != nullptr) {
+      ui->gridLayout_6->removeWidget(lastWidget);
+      lastWidget->setParent(nullptr);
+    }
+    lastWidget = plugin->getWidget();
+    ui->gridLayout_6->addWidget(lastWidget);
+  }
 }
