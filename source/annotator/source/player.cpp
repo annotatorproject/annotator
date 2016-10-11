@@ -1,13 +1,14 @@
 #include "player.h"
-#include "ui_player.h"
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "geomObject/annotationgraphicsitemfactory.h"
 #include "plugins/pluginloader.h"
+#include "ui_player.h"
 #include <AnnotatorLib/Algo/InterpolateAnnotation.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <AnnotatorLib/Frame.h>
+#include <QApplication>
 #include <QDebug>
 #include <QFile>
 #include <QMessageBox>
@@ -23,7 +24,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   videoplayer->setDelay(ui->speedSpinBox->value()); // get default value
 
   updateStatus(false); // set Status disable
-  on_updateBtn();         // update the button Play & Pause
+  on_updateBtn();      // update the button Play & Pause
 
   connect(videoplayer, SIGNAL(nextFrame(long)), this, SLOT(on_nextFrame(long)));
   connect(videoplayer, SIGNAL(showFrame(cv::Mat)), this,
@@ -55,6 +56,8 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   connect(
       this, SIGNAL(signal_objectSelection(shared_ptr<AnnotatorLib::Object>)),
       scene, SLOT(on_signal_objectSelection(shared_ptr<AnnotatorLib::Object>)));
+
+  qApp->installEventFilter(this);
 }
 
 Player::~Player() {
@@ -78,14 +81,16 @@ QString Player::getRateValue() {
   return "FPS: " + QString::number(videoplayer->rate);
 }
 
-std::shared_ptr<AnnotatorLib::Session> Player::getSession() const { return this->session; }
+std::shared_ptr<AnnotatorLib::Session> Player::getSession() const {
+  return this->session;
+}
 
 void Player::closeProject() {
   this->currentFrame = cv::Mat();
   setProject(nullptr);
   this->videoplayer->close();
   scene->setSession(nullptr);
-  updateStatus(false);           //disable ui
+  updateStatus(false); // disable ui
 }
 
 std::shared_ptr<AnnotatorLib::Project> Player::getProject() const {
@@ -97,10 +102,12 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
   this->session = project ? project->getSession() : nullptr;
 
-  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size() : 0);
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                           : 0);
 
   videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
-  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size() : 0);
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                           : 0);
 
   cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
   scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
@@ -161,22 +168,23 @@ void Player::on_updateBtn() {
  *
  */
 void Player::showFrame(cv::Mat frame) {
-    currentFrame = frame;
-//  cv::Mat tmp;
+  currentFrame = frame;
+  //  cv::Mat tmp;
 
-//  cv::Size size;
-//  size.width = scene->sceneRect().width();
-//  size.height = scene->sceneRect().height();
+  //  cv::Size size;
+  //  size.width = scene->sceneRect().width();
+  //  size.height = scene->sceneRect().height();
 
-//  tmp.convertTo(tmp, CV_8U);
-//  cv::resize(currentFrame, tmp, size);
-//  cvtColor(currentFrame, tmp, CV_BGR2RGB);
-//    QImage img = QImage((const unsigned char *)(tmp.data), tmp.cols, tmp.rows,
-//                        tmp.step, QImage::Format_RGB888);
+  //  tmp.convertTo(tmp, CV_8U);
+  //  cv::resize(currentFrame, tmp, size);
+  //  cvtColor(currentFrame, tmp, CV_BGR2RGB);
+  //    QImage img = QImage((const unsigned char *)(tmp.data), tmp.cols,
+  //    tmp.rows,
+  //                        tmp.step, QImage::Format_RGB888);
 
   cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
-  QImage img = QImage((const unsigned char *)(frame.data), frame.cols, frame.rows,
-                      frame.step, QImage::Format_RGB888);
+  QImage img = QImage((const unsigned char *)(frame.data), frame.cols,
+                      frame.rows, frame.step, QImage::Format_RGB888);
 
   scene->setSceneRect(img.rect());
   overlay->fitInView(img.rect());
@@ -195,20 +203,21 @@ void Player::updateFrame(long frame_nmb) {
 }
 
 void Player::runPlugin(unsigned long frame_nmb) {
-    shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
-    if (!f)
-      f = std::make_shared<AnnotatorLib::Frame>(
-          frame_nmb); // create temporary frame
+  shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
+  if (!f)
+    f = std::make_shared<AnnotatorLib::Frame>(
+        frame_nmb); // create temporary frame
 
-    Annotator::Plugin *plugin =
-        Annotator::PluginLoader::getInstance().getCurrent();
+  Annotator::Plugin *plugin =
+      Annotator::PluginLoader::getInstance().getCurrent();
 
-    if (plugin) {
-        for (shared_ptr<AnnotatorLib::Commands::Command> command :
-             plugin->calculate(SelectionController::instance()->getSelectedObject(), f, false)) {
-          CommandController::instance()->execute(command);
-        }
-    }  
+  if (plugin) {
+    for (shared_ptr<AnnotatorLib::Commands::Command> command :
+         plugin->calculate(SelectionController::instance()->getSelectedObject(),
+                           f, false)) {
+      CommandController::instance()->execute(command);
+    }
+  }
 }
 
 void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
@@ -230,7 +239,6 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
     scene->addItem(graphicsItem);
     annotationGraphics.push_back(graphicsItem);
   }
-
 }
 
 /**
@@ -280,12 +288,10 @@ void Player::updateTimeLabel() {
     tfn = videoplayer->getTotalFrameNr();
   }
   QString curPos =
-      QDateTime::fromMSecsSinceEpoch(pos_ms - 3600000)
-          .toString("hh:mm:ss");
+      QDateTime::fromMSecsSinceEpoch(pos_ms - 3600000).toString("hh:mm:ss");
 
   QString length =
-      QDateTime::fromMSecsSinceEpoch(length_ms - 3600000)
-          .toString("hh:mm:ss");
+      QDateTime::fromMSecsSinceEpoch(length_ms - 3600000).toString("hh:mm:ss");
 
   ui->timeLabel->setText(tr("<span style=' color:#FFCD00;'>"
                             "%1</span> / %2")
@@ -322,20 +328,41 @@ void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 ///#################################################################################################///
 
 void Player::reload() {
-  //this->videoplayer->reload();
+  // this->videoplayer->reload();
   // reload annotations?
   this->updateFrame(this->videoplayer->getCurFrameNr());
 }
 
-void Player::enableDrawing(bool enable)
-{
-    this->ui->scrollArea->setEnabled(enable);
+void Player::enableDrawing(bool enable) {
+  this->ui->playerScrollArea->setEnabled(enable);
 }
 
-void Player::on_nextFrame(long frame)    //wrong frame number???
+void Player::on_nextFrame(long frame) // wrong frame number???
 {
-    if (autoAnnotation)
-      runPlugin(frame);
+  if (autoAnnotation)
+    runPlugin(frame);
+}
+
+bool Player::eventFilter(QObject *object, QEvent *event) {
+  if (event->type() == QEvent::KeyPress) {
+    if (object == scene || object == overlay ||
+        object->objectName() == "playerScrollArea") {
+      QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+      switch (keyEvent->key()) {
+      case Qt::Key_Left:
+        on_btnPrev_clicked();
+        break;
+      case Qt::Key_Right:
+        on_btnNext_clicked();
+        break;
+      case Qt::Key_Space:
+        break;
+      default:
+        break;
+      };
+    }
+  }
+  return QObject::eventFilter(object, event);
 }
 
 /**
@@ -361,8 +388,8 @@ void Player::on_btnPrev_clicked() {
 }
 
 void Player::on_btnNext_clicked() {
-    on_nextFrame(videoplayer->getCurFrameNr() + 1);
-    videoplayer->nextFrame();
+  on_nextFrame(videoplayer->getCurFrameNr() + 1);
+  videoplayer->nextFrame();
 }
 
 void Player::on_autoAnnotate(bool enabled) {
@@ -371,7 +398,7 @@ void Player::on_autoAnnotate(bool enabled) {
   else
     this->ui->speedSpinBox->setValue(50);
   this->autoAnnotation = enabled;
-  //don't allow to jump back and forth, when plugin is busy...
+  // don't allow to jump back and forth, when plugin is busy...
   this->ui->trackbarWidget->setEnabled(!enabled);
   this->ui->btnPrev->setEnabled(!enabled);
 }

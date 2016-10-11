@@ -61,6 +61,8 @@ class Player : public QWidget {
   void enableDrawing(bool enable);
   void on_nextFrame(long frame);
 
+  bool eventFilter(QObject *object, QEvent *event);
+
  signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 

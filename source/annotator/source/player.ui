@@ -18,7 +18,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="1">
-    <widget class="QScrollArea" name="scrollArea">
+    <widget class="QScrollArea" name="playerScrollArea">
      <property name="minimumSize">
       <size>
        <width>0</width>
