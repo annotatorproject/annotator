@@ -5,14 +5,16 @@
 
 AttributeItem::AttributeItem(shared_ptr<AnnotatorLib::Attribute> attribute,
                              QWidget *parent)
-    : QWidget(parent), attribute(attribute), ui(new Ui::AttributeItem) {
+    : QWidget(parent), ui(new Ui::AttributeItem), attribute(attribute) {
   ui->setupUi(this);
   reload();
 }
 
 AttributeItem::~AttributeItem() { delete ui; }
 
-shared_ptr<AnnotatorLib::Attribute> AttributeItem::getAttribute() { return attribute; }
+shared_ptr<AnnotatorLib::Attribute> AttributeItem::getAttribute() {
+  return attribute;
+}
 
 void AttributeItem::reload() {
   this->ui->idLabel->setText(QString::number(this->attribute->getId()));

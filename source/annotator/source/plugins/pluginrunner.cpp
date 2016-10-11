@@ -1,9 +1,8 @@
 #include "pluginrunner.h"
-#include "pluginloader.h"
-#include "ui_pluginrunner.h"
-
 #include "controller/commandcontroller.h"
 #include "object/objectitem.h"
+#include "pluginloader.h"
+#include "ui_pluginrunner.h"
 
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -33,9 +32,9 @@ PluginRunner::~PluginRunner() {
 }
 
 QPixmap PluginRunner::getImgCrop(long frame, int size) {
-  //long prev_pos = project->getImageSet()->getPosition();
+  // long prev_pos = project->getImageSet()->getPosition();
   cv::Mat tmp = project->getImageSet()->getImage(frame);
-  //project->getImageSet()->gotoPosition(prev_pos);
+  // project->getImageSet()->gotoPosition(prev_pos);
 
   tmp.convertTo(tmp, CV_8U);
   cv::cvtColor(tmp, tmp, CV_BGR2RGB);
@@ -113,16 +112,17 @@ void PluginRunner::on_startButton_clicked() {
       Annotator::PluginLoader::getInstance().getPlugins().at(
           ui->pluginsListWidget->currentRow());
 
-  if (plugin->requiresObject()) {
-      ui->objectsProgressBar->show();
-      ui->objectsProgressBar->setMaximum(objectRowToIdMap.size());
-      ui->objectsProgressBar->setValue(0);
-  }
   ui->framesProgressBar->show();
   ui->framesProgressBar->setMaximum(ui->endFrameSpinBox->value());
   ui->framesProgressBar->setValue(0);
 
   if (plugin) {
+    if (plugin->requiresObject()) {
+      ui->objectsProgressBar->show();
+      ui->objectsProgressBar->setMaximum(objectRowToIdMap.size());
+      ui->objectsProgressBar->setValue(0);
+    }
+
     int start = ui->startFrameSpinBox->value();
     int end = ui->endFrameSpinBox->value();
 
@@ -138,7 +138,7 @@ void PluginRunner::on_startButton_clicked() {
         calculate(obj, plugin, start, end);
       }
     } else {
-        calculate(nullptr, plugin, start, end);
+      calculate(nullptr, plugin, start, end);
     }
   }
 
@@ -170,12 +170,11 @@ void PluginRunner::updateEndSliderMinMax() {
   ui->endFrameSpinBox->setMaximum(project->getImageSet()->size());
   ui->endFrameSpinBox->setMinimum(ui->startFrameSlider->value());
   ui->endFrameSlider->setMinimum(ui->startFrameSlider->value());
-
 }
 
-void PluginRunner::on_pluginsListWidget_itemSelectionChanged()
-{
-  ui->startButton->setEnabled(ui->pluginsListWidget->selectedItems().size() > 0);
+void PluginRunner::on_pluginsListWidget_itemSelectionChanged() {
+  ui->startButton->setEnabled(ui->pluginsListWidget->selectedItems().size() >
+                              0);
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getPlugins().at(
           ui->pluginsListWidget->currentRow());
