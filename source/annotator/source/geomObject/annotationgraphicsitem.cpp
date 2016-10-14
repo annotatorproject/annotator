@@ -1,10 +1,11 @@
 #include "annotationgraphicsitem.h"
 
-#include <string>
 #include <QMenu>
 #include <QObject>
+#include <string>
 
 #include <AnnotatorLib/Annotation.h>
+#include <AnnotatorLib/Commands/AdjustNeighbors.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
@@ -37,7 +38,8 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   initCorners();
   initIdText();
   initActions();
-  if (!annotation->isTemporary() && annotation->getConfidenceScore() < 0.3) //TODO
+  if (!annotation->isTemporary() &&
+      annotation->getConfidenceScore() < 0.3) // TODO
     initializeLowConfidenceWarningSign();
 }
 
@@ -99,19 +101,20 @@ void AnnotationGraphicsItem::initIdText() {
     idText.setParentItem(this);
     idText.setDefaultTextColor(Qt::black);
     idText.setScale(0.75);
-    idText.setPlainText(QString::fromStdString(annotation->getObject()->getName() + " #"+  std::to_string((annotation->getId()))));
+    idText.setPlainText(
+        QString::fromStdString(annotation->getObject()->getName() + " #" +
+                               std::to_string((annotation->getId()))));
     idText.setPos(rectX, rectY - 20);
     idText.show();
   }
 }
 
-void AnnotationGraphicsItem::initializeLowConfidenceWarningSign()
-{
-    imWarning.setParentItem(this);
-    imWarning.setPixmap(QPixmap(":/Icons/warning.png"));
-    imWarning.setScale(0.5);
-    imWarning.setPos(rectX + width - 18, rectY + height - 18);
-    imWarning.show();
+void AnnotationGraphicsItem::initializeLowConfidenceWarningSign() {
+  imWarning.setParentItem(this);
+  imWarning.setPixmap(QPixmap(":/Icons/warning.png"));
+  imWarning.setScale(0.5);
+  imWarning.setPos(rectX + width - 18, rectY + height - 18);
+  imWarning.show();
 }
 
 void AnnotationGraphicsItem::initActions() {
@@ -294,19 +297,19 @@ void AnnotationGraphicsItem::removeAnnotation() {
   CommandController::instance()->execute(cmd);
 }
 
-void AnnotationGraphicsItem::removeFollowingAnnotations()
-{
+void AnnotationGraphicsItem::removeFollowingAnnotations() {
   auto o = annotation->getObject();
-  CommandController::instance()->execute(shared_ptr<AnnotatorLib::Commands::RemoveAnnotationRange>(
-                                           new AnnotatorLib::Commands::RemoveAnnotationRange(player->getSession(),
-                                                                                             o,
-                                                                                             annotation->getFrame()->getFrameNumber() + 1,
-                                                                                             o->getLastAnnotation()->getFrame()->getFrameNumber())));
+  CommandController::instance()->execute(
+      shared_ptr<AnnotatorLib::Commands::RemoveAnnotationRange>(
+          new AnnotatorLib::Commands::RemoveAnnotationRange(
+              player->getSession(), o,
+              annotation->getFrame()->getFrameNumber() + 1,
+              o->getLastAnnotation()->getFrame()->getFrameNumber())));
 }
 
 void AnnotationGraphicsItem::removeAnnotationRange() {
   RemoveRangeDialog raDialog(player->getProject(), annotation->getObject(),
-                                  annotation->getFrame()->getFrameNumber());
+                             annotation->getFrame()->getFrameNumber());
   raDialog.exec();
 }
 
@@ -503,14 +506,24 @@ void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
 }
 
 void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
+  static std::mutex mtx;
+  mtx.lock();
   shared_ptr<AnnotatorLib::Commands::Command> nA;
+  std::shared_ptr<AnnotatorLib::Session> session = player->getSession();
   if (annotation->isTemporary()) {
     nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
-        player->getSession(), annotation->getObject(), annotation->getFrame(),
-        x, y, w, h);
+        session, annotation->getObject(), annotation->getFrame(), x, y, w, h);
   } else {
     nA = std::make_shared<AnnotatorLib::Commands::UpdateAnnotation>(annotation,
                                                                     x, y, w, h);
   }
   CommandController::instance()->execute(nA);
+
+  if (QApplication::keyboardModifiers() && Qt::ControlModifier) {
+    shared_ptr<AnnotatorLib::Commands::Command> aNCommand =
+        std::make_shared<AnnotatorLib::Commands::AdjustNeighbors>(
+            session, annotation->getObject(), annotation->getFrame(), 10);
+    CommandController::instance()->execute(aNCommand);
+  }
+  mtx.unlock();
 }

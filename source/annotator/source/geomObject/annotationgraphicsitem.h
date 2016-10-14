@@ -2,6 +2,7 @@
 #define ANNOTATIONGRAPHICSITEM_H
 
 #include <memory>
+#include <mutex>
 #include <QGraphicsItem>
 #include <QColor>
 #include <QPen>
@@ -50,6 +51,8 @@ protected:
     qreal width;
     qreal height;
     Corner* corners[4];
+
+
 
     QBrush getGradient();
 
