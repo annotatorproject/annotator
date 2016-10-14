@@ -1,0 +1,51 @@
+name: @META_PROJECT_NAME@
+version: @META_VERSION@
+summary: @META_PROJECT_DESCRIPTION@
+description:
+  @META_PROJECT_DESCRIPTION@
+confinement: strict
+
+build-packages: [gcc, g++, libc6-dev, libopencv-dev, qt5-default]
+
+apps:
+  @META_PROJECT_NAME@:
+    command: qt5-launch bin/annotator
+    plugs: [x11, unity7, home, opengl, network, network-bind]
+
+parts:
+  dlib:
+    plugin: cmake
+    source: http://github.com/davisking/dlib.git
+  annotatorlib:
+    plugin: cmake
+    source: https://github.com/lasmue/annotatorlib.git
+  qt:
+    plugin: nil
+    stage-packages:
+      - libqt5core5a
+      - libqt5concurrent5
+      - libqt5printsupport5
+      - libqt5dbus5
+      - libqt5gui5
+      - libqt5network5
+      - libqt5opengl5
+      - libqt5widgets5
+      - libqt5x11extras5
+  environment:
+    plugin: copy
+    files:
+      qt5-launch: bin/qt5-launch
+  integration:
+    plugin: nil
+    stage-packages:
+      - ttf-ubuntu-font-family
+      - breeze-icon-theme
+      - hicolor-icon-theme
+      - oxygen-icon-theme
+    snap:
+      - usr/share
+
+  @META_PROJECT_NAME@:
+    plugin: cmake
+    source: https://github.com/lasmue/annotator.git
+    after: [dlib, annotatorlib, qt, environment, integration]
