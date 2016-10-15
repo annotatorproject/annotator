@@ -18,16 +18,6 @@ parts:
   dlib:
     plugin: cmake
     source: http://github.com/davisking/dlib.git
-  #annotatorlib:
-  #  plugin: cmake
-  #  source: https://github.com/lasmue/annotatorlib.git
-  #  filesets:
-  #    others:
-  #     - "LICENSE"
-  #     - "README.md"
-  #     - "VERSION"
-  #  snap:
-  #    - -$others
   qt:
     plugin: nil
     stage-packages:
@@ -44,9 +34,9 @@ parts:
     plugin: nil
     stage-packages:
       - ttf-ubuntu-font-family
-      - breeze-icon-theme
-      - hicolor-icon-theme
-      - oxygen-icon-theme
+#      - breeze-icon-theme
+#      - hicolor-icon-theme
+#      - oxygen-icon-theme
     snap:
       - usr/share
 
@@ -56,8 +46,6 @@ parts:
       - "-DOPTION_BUILD_ANNOTATORLIB=0"
     source: https://github.com/lasmue/annotator.git
     after: [dlib, qt, integration]
-    #stage:
-    #  - annotatorlib/src/annotatorlib-build/libannotatorlib.so
     organize:
       annotator: bin/annotator
       lib/plugins/: bin/plugins/
