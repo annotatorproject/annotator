@@ -44,3 +44,9 @@ cd build
 cmake -Dannotatorlib_DIR=../annotatorlib -DCMAKE_BUILD_TYPE=Debug ..
 make
 ```
+
+### Docker
+```sh
+xhost +
+docker run -e DISPLAY=$DISPLAY -e QT_X11_NOMITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/:/home/user/ chriamue/annotator
+```
