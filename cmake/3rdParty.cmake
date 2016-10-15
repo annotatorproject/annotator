@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-if( NOT annotatorlib_FOUND )
+if( NOT annotatorlib_FOUND AND OPTION_BUILD_ANNOTATORLIB)
 
 ExternalProject_Add(
     annotatorlib
@@ -24,7 +24,7 @@ set_target_properties(annotatorlib::annotatorlib PROPERTIES
 include_directories("${source_dir}/source/annotatorlib/include"
 		"${binary_dir}/source/annotatorlib/include")
 
-endif( NOT annotatorlib_FOUND )
+endif( NOT annotatorlib_FOUND AND OPTION_BUILD_ANNOTATORLIB)
 
 if( OPTION_BUILD_TESTS )
 

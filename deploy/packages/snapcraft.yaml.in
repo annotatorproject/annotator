@@ -16,9 +16,16 @@ parts:
   dlib:
     plugin: cmake
     source: http://github.com/davisking/dlib.git
-  annotatorlib:
-    plugin: cmake
-    source: https://github.com/lasmue/annotatorlib.git
+  #annotatorlib:
+  #  plugin: cmake
+  #  source: https://github.com/lasmue/annotatorlib.git
+  #  filesets:
+  #    others:
+  #     - "LICENSE"
+  #     - "README.md"
+  #     - "VERSION"
+  #  snap:
+  #    - -$others
   qt:
     plugin: nil
     stage-packages:
@@ -31,10 +38,6 @@ parts:
       - libqt5opengl5
       - libqt5widgets5
       - libqt5x11extras5
-  environment:
-    plugin: copy
-    files:
-      qt5-launch: bin/qt5-launch
   integration:
     plugin: nil
     stage-packages:
@@ -45,7 +48,31 @@ parts:
     snap:
       - usr/share
 
-  @META_PROJECT_NAME@:
+  annotator:
     plugin: cmake
+    configflags:
+      - "-DOPTION_BUILD_ANNOTATORLIB=0"
     source: https://github.com/lasmue/annotator.git
-    after: [dlib, annotatorlib, qt, environment, integration]
+    after: [dlib, qt, integration]
+    #stage:
+    #  - annotatorlib/src/annotatorlib-build/libannotatorlib.so
+    organize:
+      annotator: bin/annotator
+      lib/plugins/: bin/plugins/
+      qt5-launch: bin/qt5-launch
+    snap:
+      - -LICENSE
+      - -README.md
+      - -VERSION
+      - bin/annotator
+      - bin/plugins
+      - lib/libannotatorlib.so
+      - bin/qt5-launch
+
+  copy:
+    plugin: copy
+    source: parts/annotator/build
+    files: 
+      annotatorlib/src/annotatorlib-build/libannotatorlib.so: lib/libannotatorlib.so
+    after: [annotator]
+
