@@ -1,6 +1,7 @@
 name: @META_PROJECT_NAME@
 version: @META_VERSION@
 summary: @META_PROJECT_DESCRIPTION@
+vendor: @META_AUTHOR_ORGANIZATION@ <@META_AUTHOR_MAINTAINER@>
 description:
   @META_PROJECT_DESCRIPTION@
 confinement: strict
