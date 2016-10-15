@@ -19,6 +19,8 @@ addons:
    - build-essential
    - cmake
    - git
+   - rpm
+   - snapcraft
    - libgtk2.0-dev
    - pkg-config
    - libavcodec-dev
@@ -34,6 +36,7 @@ addons:
    - libjasper-dev
    - libdc1394-22-dev
    - libboost-all-dev
+   - lcov
 
 install:
  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
@@ -93,6 +96,21 @@ before_script:
  - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DOPTION_BUILD_TESTS=0 ..
 script:
  - make -j4
+ - make pack
+
+after_success:
+  - make snap
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  file_glob: true
+  file:
+   - $TRAVIS_BUILD_DIR/build/*.deb
+   - $TRAVIS_BUILD_DIR/build/*.rpm
+   - $TRAVIS_BUILD_DIR/build/*.snap
+  skip_cleanup: true
+  on:
+    tags: true
 
 notifications:
   webhooks:
