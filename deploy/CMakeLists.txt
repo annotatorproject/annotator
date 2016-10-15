@@ -32,6 +32,7 @@ add_custom_target(
 configure_file(packages/snapcraft.yaml.in ${PROJECT_BINARY_DIR}/snapcraft.yaml)
 configure_file(packages/qt5-launch ${PROJECT_BINARY_DIR}/qt5-launch)
 configure_file(packages/snappy-qt5.conf.in ${PROJECT_BINARY_DIR}/snappy-qt5.conf)
+configure_file(images/logo.png ${PROJECT_BINARY_DIR}/logo.png)
 
 add_custom_target(
     snap
