@@ -12,6 +12,7 @@ addons:
  apt:
   sources:
    - ubuntu-toolchain-r-test
+   - sourceline: 'ppa:snappy-dev/tools'
   
   packages:
    - gcc-5
@@ -21,6 +22,7 @@ addons:
    - git
    - rpm
    - snapcraft
+   - snap
    - libgtk2.0-dev
    - pkg-config
    - libavcodec-dev
