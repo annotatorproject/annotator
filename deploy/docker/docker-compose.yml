@@ -1,0 +1,11 @@
+version: '2'
+services:
+ annotator:
+  # image:chriamue/annotator
+  build: .
+  environment:
+   - DISPLAY=$DISPLAY
+   - QT_X11_NOMITSHM=1
+  volumes:
+   - '/tmp/.X11-unix:/tmp/.X11-unix'
+   - '~/:/home/user/'
