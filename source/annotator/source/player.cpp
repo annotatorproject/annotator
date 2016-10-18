@@ -267,7 +267,7 @@ void Player::setSliderValue(int newpos) {
 }
 
 void Player::on_frameSelected(long index) {
-  this->videoplayer->on_frameSelected(index - 1); // why -1?
+  this->videoplayer->on_frameSelected(index); // why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }
@@ -300,7 +300,7 @@ void Player::updateTimeLabel() {
   ui->frameNrLabel->setText(
       tr("<span style=' color:#FFCD00;'>"
          "%1</span> / %2")
-          .arg(QString::number(cfn), QString::number(tfn)));
+          .arg(QString::number(cfn + 1), QString::number(tfn)));
 }
 
 /**

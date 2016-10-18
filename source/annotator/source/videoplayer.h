@@ -50,10 +50,7 @@ class Videoplayer : public QThread {
 
   void wait(int msecs);
 
-  void setLength(long size);
-
   bool isImages;  // if load file is sequence of images
-  void setCurImageNr(long Nr);
   void setStop(bool state);
 
   QTime start_Timer;
@@ -89,13 +86,9 @@ class Videoplayer : public QThread {
 
   long fnumber;  // number of processed frames
 
-  long length;  // total number of frames
-
   bool stop;  // to stop the player
 
   bool modify;  // is the video modified
-
-  long curPos;  // the current playing pos
 
   int curIndex;  // current index for output images
 
@@ -126,6 +119,13 @@ class Videoplayer : public QThread {
   std::string tempFile;  // temp filename
 
   bool getNextFrame(cv::Mat &frame);  // get the next frame if any
+
+  /**
+   * @brief getFrame
+   * @param frame update to current frame
+   * @return true if frame could read, false if exception occured
+   */
+  bool getFrame(cv::Mat &frame);
 
   AnnotatorLib::ImageSet *imageSet = nullptr;
 };

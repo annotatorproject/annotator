@@ -2,27 +2,10 @@
 #include <QDebug>
 
 Videoplayer::Videoplayer(QObject *parent)
-    : QThread(parent),
-      rate(0),
-      delay(-1),
-      fnumber(0),
-      length(0),
-      stop(true),
-      modify(false),
-      curPos(0),
-      curIndex(0),
-      curLevel(0),
-      digits(0),
-      extension(".avi"),
-      levels(4),
-      alpha(10),
-      lambda_c(80),
-      fl(0.05),
-      fh(0.4),
-      chromAttenuation(0.1),
-      delta(0),
-      exaggeration_factor(2.0),
-      lambda(0) {
+    : QThread(parent), rate(0), delay(-1), fnumber(0), stop(true),
+      modify(false), curIndex(0), curLevel(0), digits(0), extension(".avi"),
+      levels(4), alpha(10), lambda_c(80), fl(0.05), fh(0.4),
+      chromAttenuation(0.1), delta(0), exaggeration_factor(2.0), lambda(0) {
   connect(this, SIGNAL(revert()), this, SLOT(revertVideo()));
 }
 
@@ -72,13 +55,7 @@ double Videoplayer::getFrameRate() {
  *
  * @return the total frame number
  */
-long Videoplayer::getTotalFrameNr() {
-  // length = capture.get(CV_CAP_PROP_FRAME_COUNT);
-  length = imageSet->size();
-  return length;
-}
-
-void Videoplayer::setLength(long size) { length = size; }
+long Videoplayer::getTotalFrameNr() { return imageSet->size(); }
 
 /**
  * getCurFrameNr	-	return the current frame number
@@ -86,13 +63,7 @@ void Videoplayer::setLength(long size) { length = size; }
  *
  * @return the current frame number
  */
-long Videoplayer::getCurFrameNr() {
-  // curPos = capture.get(CV_CAP_PROP_POS_FRAMES);
-  curPos = imageSet->getPosition();
-  return curPos;
-}
-
-void Videoplayer::setCurImageNr(long Nr) { curPos = Nr; }
+long Videoplayer::getCurFrameNr() { return imageSet->getPosition(); }
 
 /**
  * getPositionMS	-	return the position in milliseconds
@@ -100,7 +71,7 @@ void Videoplayer::setCurImageNr(long Nr) { curPos = Nr; }
  * @return the position in milliseconds
  */
 double Videoplayer::getPositionMS() {
-  return imageSet->getPosition() * this->getFrameRate();
+  return 1000.0 * imageSet->getPosition() / this->getFrameRate();
 }
 
 /**
@@ -110,9 +81,7 @@ double Videoplayer::getPositionMS() {
  * @return the length of video in milliseconds
  */
 double Videoplayer::getLengthMS() {
-  double l = 1000.0 * length / rate;
-
-  return l;
+  return 1000.0 * imageSet->size() / this->getFrameRate();
 }
 
 /**
@@ -141,9 +110,18 @@ bool Videoplayer::isOpened() { return imageSet != nullptr; }
  * @return True if success. False otherwise
  */
 bool Videoplayer::getNextFrame(cv::Mat &frame) {
-  if (!imageSet->hasNext()) return false;
+  if (!imageSet->hasNext())
+    return false;
   frame = imageSet->next();
-  // return capture.read(frame);
+  return true;
+}
+
+bool Videoplayer::getFrame(cv::Mat &frame) {
+  try {
+    frame = imageSet->getImage(imageSet->getPosition());
+  } catch (...) {
+    return false;
+  }
   return true;
 }
 
@@ -167,7 +145,8 @@ void Videoplayer::playIt() {
   cv::Mat input;
 
   // if no capture device has been set
-  if (!isOpened()) return;
+  if (!isOpened())
+    return;
 
   // is playing
   setStop(false);
@@ -180,10 +159,8 @@ void Videoplayer::playIt() {
     start_Timer.start();
 
     // read next frame if any
-    if (!getNextFrame(input)) break;
-
-    curPos = imageSet->getPosition();
-
+    if (!getNextFrame(input))
+      break;
 
     emit nextFrame(getCurFrameNr());
     // display input frame
@@ -224,9 +201,9 @@ void Videoplayer::wait(int msecs) {
  * @return True if success. False otherwise
  */
 bool Videoplayer::on_frameSelected(long index) {
-  if (index > length) {
+  if (index > getTotalFrameNr()) {
     return 1;
-  } else if (index == length) {
+  } else if (index == getTotalFrameNr()) {
     index--;
   }
 
@@ -234,16 +211,17 @@ bool Videoplayer::on_frameSelected(long index) {
 
   if (re) {
     cv::Mat frame;
-    getNextFrame(frame);
+    getFrame(frame);
     emit showFrame(frame);
-    curPos = index; //do we need this?
     emit updateFrame(getCurFrameNr());
   }
   start_Timer.restart();
   return re;
 }
 
-void Videoplayer::reload() { on_frameSelected(this->curPos - 1); }  // TODO: why -1?
+void Videoplayer::reload() {
+  on_frameSelected(getCurFrameNr());
+}
 
 /**
  * pauseIt	-	pause playing
@@ -276,9 +254,8 @@ void Videoplayer::revertVideo() {
  * close	-	close the video
  *
  */
-void Videoplayer::close() {  
+void Videoplayer::close() {
   rate = 0;
-  length = 0;
   imageSet = nullptr;
 }
 
@@ -287,10 +264,10 @@ void Videoplayer::close() {
  *
  */
 void Videoplayer::nextFrame() {
-  if (curPos < length) {
-    on_frameSelected(curPos);
+  if (getCurFrameNr() < getTotalFrameNr()) {
+    on_frameSelected(getCurFrameNr() + 1);
+    emit updateHorizontalSlider();
   }
-  emit updateHorizontalSlider();
 }
 
 /**
@@ -298,11 +275,10 @@ void Videoplayer::nextFrame() {
  *
  */
 void Videoplayer::prevFrame() {
-  if (curPos >= 0) {
-      curPos -= 2;
-      on_frameSelected(curPos);
+  if (getCurFrameNr() > 0) {
+    on_frameSelected(getCurFrameNr() - 1);
+    emit updateHorizontalSlider();
   }
-  emit updateHorizontalSlider();
 }
 
 void Videoplayer::setImageSet(AnnotatorLib::ImageSet *imageSet) {
