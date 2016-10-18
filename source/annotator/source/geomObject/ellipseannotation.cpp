@@ -1,6 +1,7 @@
 #include "ellipseannotation.h"
 
-EllipseAnnotation::EllipseAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation)
+EllipseAnnotation::EllipseAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation)
     : AnnotationGraphicsItem::AnnotationGraphicsItem(annotation) {
   init();
 }

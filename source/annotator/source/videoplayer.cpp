@@ -2,10 +2,25 @@
 #include <QDebug>
 
 Videoplayer::Videoplayer(QObject *parent)
-    : QThread(parent), rate(0), delay(-1), fnumber(0), stop(true),
-      modify(false), curIndex(0), curLevel(0), digits(0), extension(".avi"),
-      levels(4), alpha(10), lambda_c(80), fl(0.05), fh(0.4),
-      chromAttenuation(0.1), delta(0), exaggeration_factor(2.0), lambda(0) {
+    : QThread(parent),
+      rate(0),
+      delay(-1),
+      fnumber(0),
+      stop(true),
+      modify(false),
+      curIndex(0),
+      curLevel(0),
+      digits(0),
+      extension(".avi"),
+      levels(4),
+      alpha(10),
+      lambda_c(80),
+      fl(0.05),
+      fh(0.4),
+      chromAttenuation(0.1),
+      delta(0),
+      exaggeration_factor(2.0),
+      lambda(0) {
   connect(this, SIGNAL(revert()), this, SLOT(revertVideo()));
 }
 
@@ -110,8 +125,7 @@ bool Videoplayer::isOpened() { return imageSet != nullptr; }
  * @return True if success. False otherwise
  */
 bool Videoplayer::getNextFrame(cv::Mat &frame) {
-  if (!imageSet->hasNext())
-    return false;
+  if (!imageSet->hasNext()) return false;
   frame = imageSet->next();
   return true;
 }
@@ -145,8 +159,7 @@ void Videoplayer::playIt() {
   cv::Mat input;
 
   // if no capture device has been set
-  if (!isOpened())
-    return;
+  if (!isOpened()) return;
 
   // is playing
   setStop(false);
@@ -159,8 +172,7 @@ void Videoplayer::playIt() {
     start_Timer.start();
 
     // read next frame if any
-    if (!getNextFrame(input))
-      break;
+    if (!getNextFrame(input)) break;
 
     emit nextFrame(getCurFrameNr());
     // display input frame
@@ -219,9 +231,7 @@ bool Videoplayer::on_frameSelected(long index) {
   return re;
 }
 
-void Videoplayer::reload() {
-  on_frameSelected(getCurFrameNr());
-}
+void Videoplayer::reload() { on_frameSelected(getCurFrameNr()); }
 
 /**
  * pauseIt	-	pause playing

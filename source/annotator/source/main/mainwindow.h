@@ -80,7 +80,7 @@ class MainWindow : public QMainWindow {
 
   void on_actionRun_Plugins_Dialog_triggered();
 
-protected:
+ protected:
   Player playerWidget;
   AnnotationsWidget annotationsWidget;
   ObjectsWidget objectsWidget;
@@ -96,7 +96,7 @@ protected:
 
   void closeProject();
 
-private:
+ private:
   Ui::MainWindow *ui;
 };
 

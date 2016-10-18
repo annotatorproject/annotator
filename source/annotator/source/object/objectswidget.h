@@ -3,8 +3,8 @@
 
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
-#include "objectitem.h"
 #include <QWidget>
+#include "objectitem.h"
 
 namespace Ui {
 class ObjectsWidget;
@@ -19,7 +19,7 @@ class ObjectsWidget : public QWidget {
   void setSession(std::shared_ptr<AnnotatorLib::Session> session);
   void reload();
 
-protected:
+ protected:
   void addObject(shared_ptr<AnnotatorLib::Object> object);
 
  public slots:
@@ -27,7 +27,7 @@ protected:
   void on_objectSelected(shared_ptr<AnnotatorLib::Object> object);
   void on_objectAdded(shared_ptr<AnnotatorLib::Object> object);
   void on_objectRemoved(shared_ptr<AnnotatorLib::Object> object);
-private slots:
+ private slots:
   void on_listWidget_doubleClicked(const QModelIndex &index);
 
  private:

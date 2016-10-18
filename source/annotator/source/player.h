@@ -54,7 +54,7 @@ class Player : public QWidget {
   void updateFrame(long frame);
   void showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame);
   void setSliderValue(int newpos);
-  //void on_objectSelected(shared_ptr<AnnotatorLib::Object> obj);
+  // void on_objectSelected(shared_ptr<AnnotatorLib::Object> obj);
   void on_frameSelected(long index);  // Jump to a position
   void on_autoAnnotate(bool);
   void reload();
@@ -73,9 +73,9 @@ class Player : public QWidget {
  protected slots:
   void setInputCoordinate(QPoint point);
 
-private slots:
+ private slots:
   void on_horizontalSlider_sliderMoved(int pos);
-  void on_speedSpinBox_valueChanged(int arg1);   //change video playback speed
+  void on_speedSpinBox_valueChanged(int arg1);  // change video playback speed
   void on_updateBtn();
   void on_btnPlay_clicked();
   void sleep(int msecs);  // sleep for a while
@@ -99,7 +99,7 @@ private slots:
 
   cv::Mat currentFrame;
 
-  std::list<AnnotationGraphicsItem*> annotationGraphics;
+  std::list<AnnotationGraphicsItem *> annotationGraphics;
 
   void updateStatus(bool var);
   void updateTimeLabel();

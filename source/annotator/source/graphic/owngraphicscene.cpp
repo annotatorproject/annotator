@@ -1,10 +1,10 @@
-#include <algorithm>
 #include <QDebug>
 #include <QSettings>
+#include <algorithm>
 
-#include "owngraphicscene.h"
 #include "graphic/owngraphicscene.h"
 #include "gui/newannotationdialog.h"
+#include "owngraphicscene.h"
 
 OwnGraphicScene::OwnGraphicScene()
     : isDrawn(false), isLeftPressed(false), isItemMove(false) {}
@@ -155,7 +155,8 @@ void OwnGraphicScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void OwnGraphicScene::setCurrentFrame(int frame) { this->currentFrame = frame; }
 
-void OwnGraphicScene::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
+void OwnGraphicScene::setSession(
+    std::shared_ptr<AnnotatorLib::Session> session) {
   this->session = session;
 }
 
@@ -168,8 +169,10 @@ void OwnGraphicScene::setSession(std::shared_ptr<AnnotatorLib::Session> session)
  *
 */
 QPoint OwnGraphicScene::adjustCoordinate(QPointF MousePos) {
-  int x_adj = std::max(std::min((int)std::round(MousePos.x()), (int)this->width()), 0);
-  int y_adj = std::max(std::min((int)std::round(MousePos.y()), (int)this->height()), 0);
+  int x_adj =
+      std::max(std::min((int)std::round(MousePos.x()), (int)this->width()), 0);
+  int y_adj =
+      std::max(std::min((int)std::round(MousePos.y()), (int)this->height()), 0);
   return QPoint(x_adj, y_adj);
   // I commented out because there was an offset. Without it works.
   // return QPoint(((MousePos.x() * inputCoordinate.x()) /
@@ -181,6 +184,7 @@ QPointF OwnGraphicScene::resetCoordinate(QPointF RectPos) {
                  ((RectPos.y() * this->height()) / inputCoordinate.y()));
 }
 
-void OwnGraphicScene::on_signal_objectSelection(shared_ptr<AnnotatorLib::Object> obj) {
+void OwnGraphicScene::on_signal_objectSelection(
+    shared_ptr<AnnotatorLib::Object> obj) {
   this->selected_obj = obj;
 }

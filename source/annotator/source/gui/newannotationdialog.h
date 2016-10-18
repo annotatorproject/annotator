@@ -15,7 +15,8 @@ class NewAnnotationDialog : public QDialog {
  public:
   explicit NewAnnotationDialog(std::shared_ptr<AnnotatorLib::Session> session,
                                unsigned long frame_nmb,
-                               shared_ptr<AnnotatorLib::Object> sel_obj = shared_ptr<AnnotatorLib::Object>(nullptr),
+                               shared_ptr<AnnotatorLib::Object> sel_obj =
+                                   shared_ptr<AnnotatorLib::Object>(nullptr),
                                QWidget *parent = 0);
   ~NewAnnotationDialog();
   void setDimensions(float x, float y, float w, float h);

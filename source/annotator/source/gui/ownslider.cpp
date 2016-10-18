@@ -21,10 +21,9 @@ void OwnSlider::mousePressEvent(QMouseEvent *event) {
       newVal = minimum() +
                ((maximum() - minimum()) * (height() - event->y())) / height();
     else
-      halfHandleWidth = (0.5 * sr.width()) + 0.5; // Correct rounding
+      halfHandleWidth = (0.5 * sr.width()) + 0.5;  // Correct rounding
     adaptedPosX = event->x();
-    if (adaptedPosX < halfHandleWidth)
-      adaptedPosX = halfHandleWidth;
+    if (adaptedPosX < halfHandleWidth) adaptedPosX = halfHandleWidth;
     if (adaptedPosX > width() - halfHandleWidth)
       adaptedPosX = width() - halfHandleWidth;
 

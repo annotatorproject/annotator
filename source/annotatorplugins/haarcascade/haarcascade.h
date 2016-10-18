@@ -10,8 +10,8 @@
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Frame.h>
 
-#include "widget.h"
 #include <annotator/plugins/plugin.h>
+#include "widget.h"
 
 using namespace AnnotatorLib;
 using std::shared_ptr;
@@ -28,7 +28,7 @@ class Haarcascade : public Plugin {
   Q_PLUGIN_METADATA(IID "annotator.haarcascade" FILE "haarcascade.json")
   Q_INTERFACES(Annotator::Plugin)
 
-public:
+ public:
   Haarcascade();
   ~Haarcascade();
   QString getName() override;
@@ -44,7 +44,8 @@ public:
   void setObjectName(std::string name);
 
   QWidget *getWidget();
-protected:
+
+ protected:
   shared_ptr<Frame> frame = 0;
   shared_ptr<Frame> lastFrame = 0;
 
@@ -63,4 +64,4 @@ protected:
 }
 }
 
-#endif // HAARCASCADE_H
+#endif  // HAARCASCADE_H

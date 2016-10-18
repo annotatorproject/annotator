@@ -1,9 +1,9 @@
 #ifndef PLUGINSWIDGET_H
 #define PLUGINSWIDGET_H
 
-#include <memory>
-#include <QWidget>
 #include <AnnotatorLib/Object.h>
+#include <QWidget>
+#include <memory>
 
 using std::shared_ptr;
 
@@ -19,7 +19,7 @@ class PluginsWidget : public QWidget {
   ~PluginsWidget();
 
   void reload();
-  void setAutoAnnotate(bool b) { autoAnnotate = b;}
+  void setAutoAnnotate(bool b) { autoAnnotate = b; }
 
  signals:
   void signal_autoAnnotate(bool);
@@ -27,7 +27,7 @@ class PluginsWidget : public QWidget {
  public slots:
   void on_objectSelected(shared_ptr<AnnotatorLib::Object>);
 
-private slots:
+ private slots:
   void on_auto_annotate_checkBox_clicked(bool checked);
   void on_comboBox_currentIndexChanged(const QString &arg1);
 

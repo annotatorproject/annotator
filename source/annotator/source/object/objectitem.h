@@ -13,7 +13,8 @@ class ObjectItem : public QWidget {
 
  public:
   ObjectItem() = delete;
-  explicit ObjectItem(shared_ptr<AnnotatorLib::Object> object, QWidget *parent = 0);
+  explicit ObjectItem(shared_ptr<AnnotatorLib::Object> object,
+                      QWidget *parent = 0);
   ~ObjectItem();
   void reload();
   shared_ptr<AnnotatorLib::Object> getObject();

@@ -1,30 +1,30 @@
 #include "player.h"
+#include <AnnotatorLib/Algo/InterpolateAnnotation.h>
+#include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Commands/UpdateAnnotation.h>
+#include <AnnotatorLib/Frame.h>
+#include <geomObject/annotationgraphicsitem.h>
+#include <QApplication>
+#include <QDebug>
+#include <QFile>
+#include <QMessageBox>
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "geomObject/annotationgraphicsitemfactory.h"
 #include "plugins/pluginloader.h"
 #include "ui_player.h"
-#include <AnnotatorLib/Algo/InterpolateAnnotation.h>
-#include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <AnnotatorLib/Commands/UpdateAnnotation.h>
-#include <AnnotatorLib/Frame.h>
-#include <QApplication>
-#include <QDebug>
-#include <QFile>
-#include <QMessageBox>
-#include <geomObject/annotationgraphicsitem.h>
 
 Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   ui->setupUi(this);
-  videoplayer = new Videoplayer(); // Creating an instance of class videoplayer
+  videoplayer = new Videoplayer();  // Creating an instance of class videoplayer
 
   ui->btnNext->setAutoRepeat(true);
   ui->btnPrev->setAutoRepeat(true);
 
-  videoplayer->setDelay(ui->speedSpinBox->value()); // get default value
+  videoplayer->setDelay(ui->speedSpinBox->value());  // get default value
 
-  updateStatus(false); // set Status disable
-  on_updateBtn();      // update the button Play & Pause
+  updateStatus(false);  // set Status disable
+  on_updateBtn();       // update the button Play & Pause
 
   connect(videoplayer, SIGNAL(nextFrame(long)), this, SLOT(on_nextFrame(long)));
   connect(videoplayer, SIGNAL(showFrame(cv::Mat)), this,
@@ -90,7 +90,7 @@ void Player::closeProject() {
   setProject(nullptr);
   this->videoplayer->close();
   scene->setSession(nullptr);
-  updateStatus(false); // disable ui
+  updateStatus(false);  // disable ui
 }
 
 std::shared_ptr<AnnotatorLib::Project> Player::getProject() const {
@@ -196,7 +196,7 @@ void Player::updateFrame(long frame_nmb) {
   shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
   if (!f)
     f = std::make_shared<AnnotatorLib::Frame>(
-        frame_nmb); // create temporary frame
+        frame_nmb);  // create temporary frame
   this->scene->setCurrentFrame(frame_nmb);
   showAnnotationsOfFrame(f);
   this->scene->update();
@@ -206,7 +206,7 @@ void Player::runPlugin(unsigned long frame_nmb) {
   shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_nmb);
   if (!f)
     f = std::make_shared<AnnotatorLib::Frame>(
-        frame_nmb); // create temporary frame
+        frame_nmb);  // create temporary frame
 
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getCurrent();
@@ -226,7 +226,6 @@ void Player::showAnnotationsOfFrame(shared_ptr<AnnotatorLib::Frame> frame) {
   for (shared_ptr<AnnotatorLib::Annotation> annotation :
        AnnotatorLib::Algo::InterpolateAnnotation::getInterpolations(
            this->session, frame)) {
-
     AnnotationGraphicsItem *graphicsItem =
         AnnotationGraphicsItemFactory::createItem(annotation);
 
@@ -267,7 +266,7 @@ void Player::setSliderValue(int newpos) {
 }
 
 void Player::on_frameSelected(long index) {
-  this->videoplayer->on_frameSelected(index); // why -1?
+  this->videoplayer->on_frameSelected(index);  // why -1?
   updateTimeLabel();
   updateHorizontalSlider();
 }
@@ -276,7 +275,6 @@ void Player::on_frameSelected(long index) {
  * updateTimeLabel	-	update Time Label
  */
 void Player::updateTimeLabel() {
-
   double pos_ms = 0;
   double length_ms = 0;
   long cfn = 0;
@@ -337,10 +335,9 @@ void Player::enableDrawing(bool enable) {
   this->ui->playerScrollArea->setEnabled(enable);
 }
 
-void Player::on_nextFrame(long frame) // wrong frame number???
+void Player::on_nextFrame(long frame)  // wrong frame number???
 {
-  if (autoAnnotation)
-    runPlugin(frame);
+  if (autoAnnotation) runPlugin(frame);
 }
 
 bool Player::eventFilter(QObject *object, QEvent *event) {
@@ -349,16 +346,16 @@ bool Player::eventFilter(QObject *object, QEvent *event) {
         object->objectName() == "playerScrollArea") {
       QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
       switch (keyEvent->key()) {
-      case Qt::Key_Left:
-        on_btnPrev_clicked();
-        break;
-      case Qt::Key_Right:
-        on_btnNext_clicked();
-        break;
-      case Qt::Key_Space:
-        break;
-      default:
-        break;
+        case Qt::Key_Left:
+          on_btnPrev_clicked();
+          break;
+        case Qt::Key_Right:
+          on_btnNext_clicked();
+          break;
+        case Qt::Key_Space:
+          break;
+        default:
+          break;
       };
     }
   }

@@ -12,7 +12,8 @@ class ClassesDialog : public QDialog {
   Q_OBJECT
 
  public:
-  explicit ClassesDialog(std::shared_ptr<AnnotatorLib::Session> session, QWidget *parent = 0);
+  explicit ClassesDialog(std::shared_ptr<AnnotatorLib::Session> session,
+                         QWidget *parent = 0);
   ~ClassesDialog();
 
  private slots:

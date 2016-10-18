@@ -10,7 +10,9 @@ NewProjectDialog::NewProjectDialog(QWidget *parent)
 
 NewProjectDialog::~NewProjectDialog() { delete ui; }
 
-std::shared_ptr<AnnotatorLib::Project> NewProjectDialog::getProject() { return this->project; }
+std::shared_ptr<AnnotatorLib::Project> NewProjectDialog::getProject() {
+  return this->project;
+}
 
 QString NewProjectDialog::getStorageType() {
   QString storageType;

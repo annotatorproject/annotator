@@ -88,14 +88,12 @@ void PluginRunner::addObject(shared_ptr<AnnotatorLib::Object> object) {
 void PluginRunner::calculate(shared_ptr<AnnotatorLib::Object> object,
                              Annotator::Plugin *plugin, int start, int end) {
   for (int i = start; i <= end; ++i) {
-    if (stopCalculation)
-      return;
+    if (stopCalculation) return;
 
     ui->framesProgressBar->setValue(i);
     shared_ptr<AnnotatorLib::Frame> f = project->getSession()->getFrame(i);
 
-    if (!f)
-      f = std::make_shared<AnnotatorLib::Frame>(i); // create new frame
+    if (!f) f = std::make_shared<AnnotatorLib::Frame>(i);  // create new frame
 
     plugin->calculate(object, f, true);
   }
@@ -106,8 +104,7 @@ void PluginRunner::on_startButton_clicked() {
 
   ui->startButton->setText(stopCalculation ? "Start" : "Stop");
 
-  if (ui->pluginsListWidget->currentRow() == -1)
-    return;
+  if (ui->pluginsListWidget->currentRow() == -1) return;
   Annotator::Plugin *plugin =
       Annotator::PluginLoader::getInstance().getPlugins().at(
           ui->pluginsListWidget->currentRow());
@@ -128,8 +125,7 @@ void PluginRunner::on_startButton_clicked() {
 
     if (plugin->requiresObject()) {
       for (QListWidgetItem *item : ui->objectsListWidget->selectedItems()) {
-        if (stopCalculation)
-          break;
+        if (stopCalculation) break;
         int row = ui->objectsListWidget->row(item);
         ui->objectsProgressBar->setValue(row + 1);
         unsigned long obj_id = objectRowToIdMap[row];
@@ -165,7 +161,6 @@ void PluginRunner::updateStartSliderMinMax() {
 }
 
 void PluginRunner::updateEndSliderMinMax() {
-
   ui->endFrameSlider->setMaximum(project->getImageSet()->size());
   ui->endFrameSpinBox->setMaximum(project->getImageSet()->size());
   ui->endFrameSpinBox->setMinimum(ui->startFrameSlider->value());

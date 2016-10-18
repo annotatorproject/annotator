@@ -61,8 +61,8 @@ std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
 
       // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
       shared_ptr<Commands::NewAnnotation> nA =
-          std::make_shared<Commands::NewAnnotation>(project->getSession(), this->object, frame, x, y,
-                                                    w, h);
+          std::make_shared<Commands::NewAnnotation>(
+              project->getSession(), this->object, frame, x, y, w, h);
       commands.push_back(nA);
     }
 

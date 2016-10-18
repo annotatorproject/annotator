@@ -14,14 +14,13 @@ namespace Annotator {
 
 class Plugin : virtual public QObject,
                public AnnotatorAlgo::AnnotatorAlgoInterface {
-public:
+ public:
   virtual QString getName() = 0;
   virtual QWidget *getWidget() = 0;
 
-  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
-  calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame,
-            bool execute_commands = true) {
+  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>> calculate(
+      shared_ptr<AnnotatorLib::Object> object,
+      shared_ptr<AnnotatorLib::Frame> frame, bool execute_commands = true) {
     std::shared_ptr<AnnotatorLib::Session> session = getProject()->getSession();
 
     if (requiresObject()) {
@@ -32,7 +31,7 @@ public:
 
       setObject(object);
       shared_ptr<AnnotatorLib::Annotation> annotationAtFrame =
-          session->getAnnotation(frame, object); // find annotation at keyFrame
+          session->getAnnotation(frame, object);  // find annotation at keyFrame
 
       if (!annotationAtFrame) {
         shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
@@ -46,13 +45,14 @@ public:
       }
     }
 
-    cv::Mat image = getProject()->getImageSet()->getImage(frame->getFrameNumber());
+    cv::Mat image =
+        getProject()->getImageSet()->getImage(frame->getFrameNumber());
     setFrame(frame, image);
 
     std::vector<shared_ptr<AnnotatorLib::Commands::Command>> commands =
         getCommands();
 
-    if ( execute_commands) {
+    if (execute_commands) {
       for (shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
         session->execute(command);
       }
@@ -64,4 +64,4 @@ public:
 
 Q_DECLARE_INTERFACE(Annotator::Plugin, "Annotator.Plugin/1.0")
 
-#endif // PLUGIN_H
+#endif  // PLUGIN_H

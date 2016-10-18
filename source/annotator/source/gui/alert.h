@@ -12,9 +12,9 @@ class Alert : public QMessageBox {
 
  public:
   Alert() : timeout(5), autoClose(false), currentTime(0) {}
-  void showEvent ( QShowEvent * event );
-  void setAutoClose ( bool b ) { autoClose = b; }
-  void setTimeout ( int time ) { timeout = time; }
+  void showEvent(QShowEvent *event);
+  void setAutoClose(bool b) { autoClose = b; }
+  void setTimeout(int time) { timeout = time; }
 
  protected:
   void timerEvent(QTimerEvent *event);

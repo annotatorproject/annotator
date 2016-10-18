@@ -39,7 +39,8 @@ class CommandController : public QObject {
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   QWidget *main_widget = nullptr;
 
-  void send_signals(shared_ptr<AnnotatorLib::Commands::Command> command, bool undo);
+  void send_signals(shared_ptr<AnnotatorLib::Commands::Command> command,
+                    bool undo);
   void enableBusySpinner(bool enable);
 };
 

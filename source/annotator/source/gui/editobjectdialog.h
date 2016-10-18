@@ -13,7 +13,8 @@ class EditObjectDialog : public QDialog {
 
  public:
   explicit EditObjectDialog(std::shared_ptr<AnnotatorLib::Session> session,
-                            shared_ptr<AnnotatorLib::Object> obj, QWidget *parent = 0);
+                            shared_ptr<AnnotatorLib::Object> obj,
+                            QWidget *parent = 0);
   ~EditObjectDialog();
 
   void updateObject();

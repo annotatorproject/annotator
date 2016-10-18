@@ -5,8 +5,9 @@
 #include "controller/commandcontroller.h"
 #include "ui_editobjectdialog.h"
 
-EditObjectDialog::EditObjectDialog(std::shared_ptr<AnnotatorLib::Session> session,
-                                   shared_ptr<AnnotatorLib::Object> obj, QWidget* parent)
+EditObjectDialog::EditObjectDialog(
+    std::shared_ptr<AnnotatorLib::Session> session,
+    shared_ptr<AnnotatorLib::Object> obj, QWidget* parent)
     : QDialog(parent),
       session(session),
       obj(obj),
@@ -42,7 +43,8 @@ void EditObjectDialog::updateObject() {
 void EditObjectDialog::reloadClasses() {
   ui->objectClassComboBox->clear();
   for (auto& pair : session->getClasses()) {
-    ui->objectClassComboBox->addItem(QString::fromStdString(pair.second->getName()));
+    ui->objectClassComboBox->addItem(
+        QString::fromStdString(pair.second->getName()));
   }
 }
 

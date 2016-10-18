@@ -9,9 +9,9 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Session.h>
+#include <dlib/opencv.h>
 #include <QDebug>
 #include <QtGui/QPainter>
-#include <dlib/opencv.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/video/tracking.hpp>
 
@@ -45,8 +45,7 @@ shared_ptr<Object> CorrelationTracker::getObject() const { return object; }
 
 // second call
 void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
-  if (!annotation || annotation->getObject() != object)
-    return;
+  if (!annotation || annotation->getObject() != object) return;
 
   if (trackerStarted &&
       annotation->getObject() == lastAnnotation->getObject() &&
@@ -59,8 +58,7 @@ void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
   selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
                        lastAnnotation->getWidth(), lastAnnotation->getHeight());
 
-  if (this->frameImg.empty())
-    return;
+  if (this->frameImg.empty()) return;
   dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
   tracker.start_track(cvimg, dlib::rectangle(selection.x, selection.y,
                                              selection.x + selection.width,
@@ -79,7 +77,6 @@ std::vector<shared_ptr<Commands::Command>> CorrelationTracker::getCommands() {
     auto res = findObject();
 
     if (res.first.width > 0) {
-
       int w = res.first.width;
       int h = res.first.height;
 
@@ -105,9 +102,9 @@ std::pair<cv::Rect, float> CorrelationTracker::findObject() {
   if (trackerStarted) {
     dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
     try {
-      ret.second = tracker.update(cvimg); // returns the peak to side-lobe
-                                          // ratio.  This is a number that
-                                          // measures how
+      ret.second = tracker.update(cvimg);  // returns the peak to side-lobe
+                                           // ratio.  This is a number that
+                                           // measures how
       dlib::rectangle found = tracker.get_position();
       ret.first =
           cv::Rect(found.left(), found.top(), found.width(), found.height());

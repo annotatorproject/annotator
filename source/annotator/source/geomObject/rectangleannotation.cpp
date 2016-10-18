@@ -1,6 +1,7 @@
 #include "rectangleannotation.h"
 
-RectangleAnnotation::RectangleAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation)
+RectangleAnnotation::RectangleAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation)
     : AnnotationGraphicsItem::AnnotationGraphicsItem(annotation) {
   assert(annotation->getObject());
   init();

@@ -9,13 +9,14 @@ AttributesWidget::AttributesWidget(QWidget *parent)
 
 AttributesWidget::~AttributesWidget() { delete ui; }
 
-void AttributesWidget::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
+void AttributesWidget::setSession(
+    std::shared_ptr<AnnotatorLib::Session> session) {
   this->session = session;
 }
 
 void AttributesWidget::reload() {
   ui->listWidget->clear();
-  for (auto& pair : session->getAttributes()) {
+  for (auto &pair : session->getAttributes()) {
     QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
 
     AttributeItem *attributeItem = new AttributeItem(pair.second);

@@ -1,9 +1,9 @@
 #ifndef SELECTIONCONTROLLER_H
 #define SELECTIONCONTROLLER_H
 
-#include <memory>
-#include <QObject>
 #include <AnnotatorLib/Object.h>
+#include <QObject>
+#include <memory>
 
 /**
  * @brief The SelectionController class
@@ -20,7 +20,7 @@ class SelectionController : public QObject {
   void setSelectedFrame(shared_ptr<AnnotatorLib::Frame> f);
   void setSelectedFrame(long nmb);
 
-signals:
+ signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
   void signal_frameSelection(long nmb);
 

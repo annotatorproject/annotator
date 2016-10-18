@@ -4,20 +4,17 @@
 #include <AnnotatorLib/Annotation.h>
 #include "annotationgraphicsitem.h"
 
-class RectangleAnnotation : public AnnotationGraphicsItem
-{
-public:
-    RectangleAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation);
+class RectangleAnnotation : public AnnotationGraphicsItem {
+ public:
+  RectangleAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation);
 
-    virtual QRectF boundingRect() const;
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+  virtual QRectF boundingRect() const;
+  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                     QWidget *widget = 0);
 
-protected:
-    void init();
-    //void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
-
-
+ protected:
+  void init();
+  // void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 };
 
-#endif // RECTANGLEANNOTATION_H
+#endif  // RECTANGLEANNOTATION_H

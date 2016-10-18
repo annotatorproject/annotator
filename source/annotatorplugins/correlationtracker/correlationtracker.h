@@ -3,11 +3,11 @@
 
 #include "widget.h"
 
+#include <annotator/plugins/plugin.h>
+#include <dlib/image_processing.h>
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 #include <QtGui/QIcon>
-#include <annotator/plugins/plugin.h>
-#include <dlib/image_processing.h>
 #include <opencv2/core/mat.hpp>
 
 using namespace AnnotatorLib;
@@ -26,7 +26,7 @@ class CorrelationTracker : public Plugin {
                         "correlationtracker.json")
   Q_INTERFACES(Annotator::Plugin)
 
-public:
+ public:
   CorrelationTracker();
   ~CorrelationTracker();
   QString getName() override;
@@ -38,7 +38,7 @@ public:
   void setLastAnnotation(shared_ptr<Annotation> annotation) override;
   std::vector<shared_ptr<Commands::Command>> getCommands() override;
 
-protected:
+ protected:
   cv::Mat frameImg;
   shared_ptr<Annotation> lastAnnotation = nullptr;
   shared_ptr<Object> object = nullptr;
@@ -67,4 +67,4 @@ protected:
 }
 }
 
-#endif // CORRELATIONTRACKER_H
+#endif  // CORRELATIONTRACKER_H

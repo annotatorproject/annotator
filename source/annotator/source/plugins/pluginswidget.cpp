@@ -32,10 +32,8 @@ void PluginsWidget::reload() {
   ui->scrollArea->updateGeometry();
 }
 
-
-void  PluginsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> obj) {
-  if(autoAnnotate)
-    ui->comboBox->setDisabled(!obj);
+void PluginsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> obj) {
+  if (autoAnnotate) ui->comboBox->setDisabled(!obj);
 }
 
 void PluginsWidget::on_comboBox_currentIndexChanged(const QString &arg1) {
@@ -54,11 +52,9 @@ void PluginsWidget::on_comboBox_currentIndexChanged(const QString &arg1) {
   }
 }
 
-void PluginsWidget::on_auto_annotate_checkBox_clicked(bool checked)
-{
+void PluginsWidget::on_auto_annotate_checkBox_clicked(bool checked) {
   this->autoAnnotate = checked;
   this->ui->comboBox->setEnabled(checked);
-    if(this->lastWidget)
-        lastWidget->setEnabled(checked);
+  if (this->lastWidget) lastWidget->setEnabled(checked);
   emit signal_autoAnnotate(checked);
 }

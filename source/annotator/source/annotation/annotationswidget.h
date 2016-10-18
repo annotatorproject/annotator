@@ -1,10 +1,10 @@
 #ifndef ANNOTATIONSWIDGET_H
 #define ANNOTATIONSWIDGET_H
 
-#include <unordered_map>
 #include <AnnotatorLib/Session.h>
 #include <QTreeWidgetItem>
 #include <QWidget>
+#include <unordered_map>
 
 namespace Ui {
 class AnnotationsWidget;
@@ -26,7 +26,9 @@ class AnnotationsWidget : public QWidget {
 
  public slots:
   void on_refreshSession();
-  void on_objectAdded(shared_ptr<AnnotatorLib::Object> object) { addObject(object); }
+  void on_objectAdded(shared_ptr<AnnotatorLib::Object> object) {
+    addObject(object);
+  }
   void on_objectRemoved(shared_ptr<AnnotatorLib::Object> object);
   void on_annotationAdded(shared_ptr<AnnotatorLib::Annotation> a);
   void on_annotationRemoved(shared_ptr<AnnotatorLib::Annotation> a);
