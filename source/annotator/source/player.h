@@ -45,7 +45,7 @@ class Player : public QWidget {
   OwnGraphicScene *scene;
   OwnGraphicView *overlay;
 
-  QString getRateValue();
+  int getRateValue();
   std::shared_ptr<AnnotatorLib::Session> getSession() const;
   std::shared_ptr<AnnotatorLib::Project> getProject() const;
 

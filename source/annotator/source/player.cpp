@@ -77,9 +77,7 @@ void Player::setInputCoordinate(QPoint point) {
 
 void Player::setRateLabel(QLabel *label) { this->rateLabel = label; }
 
-QString Player::getRateValue() {
-  return "FPS: " + QString::number(videoplayer->rate);
-}
+int Player::getRateValue() { return (int)videoplayer->getFrameRate(); }
 
 std::shared_ptr<AnnotatorLib::Session> Player::getSession() const {
   return this->session;
@@ -367,7 +365,6 @@ bool Player::eventFilter(QObject *object, QEvent *event) {
  *
  */
 void Player::on_speedSpinBox_valueChanged(int f) {
-  // TODO: set proper framerate
   videoplayer->setDelay((100.f * videoplayer->getFrameRate()) / (float)f);
 }
 

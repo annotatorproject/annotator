@@ -2,54 +2,8 @@
 #include <QDebug>
 
 Videoplayer::Videoplayer(QObject *parent)
-    : QThread(parent),
-      rate(0),
-      delay(-1),
-      fnumber(0),
-      stop(true),
-      modify(false),
-      curIndex(0),
-      curLevel(0),
-      digits(0),
-      extension(".avi"),
-      levels(4),
-      alpha(10),
-      lambda_c(80),
-      fl(0.05),
-      fh(0.4),
-      chromAttenuation(0.1),
-      delta(0),
-      exaggeration_factor(2.0),
-      lambda(0) {
+    : QThread(parent), delay(-1), stop(true), curIndex(0) {
   connect(this, SIGNAL(revert()), this, SLOT(revertVideo()));
-}
-
-/**
- * setInput	-	set the name of the expected video file
- *
- * @param fileName	-	the name of the video file
- *
- * @return True if success. False otherwise
- */
-bool Videoplayer::setInput(const std::string &fileName) {
-  fnumber = 0;
-  tempFile = fileName;
-
-  // In case a resource was already
-  // associated with the VideoCapture instance
-  rate = getFrameRate();
-
-  cv::Mat input;
-
-  // show first frame
-  getNextFrame(input);
-  emit setInputCoordinate(QPoint(input.cols, input.rows));
-
-  emit showFrame(input);
-  emit updateFrame(getCurFrameNr());
-
-  emit updateBtn_signal();
-  return true;
 }
 
 /**
@@ -58,11 +12,7 @@ bool Videoplayer::setInput(const std::string &fileName) {
  *
  * @return the frame rate
  */
-double Videoplayer::getFrameRate() {
-  // TODO:
-  // return capture.get(CV_CAP_PROP_FPS);
-  return 25;
-}
+double Videoplayer::getFrameRate() { return this->imageSet->getFPS(); }
 
 /**
  * getTotalFrameNr	-	return the total frame number
@@ -264,10 +214,7 @@ void Videoplayer::revertVideo() {
  * close	-	close the video
  *
  */
-void Videoplayer::close() {
-  rate = 0;
-  imageSet = nullptr;
-}
+void Videoplayer::close() { imageSet = nullptr; }
 
 /**
  * nextFrame	-	display the next frame of the sequence
@@ -293,4 +240,16 @@ void Videoplayer::prevFrame() {
 
 void Videoplayer::setImageSet(AnnotatorLib::ImageSet *imageSet) {
   this->imageSet = imageSet;
+  if (this->imageSet) {
+    cv::Mat input;
+
+    // show first frame
+    getNextFrame(input);
+    emit setInputCoordinate(QPoint(input.cols, input.rows));
+
+    emit showFrame(input);
+    emit updateFrame(getCurFrameNr());
+
+    emit updateBtn_signal();
+  }
 }

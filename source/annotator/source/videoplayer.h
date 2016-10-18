@@ -29,9 +29,8 @@ class Videoplayer : public QThread {
  public:
   explicit Videoplayer(QObject *parent = 0);
 
-  bool setInput(const std::string &fileName);  // set the name of the video file
-  double getFrameRate();                       // return the frame rate
-  long getTotalFrameNr();                      // return the total frame number
+  double getFrameRate();   // return the frame rate
+  long getTotalFrameNr();  // return the total frame number
   long getCurFrameNr();    // return the current frame number
   double getPositionMS();  // return the position in milliseconds
   double getLengthMS();    // return the video length in milliseconds
@@ -54,7 +53,7 @@ class Videoplayer : public QThread {
   void setStop(bool state);
 
   QTime start_Timer;
-  double rate;  // video frame rate
+  // double rate;  // video frame rate
 
  public slots:
   bool on_frameSelected(long index);  // Jump to a position
@@ -84,39 +83,9 @@ class Videoplayer : public QThread {
  private:
   int delay;  // delay between each frame processing
 
-  long fnumber;  // number of processed frames
-
   bool stop;  // to stop the player
 
-  bool modify;  // is the video modified
-
   int curIndex;  // current index for output images
-
-  int curLevel;  // current level of pyramid
-
-  int digits;  // number of digits in output image filename
-
-  std::string extension;  // extension of output images
-
-  int levels;  // level numbers of image pyramid
-
-  float alpha;  // amplification factor
-
-  float lambda_c;  // cut-off wave length
-
-  float fl;  // low cut-off
-
-  float fh;  // high cut-off
-
-  float chromAttenuation;  // chromAttenuation
-
-  float delta;  // delta
-
-  float exaggeration_factor;  // extraggon factor
-
-  float lambda;  // lambda
-
-  std::string tempFile;  // temp filename
 
   bool getNextFrame(cv::Mat &frame);  // get the next frame if any
 

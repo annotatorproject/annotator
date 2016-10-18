@@ -119,7 +119,7 @@ void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
     selectedObject.setProject(project);
     attributesWidget.setSession(this->session);
 
-    this->setRateValue(playerWidget.getRateValue());
+    this->setRateValue("FPS: " + QString::number(playerWidget.getRateValue()));
     setWindowTitle(project);
 
     CommandController::instance()->doEmitRefreshSession();

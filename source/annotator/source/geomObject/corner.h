@@ -33,11 +33,11 @@ class Corner : public QGraphicsItem {
 
  private:
   virtual QRectF boundingRect() const;  //< must be re-implemented in this class
-                                        //to provide the diminsions of the box
-                                        //to the QGraphicsView
+                                        // to provide the diminsions of the box
+  // to the QGraphicsView
 
   QColor cornerborderColor;  //< the hover event handlers will toggle this
-                             //between red and black
+                             // between red and black
   QPen cornerborderPen;      //< the pen is used to paint the red/black border
 
   qreal cornerwidth;
