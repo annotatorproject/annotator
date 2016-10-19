@@ -39,6 +39,9 @@
       </item>
       <item row="0" column="3">
        <widget class="QRadioButton" name="sqlRadioButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>SQL</string>
         </property>
@@ -46,6 +49,9 @@
       </item>
       <item row="0" column="2">
        <widget class="QRadioButton" name="xmlRadioButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>XML</string>
         </property>
