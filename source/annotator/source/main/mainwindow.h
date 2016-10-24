@@ -93,7 +93,7 @@ class MainWindow : public QMainWindow {
   QLabel *rateLabel;
 
   void enableDrawing(bool enable);
-
+  void lock(bool b);
   void closeProject();
 
  private:

@@ -33,6 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
   rateLabel = new QLabel;     // Frame rate
   rateLabel->setText("fps");  // Add to Status bar
 
+  // initial locking drawing area and plugins
+  enableDrawing(false);
+
   // make some initialization
   ui->statusBar->addPermanentWidget(rateLabel);
   playerWidget.setRateLabel(rateLabel);
@@ -133,7 +136,7 @@ void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
     addRecentProject(QString::fromStdString(project->getPath()));
 
     // lock/unlock project
-    this->ui->actionLock_project->setChecked(!project->isActive());
+    lock(!project->isActive());
   }
 }
 
@@ -175,6 +178,10 @@ void MainWindow::closeProject() {
   if (!this->project) {
     return;
   }
+  // lock drawing area and plugins
+  enableDrawing(false);
+
+  //ask if project should be saved
   QCheckBox *cb_lock =
       new QCheckBox("Yes, lock this project. Labeling is completed now.");
   cb_lock->setChecked(!project->isActive());
@@ -201,7 +208,7 @@ void MainWindow::closeProject() {
     project->save();
   }
   this->setWindowTitle(nullptr);
-  this->project = nullptr;
+  this->project.reset();
   playerWidget.closeProject();
 }
 
@@ -320,6 +327,10 @@ void MainWindow::enableDrawing(bool enable) {
 }
 
 void MainWindow::on_actionLock_project_toggled(bool b) {
+  lock(b);
+}
+
+void MainWindow::lock(bool b) {
   this->project->setActive(!b);
   enableDrawing(!b);
 
