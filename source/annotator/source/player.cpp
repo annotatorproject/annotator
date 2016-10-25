@@ -100,6 +100,7 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
   this->session = project ? project->getSession() : nullptr;
 
+    if (project) {
   ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
                                            : 0);
 
@@ -113,7 +114,6 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
   this->setEnabled(project.get() != nullptr);
 
-  if (project) {
     overlay->fitInView(scene->sceneRect());
     project->getImageSet()->gotoPosition(0);
   }
