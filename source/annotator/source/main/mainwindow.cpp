@@ -181,6 +181,13 @@ void MainWindow::closeProject() {
   // lock drawing area and plugins
   enableDrawing(false);
 
+  annotationsWidget.setSession(nullptr);
+  annotationsWidget.on_refreshSession();
+  objectsWidget.setSession(nullptr);
+  objectsWidget.on_refreshSession();
+  selectedObject.setProject(nullptr);
+  attributesWidget.setSession(nullptr);
+
   //ask if project should be saved
   QCheckBox *cb_lock =
       new QCheckBox("Yes, lock this project. Labeling is completed now.");

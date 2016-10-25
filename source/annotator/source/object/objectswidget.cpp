@@ -20,8 +20,8 @@ void ObjectsWidget::setSession(std::shared_ptr<AnnotatorLib::Session> session) {
 void ObjectsWidget::reload() {
   objectIdToRowMap.clear();
   objectRowToIdMap.clear();
+  ui->listWidget->clear();
   if (session) {
-    ui->listWidget->clear();
     for (auto &pair : session->getObjects()) {
       if (pair.second->getAnnotations().size() > 0) addObject(pair.second);
     }
