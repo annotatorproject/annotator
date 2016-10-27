@@ -19,18 +19,17 @@ class NewProjectDialog : public QDialog {
   QString getStorageType();
   QString getImageSetType();
 
- private slots:
-  void on_buttonBox_accepted();
-
+private slots:
+  void on_pushButtonOk_clicked();
   void on_imageSetPathPushButton_clicked();
-
   void on_projectFilePushButton_clicked();
-
   void on_storagePathPushButton_clicked();
+  void checkLineEdits();
 
  private:
   Ui::NewProjectDialog *ui;
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
+  void createFile(std::string path);
 };
 
 #endif  // NEWPROJECTDIALOG_H

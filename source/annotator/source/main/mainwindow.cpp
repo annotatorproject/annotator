@@ -110,7 +110,7 @@ void MainWindow::connectSignalSlots() {
 void MainWindow::setRateValue(QString value) { rateLabel->setText(value); }
 
 void MainWindow::openProject(std::shared_ptr<AnnotatorLib::Project> project) {
-  if (project != nullptr) {
+  if (project) {
     this->project = project;
 
     this->session = project->getSession();
@@ -263,7 +263,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
 void MainWindow::on_actionNew_Project_triggered() {
   NewProjectDialog dialog;
   dialog.exec();
-  if (dialog.getProject() != nullptr) {
+  if (dialog.getProject()) {
     this->project = dialog.getProject();
     AnnotatorLib::Project::save(this->project, this->project->getPath());
     openProject(this->project);
