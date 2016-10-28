@@ -1,21 +1,23 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QWidget>
-
-#include <AnnotatorLib/Project.h>
-#include <AnnotatorLib/Session.h>
-#include <QLabel>
-#include <list>
-
-#include <memory>
-
+#include "videoplayer.h"
 // Graphics
 #include "graphic/owngraphicscene.h"
 #include "graphic/owngraphicview.h"
 
+#include <list>
+#include <memory>
+
+#include <AnnotatorLib/Project.h>
+#include <AnnotatorLib/Session.h>
+
+#include <QGraphicsPixmapItem>
+#include <QLabel>
+#include <QWidget>
+
 // OPENCV//
-#include <videoplayer.h>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -100,7 +102,7 @@ class Player : public QWidget {
   cv::Mat currentFrame;
 
   std::list<AnnotationGraphicsItem *> annotationGraphics;
-
+  QGraphicsPixmapItem *backgroundImage = nullptr;
   void updateStatus(bool var);
   void updateTimeLabel();
 };

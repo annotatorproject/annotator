@@ -115,7 +115,8 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
     this->setEnabled(project.get() != nullptr);
 
-    overlay->fitInView(QRect(0,0, firstImage.cols, firstImage.rows), Qt::KeepAspectRatio);
+    overlay->fitInView(QRect(0, 0, firstImage.cols, firstImage.rows),
+                       Qt::KeepAspectRatio);
     project->getImageSet()->gotoPosition(0);
   }
 
@@ -178,8 +179,9 @@ void Player::showFrame(cv::Mat frame) {
 
   scene->setSceneRect(img.rect());
   overlay->fitInView(img.rect(), Qt::KeepAspectRatio);
-  QGraphicsPixmapItem *pim = new QGraphicsPixmapItem(QPixmap::fromImage(img));
-  scene->addItem(pim);
+  if (backgroundImage) delete backgroundImage;
+  backgroundImage = new QGraphicsPixmapItem(QPixmap::fromImage(img));
+  scene->addItem(backgroundImage);
 }
 
 void Player::updateFrame(long frame_nmb) {
