@@ -19,7 +19,7 @@ class NewProjectDialog : public QDialog {
   QString getStorageType();
   QString getImageSetType();
 
-private slots:
+ private slots:
   void on_pushButtonOk_clicked();
   void on_imageSetPathPushButton_clicked();
   void on_projectFilePushButton_clicked();

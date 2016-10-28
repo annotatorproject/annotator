@@ -1,14 +1,4 @@
 #include "mainwindow.h"
-#include "aboutdialog.h"
-#include "controller/commandcontroller.h"
-#include "controller/selectioncontroller.h"
-#include "gui/alert.h"
-#include "gui/classesdialog.h"
-#include "gui/statisticsdialog.h"
-#include "newprojectdialog.h"
-#include "plugins/pluginloader.h"
-#include "plugins/pluginrunner.h"
-#include "ui_mainwindow.h"
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
@@ -19,6 +9,16 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <string>
+#include "aboutdialog.h"
+#include "controller/commandcontroller.h"
+#include "controller/selectioncontroller.h"
+#include "gui/alert.h"
+#include "gui/classesdialog.h"
+#include "gui/statisticsdialog.h"
+#include "newprojectdialog.h"
+#include "plugins/pluginloader.h"
+#include "plugins/pluginrunner.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
   // ui->attributesLayout->addWidget(&attributesWidget); // TODO
   ui->pluginsLayout->addWidget(&pluginsWidget);
 
-  rateLabel = new QLabel;    // Frame rate
-  rateLabel->setText("fps"); // Add to Status bar
+  rateLabel = new QLabel;     // Frame rate
+  rateLabel->setText("fps");  // Add to Status bar
 
   // initial locking drawing area and plugins
   enableDrawing(false);
@@ -194,10 +194,11 @@ void MainWindow::closeProject() {
   cb_lock->setChecked(!project->isActive());
   QMessageBox msgbox;
   msgbox.setParent(0);
-  msgbox.setStyleSheet("color: black;"
-                       "background-color: white;"
-                       "selection-color: black;"
-                       "selection-background-color: black;");
+  msgbox.setStyleSheet(
+      "color: black;"
+      "background-color: white;"
+      "selection-color: black;"
+      "selection-background-color: black;");
   msgbox.setText(tr("Save project before close?\n"));
   msgbox.setIcon(QMessageBox::Icon::Question);
   msgbox.addButton(QMessageBox::No);
@@ -316,7 +317,7 @@ void MainWindow::on_actionCompress_Session_triggered() {
   msgBox.setIcon(QMessageBox::Information);
   msgBox.setStandardButtons(0);
   msgBox.setAutoClose(true);
-  msgBox.setTimeout(3); // Closes after three seconds
+  msgBox.setTimeout(3);  // Closes after three seconds
   msgBox.exec();
 }
 
@@ -351,7 +352,7 @@ void MainWindow::lock(bool b) {
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setStandardButtons(0);
     msgBox.setAutoClose(true);
-    msgBox.setTimeout(3); // Closes after three seconds
+    msgBox.setTimeout(3);  // Closes after three seconds
     msgBox.exec();
   }
 }

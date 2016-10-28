@@ -244,13 +244,13 @@ void Videoplayer::setImageSet(AnnotatorLib::ImageSet *imageSet) {
     cv::Mat input;
 
     // show first frame
-    if(getNextFrame(input)){
-        emit setInputCoordinate(QPoint(input.cols, input.rows));
+    if (getNextFrame(input)) {
+      emit setInputCoordinate(QPoint(input.cols, input.rows));
 
-        emit showFrame(input);
-        emit updateFrame(getCurFrameNr());
+      emit showFrame(input);
+      emit updateFrame(getCurFrameNr());
 
-        emit updateBtn_signal();
+      emit updateBtn_signal();
     }
   }
 }

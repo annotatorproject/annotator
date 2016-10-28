@@ -46,7 +46,6 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
   // create graphicsview to be able to draw objects on screen.
   scene = new OwnGraphicScene();
   overlay = new OwnGraphicView(scene, this);
-  // overlay->setEnabled(false);
   ui->playerLayout->addWidget(overlay);
   overlay->show();
 
@@ -61,7 +60,7 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
 }
 
 Player::~Player() {
-  clearAnnotationsGraphics();
+  // TODO: clearAnnotationsGraphics(); // its crashing for me
   delete videoplayer;
   delete scene;
   delete ui;
@@ -87,6 +86,8 @@ void Player::closeProject() {
   this->currentFrame = cv::Mat();
   setProject(nullptr);
   this->videoplayer->close();
+  scene->setBackgroundBrush(QPixmap(1, 1));
+  scene->clear();
   scene->setSession(nullptr);
   updateStatus(false);  // disable ui
 }
@@ -100,19 +101,19 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
 
   this->session = project ? project->getSession() : nullptr;
 
-    if (project) {
-  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                           : 0);
+  if (project) {
+    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                             : 0);
 
-  videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
-  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                           : 0);
+    videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
+    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                             : 0);
 
-  cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
-  scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
-  scene->setSession(project ? session : nullptr);
+    cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
+    scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
+    scene->setSession(project ? session : nullptr);
 
-  this->setEnabled(project.get() != nullptr);
+    this->setEnabled(project.get() != nullptr);
 
     overlay->fitInView(scene->sceneRect());
     project->getImageSet()->gotoPosition(0);
@@ -146,6 +147,8 @@ void Player::updateStatus(bool enable) {
 
   if (!enable) {
     ui->horizontalSlider->setValue(0);
+    ui->frameNrLabel->setText("");
+    ui->timeLabel->setText("");
   }
 }
 
@@ -167,19 +170,8 @@ void Player::on_updateBtn() {
  */
 void Player::showFrame(cv::Mat frame) {
   currentFrame = frame;
-  //  cv::Mat tmp;
 
-  //  cv::Size size;
-  //  size.width = scene->sceneRect().width();
-  //  size.height = scene->sceneRect().height();
-
-  //  tmp.convertTo(tmp, CV_8U);
-  //  cv::resize(currentFrame, tmp, size);
-  //  cvtColor(currentFrame, tmp, CV_BGR2RGB);
-  //    QImage img = QImage((const unsigned char *)(tmp.data), tmp.cols,
-  //    tmp.rows,
-  //                        tmp.step, QImage::Format_RGB888);
-
+  // convert cv::mat to QImage, cv::mat uses bgr, qimage rgb format
   cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
   QImage img = QImage((const unsigned char *)(frame.data), frame.cols,
                       frame.rows, frame.step, QImage::Format_RGB888);
@@ -303,10 +295,7 @@ void Player::updateTimeLabel() {
  * play	-	play the video
  *
  */
-void Player::play() {
-  // video->setDelay(1000.f / video->getFrameRate());
-  videoplayer->playIt();
-}
+void Player::play() { videoplayer->playIt(); }
 
 /**
  * pause	-	pause the video
@@ -324,7 +313,6 @@ void Player::sleep(int msecs) { videoplayer->wait(msecs); }
 ///#################################################################################################///
 
 void Player::reload() {
-  // this->videoplayer->reload();
   // reload annotations?
   this->updateFrame(this->videoplayer->getCurFrameNr());
 }
@@ -376,10 +364,7 @@ void Player::on_btnPause_clicked() { pause(); }
 
 void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
 
-void Player::on_btnPrev_clicked() {
-  // this->setAutoAnnotation(false);
-  videoplayer->prevFrame();
-}
+void Player::on_btnPrev_clicked() { videoplayer->prevFrame(); }
 
 void Player::on_btnNext_clicked() {
   on_nextFrame(videoplayer->getCurFrameNr() + 1);

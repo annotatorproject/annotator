@@ -1,16 +1,20 @@
 #include "newprojectdialog.h"
-#include <QFileDialog>
 #include <QFile>
+#include <QFileDialog>
 #include <QMessageBox>
 #include "ui_newprojectdialog.h"
 
 NewProjectDialog::NewProjectDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::NewProjectDialog) {
   ui->setupUi(this);
-  connect(ui->imageSetPathLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkLineEdits()));
-  connect(ui->projectFileLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkLineEdits()));
-  connect(ui->storagePathLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkLineEdits()));
-  connect(ui->projectNameLineEdit, SIGNAL(textChanged(QString)), this, SLOT(checkLineEdits()));
+  connect(ui->imageSetPathLineEdit, SIGNAL(textChanged(QString)), this,
+          SLOT(checkLineEdits()));
+  connect(ui->projectFileLineEdit, SIGNAL(textChanged(QString)), this,
+          SLOT(checkLineEdits()));
+  connect(ui->storagePathLineEdit, SIGNAL(textChanged(QString)), this,
+          SLOT(checkLineEdits()));
+  connect(ui->projectNameLineEdit, SIGNAL(textChanged(QString)), this,
+          SLOT(checkLineEdits()));
 }
 
 NewProjectDialog::~NewProjectDialog() { delete ui; }
@@ -54,8 +58,7 @@ void NewProjectDialog::on_projectFilePushButton_clicked() {
   path = QFileDialog::getSaveFileName(this, tr("Select Project File"), ".",
                                       tr("Annotator Project File (*.pro.xml)"));
   if (!path.isEmpty()) {
-    if (!path.endsWith(".pro.xml"))
-      path = path + ".pro.xml";
+    if (!path.endsWith(".pro.xml")) path = path + ".pro.xml";
     ui->projectFileLineEdit->setText(path);
   }
 }
@@ -65,27 +68,22 @@ void NewProjectDialog::on_storagePathPushButton_clicked() {
   if (getStorageType() == "json") {
     path = QFileDialog::getSaveFileName(this, tr("Select Storage File"), ".",
                                         tr("Json File (*.json)"));
-    if (!path.isEmpty() && !path.endsWith(".json"))
-      path = path + ".json";
+    if (!path.isEmpty() && !path.endsWith(".json")) path = path + ".json";
   } else if (getStorageType() == "xml")
     QMessageBox::warning(this, "Warning", "Not implemented yet");
 
-  if (!path.isEmpty())
-    ui->storagePathLineEdit->setText(path);
+  if (!path.isEmpty()) ui->storagePathLineEdit->setText(path);
 }
 
-
-void NewProjectDialog::checkLineEdits()
-{
-  bool ok = !ui->imageSetPathLineEdit->text().isEmpty()
-  && !ui->projectFileLineEdit->text().isEmpty()
-  && !ui->storagePathLineEdit->text().isEmpty()
-  && !ui->projectNameLineEdit->text().isEmpty();
+void NewProjectDialog::checkLineEdits() {
+  bool ok = !ui->imageSetPathLineEdit->text().isEmpty() &&
+            !ui->projectFileLineEdit->text().isEmpty() &&
+            !ui->storagePathLineEdit->text().isEmpty() &&
+            !ui->projectNameLineEdit->text().isEmpty();
   ui->pushButtonOk->setEnabled(ok);
 }
 
-void NewProjectDialog::on_pushButtonOk_clicked()
-{
+void NewProjectDialog::on_pushButtonOk_clicked() {
   std::string name = ui->projectNameLineEdit->text().toStdString();
   std::string imageSetType = getImageSetType().toStdString();
   std::string imageSetPath = ui->imageSetPathLineEdit->text().toStdString();
@@ -93,10 +91,8 @@ void NewProjectDialog::on_pushButtonOk_clicked()
   std::string storagePath = ui->storagePathLineEdit->text().toStdString();
   std::string projectFilePath = ui->projectFileLineEdit->text().toStdString();
   try {
-    project = AnnotatorLib::Project::create(
-        name, imageSetType,
-        imageSetPath, storageType,
-        storagePath);
+    project = AnnotatorLib::Project::create(name, imageSetType, imageSetPath,
+                                            storageType, storagePath);
     project->setPath(projectFilePath);
     project->create();
     project->load();

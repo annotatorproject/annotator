@@ -17,9 +17,9 @@
 #include "gui/removerangedialog.h"
 #include "plugins/pluginloader.h"
 
+#include <gui/alert.h>
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
-#include <gui/alert.h>
 
 // constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
@@ -40,7 +40,7 @@ AnnotationGraphicsItem::AnnotationGraphicsItem(
   initIdText();
   initActions();
   if (!annotation->isTemporary() &&
-      annotation->getConfidenceScore() < 0.3) // TODO
+      annotation->getConfidenceScore() < 0.3)  // TODO
     initializeLowConfidenceWarningSign();
 }
 
@@ -65,8 +65,8 @@ bool AnnotationGraphicsItem::isAnnotationSelected() const {
          SelectionController::instance()->getSelectedObject();
 }
 
-shared_ptr<AnnotatorLib::Annotation>
-AnnotationGraphicsItem::getAnnotation() const {
+shared_ptr<AnnotatorLib::Annotation> AnnotationGraphicsItem::getAnnotation()
+    const {
   return annotation;
 }
 
@@ -154,13 +154,13 @@ void AnnotationGraphicsItem::initActions() {
 
 void AnnotationGraphicsItem::highlight(const int reason) {
   switch (reason) {
-  case 0: // hovered
-    borderColor = Qt::yellow;
-    brush = getGradient();
-    break;
-  default:
-    hideHighlight();
-    return;
+    case 0:  // hovered
+      borderColor = Qt::yellow;
+      brush = getGradient();
+      break;
+    default:
+      hideHighlight();
+      return;
   }
 
   for (int i = 0; i < 4; ++i) {
@@ -227,8 +227,7 @@ void AnnotationGraphicsItem::contextMenuEvent(
   QMenu contextMenu("Context menu");
   contextMenu.addAction(action_edit);
 
-  if (!this->annotation->isTemporary())
-    contextMenu.addAction(action_del);
+  if (!this->annotation->isTemporary()) contextMenu.addAction(action_del);
 
   if (*this->annotation < *this->annotation->getObject()->getLastAnnotation())
     contextMenu.addAction(action_del_following);
@@ -282,7 +281,7 @@ void AnnotationGraphicsItem::compressObject() {
   msgBox.setIcon(QMessageBox::Information);
   msgBox.setStandardButtons(0);
   msgBox.setAutoClose(true);
-  msgBox.setTimeout(3); // Closes after three seconds
+  msgBox.setTimeout(3);  // Closes after three seconds
   msgBox.exec();
 }
 
@@ -351,26 +350,26 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
   int XSign = 0;
   int YSign = 0;
   switch (corner->getCorner()) {
-  case 0: {
-    XSign = +1;
-    YSign = +1;
-  } break;
+    case 0: {
+      XSign = +1;
+      YSign = +1;
+    } break;
 
-  case 1: {
-    XSign = -1;
-    YSign = +1;
-  } break;
+    case 1: {
+      XSign = -1;
+      YSign = +1;
+    } break;
 
-  case 2: {
-    XSign = -1;
-    YSign = -1;
-  } break;
+    case 2: {
+      XSign = -1;
+      YSign = -1;
+    } break;
 
-  case 3: {
-    XSign = +1;
-    YSign = -1;
-  } break;
-  default: {}
+    case 3: {
+      XSign = +1;
+      YSign = -1;
+    } break;
+    default: {}
   }
 
   // Set the new size of Item, whene the the corner position is changed.
@@ -379,12 +378,10 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
 
   // set min width and min height to 10 px.
   int newWidth = width + (XSign * XPos);
-  if (newWidth < 10)
-    newWidth = 10;
+  if (newWidth < 10) newWidth = 10;
 
   int newHeight = height + (YSign * YPos);
-  if (newHeight < 10)
-    newHeight = 10;
+  if (newHeight < 10) newHeight = 10;
 
   int deltaWidth = newWidth - width;
   int deltaHeight = newHeight - height;
@@ -397,27 +394,27 @@ void AnnotationGraphicsItem::getCornerPositions(Corner *corner, qreal x,
   deltaHeight *= (-1);
 
   switch (corner->getCorner()) {
-  case 0: {
-    int newXPos = this->pos().x() + deltaWidth;
-    int newYpos = this->pos().y() + deltaHeight;
-    this->setPos(newXPos, newYpos);
-  } break;
+    case 0: {
+      int newXPos = this->pos().x() + deltaWidth;
+      int newYpos = this->pos().y() + deltaHeight;
+      this->setPos(newXPos, newYpos);
+    } break;
 
-  case 1: {
-    int newYpos = this->pos().y() + deltaHeight;
-    this->setPos(this->pos().x(), newYpos);
-  } break;
+    case 1: {
+      int newYpos = this->pos().y() + deltaHeight;
+      this->setPos(this->pos().x(), newYpos);
+    } break;
 
-  case 2: {
-    this->setPos(this->pos().x(), this->pos().y());
-  } break;
+    case 2: {
+      this->setPos(this->pos().x(), this->pos().y());
+    } break;
 
-  case 3: {
-    int newXPos = this->pos().x() + deltaWidth;
-    this->setPos(newXPos, this->pos().y());
-  } break;
-  default:
-    break;
+    case 3: {
+      int newXPos = this->pos().x() + deltaWidth;
+      this->setPos(newXPos, this->pos().y());
+    } break;
+    default:
+      break;
   }
 }
 
@@ -445,35 +442,35 @@ bool AnnotationGraphicsItem::sceneEventFilter(QGraphicsItem *watched,
 
   if (corner && own_event) {
     switch (event->type()) {
-    // if the mouse pressed, save igh (x,y) coordinates inside the corner
-    // object
-    case QEvent::GraphicsSceneMousePress: {
-      corner->setMouseState(Corner::MouseDown);
-      corner->mouseDownX = own_event->pos().x();
-      corner->mouseDownY = own_event->pos().y();
-      // this->setSelected(true);
-    } break;
+      // if the mouse pressed, save igh (x,y) coordinates inside the corner
+      // object
+      case QEvent::GraphicsSceneMousePress: {
+        corner->setMouseState(Corner::MouseDown);
+        corner->mouseDownX = own_event->pos().x();
+        corner->mouseDownY = own_event->pos().y();
+        // this->setSelected(true);
+      } break;
 
-    case QEvent::GraphicsSceneMouseRelease: {
-      corner->setMouseState(Corner::MouseReleased);
-      changeAnnotationSize((int)this->x(), (int)this->y(), (int)this->width,
-                           (int)this->height);
-      return true;
-    } break;
+      case QEvent::GraphicsSceneMouseRelease: {
+        corner->setMouseState(Corner::MouseReleased);
+        changeAnnotationSize((int)this->x(), (int)this->y(), (int)this->width,
+                             (int)this->height);
+        return true;
+      } break;
 
-    case QEvent::GraphicsSceneMouseMove: {
-      corner->setMouseState(Corner::MouseMoving);
-      qreal x = own_event->pos().x();
-      qreal y = own_event->pos().y();
-      getCornerPositions(corner, x, y);
-      setCornerPositions();
+      case QEvent::GraphicsSceneMouseMove: {
+        corner->setMouseState(Corner::MouseMoving);
+        qreal x = own_event->pos().x();
+        qreal y = own_event->pos().y();
+        getCornerPositions(corner, x, y);
+        setCornerPositions();
 
-      this->update();
-    } break;
+        this->update();
+      } break;
 
-    default:
-      return false;
-      break;
+      default:
+        return false;
+        break;
     }
 
     setCornerPositions();
@@ -494,15 +491,15 @@ void AnnotationGraphicsItem::mouseReleaseEvent(
 }
 
 void AnnotationGraphicsItem::changeAnnotationPosition(int x, int y) {
-  if (x == annotation->getX() && y == annotation->getY())
-    return;
+  if (x == annotation->getX() && y == annotation->getY()) return;
 
   changeAnnotationSize(x, y, annotation->getWidth(), annotation->getHeight());
 }
 
 void AnnotationGraphicsItem::changeAnnotationSize(int x, int y, int w, int h) {
   assert(this->annotation);
-  // Todo: this->annotation is null after CommandController::instance()->execute(nA);
+  // Todo: this->annotation is null after
+  // CommandController::instance()->execute(nA);
   std::shared_ptr<AnnotatorLib::Annotation> annotation = this->annotation;
   shared_ptr<AnnotatorLib::Commands::Command> nA;
   std::shared_ptr<AnnotatorLib::Session> session = player->getSession();
