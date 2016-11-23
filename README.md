@@ -1,4 +1,4 @@
-# Annotator [ ![Build Status] [travis-image] ] [travis] [ ![Documentation] [codedocs-image] ] [codedocs] [ ![Gitter] [gitter-image] ] [gitter]
+# Annotator [![Stories in Ready] [waffle-image]] [waffle] [![Build Status] [travis-image]] [travis] [![Documentation] [codedocs-image]] [codedocs] [![Gitter] [gitter-image]] [gitter]
 
 [travis-image]: https://travis-ci.org/lasmue/annotator.png?branch=master
 [travis]: http://travis-ci.org/lasmue/annotator
@@ -8,6 +8,9 @@
 
 [gitter-image]: https://badges.gitter.im/Join%20Chat.svg
 [gitter]: https://gitter.im/lasmue/annotator
+
+[waffle-image]: https://badge.waffle.io/lasmue/annotator.svg?label=ready&title=Ready
+[waffle]: http://waffle.io/lasmue/annotator
 
 ### Quick start
 
