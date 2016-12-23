@@ -16,6 +16,7 @@ class OwnGraphicScene : public QGraphicsScene {
  public:
   explicit OwnGraphicScene();
   void addBackgroundImg(QImage img);
+  void setBackground(QGraphicsPixmapItem *background);
 
   QPoint inputCoordinate;  // image/video coordinate
 
@@ -31,7 +32,6 @@ class OwnGraphicScene : public QGraphicsScene {
   virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
  private slots:
-  // void on_btnPause_clicked();
   void on_signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
  signals:
@@ -61,6 +61,12 @@ class OwnGraphicScene : public QGraphicsScene {
 
   QPoint adjustCoordinate(QPointF MousePos);
   QPointF resetCoordinate(QPointF RectPos);
+
+  /**
+   * @brief background
+   * the current image as scene background.
+   */
+  QGraphicsPixmapItem *background = nullptr;
 };
 
 #endif  // OWNGRAPHICSCENE_H

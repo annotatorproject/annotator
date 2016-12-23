@@ -102,7 +102,7 @@ class Player : public QWidget {
   cv::Mat currentFrame;
 
   std::list<AnnotationGraphicsItem *> annotationGraphics;
-  QGraphicsPixmapItem *backgroundImage = nullptr;
+
   void updateStatus(bool var);
   void updateTimeLabel();
 };

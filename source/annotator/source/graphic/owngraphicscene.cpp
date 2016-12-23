@@ -14,6 +14,12 @@ OwnGraphicScene::OwnGraphicScene()
 */
 void OwnGraphicScene::addBackgroundImg(QImage img) { image = img; }
 
+void OwnGraphicScene::setBackground(QGraphicsPixmapItem *background) {
+  if (this->background != nullptr) delete this->background;
+  this->background = background;
+  addItem(this->background);
+}
+
 /**
  * draw scene background
 */
@@ -62,7 +68,7 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   if (event->button() == Qt::LeftButton) isLeftPressed = true;
 
-  if (itemAt(event->scenePos(), QTransform()) == 0) {
+  if (itemAt(event->scenePos(), QTransform()) == 0 || background) {
     if (event->button() == Qt::LeftButton) {
       // get x,y coordinate
       point1 = (event->scenePos());
