@@ -1,8 +1,8 @@
 #include "newprojectdialog.h"
+#include "ui_newprojectdialog.h"
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
-#include "ui_newprojectdialog.h"
 
 NewProjectDialog::NewProjectDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::NewProjectDialog) {
@@ -25,16 +25,21 @@ std::shared_ptr<AnnotatorLib::Project> NewProjectDialog::getProject() {
 
 QString NewProjectDialog::getStorageType() {
   QString storageType;
-  if (ui->jsonRadioButton->isChecked()) storageType = "json";
-  if (ui->xmlRadioButton->isChecked()) storageType = "xml";
-  if (ui->sqlRadioButton->isChecked()) storageType = "sql";
+  if (ui->jsonRadioButton->isChecked())
+    storageType = "json";
+  if (ui->xmlRadioButton->isChecked())
+    storageType = "xml";
+  if (ui->sqlRadioButton->isChecked())
+    storageType = "sql";
   return storageType;
 }
 
 QString NewProjectDialog::getImageSetType() {
   QString imageSetType;
-  if (ui->videoRadioButton->isChecked()) imageSetType = "video";
-  if (ui->imagesRadioButton->isChecked()) imageSetType = "images";
+  if (ui->videoRadioButton->isChecked())
+    imageSetType = "video";
+  if (ui->imagesRadioButton->isChecked())
+    imageSetType = "images";
   return imageSetType;
 }
 
@@ -58,7 +63,8 @@ void NewProjectDialog::on_projectFilePushButton_clicked() {
   path = QFileDialog::getSaveFileName(this, tr("Select Project File"), ".",
                                       tr("Annotator Project File (*.pro.xml)"));
   if (!path.isEmpty()) {
-    if (!path.endsWith(".pro.xml")) path = path + ".pro.xml";
+    if (!path.endsWith(".pro.xml"))
+      path = path + ".pro.xml";
     ui->projectFileLineEdit->setText(path);
   }
 }
@@ -68,11 +74,13 @@ void NewProjectDialog::on_storagePathPushButton_clicked() {
   if (getStorageType() == "json") {
     path = QFileDialog::getSaveFileName(this, tr("Select Storage File"), ".",
                                         tr("Json File (*.json)"));
-    if (!path.isEmpty() && !path.endsWith(".json")) path = path + ".json";
+    if (!path.isEmpty() && !path.endsWith(".json"))
+      path = path + ".json";
   } else if (getStorageType() == "xml")
     QMessageBox::warning(this, "Warning", "Not implemented yet");
 
-  if (!path.isEmpty()) ui->storagePathLineEdit->setText(path);
+  if (!path.isEmpty())
+    ui->storagePathLineEdit->setText(path);
 }
 
 void NewProjectDialog::checkLineEdits() {
@@ -100,4 +108,15 @@ void NewProjectDialog::on_pushButtonOk_clicked() {
   } catch (std::exception &e) {
     QMessageBox::warning(this, "Error", QString::fromStdString(e.what()));
   }
+}
+
+void NewProjectDialog::on_sqlRadioButton_toggled(bool checked) {
+  if (checked)
+    ui->storagePathLineEdit->setPlaceholderText(
+        "host=localhost;user=annotator;password=annotator;db=annotatordb;");
+}
+
+void NewProjectDialog::on_jsonRadioButton_toggled(bool checked) {
+  if (checked)
+    ui->storagePathLineEdit->setPlaceholderText("storage.json");
 }

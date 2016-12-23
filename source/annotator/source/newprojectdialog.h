@@ -26,7 +26,11 @@ class NewProjectDialog : public QDialog {
   void on_storagePathPushButton_clicked();
   void checkLineEdits();
 
- private:
+  void on_sqlRadioButton_toggled(bool checked);
+
+  void on_jsonRadioButton_toggled(bool checked);
+
+private:
   Ui::NewProjectDialog *ui;
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
   void createFile(std::string path);

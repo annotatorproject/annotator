@@ -68,7 +68,7 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   if (event->button() == Qt::LeftButton) isLeftPressed = true;
 
-  if (itemAt(event->scenePos(), QTransform()) == 0 || background) {
+  if (itemAt(event->scenePos(), QTransform()) == 0 || itemAt(event->scenePos(), QTransform()) == background) {
     if (event->button() == Qt::LeftButton) {
       // get x,y coordinate
       point1 = (event->scenePos());
