@@ -179,9 +179,7 @@ void Player::showFrame(cv::Mat frame) {
 
   scene->setSceneRect(img.rect());
   overlay->fitInView(img.rect(), Qt::KeepAspectRatio);
-  if (backgroundImage) delete backgroundImage;
-  backgroundImage = new QGraphicsPixmapItem(QPixmap::fromImage(img));
-  scene->addItem(backgroundImage);
+  scene->setBackground(new QGraphicsPixmapItem(QPixmap::fromImage(img)));
 }
 
 void Player::updateFrame(long frame_nmb) {

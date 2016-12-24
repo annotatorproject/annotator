@@ -14,6 +14,13 @@ OwnGraphicScene::OwnGraphicScene()
 */
 void OwnGraphicScene::addBackgroundImg(QImage img) { image = img; }
 
+void OwnGraphicScene::setBackground(QGraphicsPixmapItem *background) {
+  if (this->background != nullptr)
+    delete this->background;
+  this->background = background;
+  addItem(this->background);
+}
+
 /**
  * draw scene background
 */
@@ -60,9 +67,10 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   // video Pause, to paint item.
   emit on_btnPause_clicked();
 
-  if (event->button() == Qt::LeftButton) isLeftPressed = true;
+  if (event->button() == Qt::LeftButton)
+    isLeftPressed = true;
 
-  if (itemAt(event->scenePos(), QTransform()) == 0) {
+  if (itemAt(event->scenePos(), QTransform()) == 0 || background) {
     if (event->button() == Qt::LeftButton) {
       // get x,y coordinate
       point1 = (event->scenePos());
@@ -76,7 +84,7 @@ void OwnGraphicScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       // TODO: I removed this, because we don't want the rect to disappear when
       // right-clicking.
     } else if (event->button() == Qt::LeftButton) {
-      this->clearSelection();  // single selection mode
+      this->clearSelection(); // single selection mode
     }
   }
 
@@ -124,7 +132,8 @@ void OwnGraphicScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         float y = std::min(upperLeft.y(), lowerRight.y());
         float w = std::max(upperLeft.x(), lowerRight.x()) - x;
         float h = std::max(upperLeft.y(), lowerRight.y()) - y;
-        if (w <= 0 || h <= 0) return;
+        if (w <= 0 || h <= 0)
+          return;
 
         newAnnotationDialog.setDimensions(x, y, w, h);
         newAnnotationDialog.move(event->scenePos().x(), event->scenePos().y());

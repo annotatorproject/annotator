@@ -13,16 +13,17 @@
 
 class OwnGraphicScene : public QGraphicsScene {
   Q_OBJECT
- public:
+public:
   explicit OwnGraphicScene();
   void addBackgroundImg(QImage img);
+  void setBackground(QGraphicsPixmapItem *background);
 
-  QPoint inputCoordinate;  // image/video coordinate
+  QPoint inputCoordinate; // image/video coordinate
 
   void setCurrentFrame(int frame);
   void setSession(std::shared_ptr<AnnotatorLib::Session> session);
 
- protected:
+protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
   void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
   void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -30,30 +31,30 @@ class OwnGraphicScene : public QGraphicsScene {
 
   virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
- private slots:
+private slots:
   // void on_btnPause_clicked();
   void on_signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
 
- signals:
+signals:
   void on_btnPause_clicked();
 
- protected:
+protected:
   unsigned long currentFrame = 0;
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   shared_ptr<AnnotatorLib::Object> selected_obj;
 
- private:
+private:
   QImage image;
   int drawMode;
 
   QGraphicsRectItem *selectionRect = nullptr;
 
-  QPointF point1;  // clicked point
-  QPointF point2;  // released point
+  QPointF point1; // clicked point
+  QPointF point2; // released point
 
   bool isDrawn;
-  bool isLeftPressed;  // left click is clicked
-  bool isItemMove;     // if item was moving
+  bool isLeftPressed; // left click is clicked
+  bool isItemMove;    // if item was moving
 
   QColor itemColor;
 
@@ -61,6 +62,12 @@ class OwnGraphicScene : public QGraphicsScene {
 
   QPoint adjustCoordinate(QPointF MousePos);
   QPointF resetCoordinate(QPointF RectPos);
+
+  /**
+  * @brief background
+  * the current image as scene background.
+  */
+  QGraphicsPixmapItem *background = nullptr;
 };
 
-#endif  // OWNGRAPHICSCENE_H
+#endif // OWNGRAPHICSCENE_H
