@@ -32,7 +32,7 @@ set(DEFAULT_PROJECT_OPTIONS
  find_package(Qt5LinguistTools REQUIRED)
  find_package(Qt5Xml REQUIRED)
  find_package( OpenCV REQUIRED )
- find_package(Poco COMPONENTS Foundation Util Data DataMySQL REQUIRED)
+ find_package(Poco COMPONENTS Foundation Util Data Net DataMySQL REQUIRED)
  find_package( annotatorlib )
 
 # 

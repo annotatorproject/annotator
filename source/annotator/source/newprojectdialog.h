@@ -30,7 +30,9 @@ class NewProjectDialog : public QDialog {
 
   void on_jsonRadioButton_toggled(bool checked);
 
-private:
+  void on_imageFTPRadioButton_toggled(bool checked);
+
+ private:
   Ui::NewProjectDialog *ui;
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
   void createFile(std::string path);
