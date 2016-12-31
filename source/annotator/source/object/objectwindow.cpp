@@ -1,6 +1,7 @@
 // Copyright 2016 Annotator Team
 #include "objectwindow.h"
 #include "../attribute/attributeitem.h"
+#include "../attribute/newattributedialog.h"
 #include "../gui/classesdialog.h"
 #include "ui_objectwindow.h"
 
@@ -77,5 +78,6 @@ void ObjectWindow::done(int status) {
 
 void ObjectWindow::on_addAttributeButton_clicked()
 {
-
+    NewAttributeDialog dlg(session, object, this);
+    dlg.exec();
 }
