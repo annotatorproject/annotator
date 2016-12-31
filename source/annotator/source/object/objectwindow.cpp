@@ -80,4 +80,5 @@ void ObjectWindow::on_addAttributeButton_clicked()
 {
     NewAttributeDialog dlg(session, object, this);
     dlg.exec();
+    reloadAttributes();
 }

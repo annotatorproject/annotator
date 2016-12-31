@@ -24,6 +24,6 @@ void AttributeItem::reload() {
       AnnotatorLib::AttributeTypeToString(this->attribute->getType()));
   this->ui->typeComboBox->setCurrentText(type);
   QString defaultValue =
-      QString::fromStdString(this->attribute->getDefaultValue()->toString());
+      QString::fromStdString(this->attribute->getValue()->toString());
   this->ui->valueLineEdit->setText(defaultValue);
 }

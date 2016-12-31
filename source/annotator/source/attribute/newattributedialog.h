@@ -23,6 +23,7 @@ public:
 
 protected:
     void createAttribute();
+
 private:
     Ui::NewAttributeDialog *ui;
     void done(int status) override;
