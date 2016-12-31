@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include "newannotationdialog.h"
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <QMessageBox>

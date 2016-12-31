@@ -31,7 +31,7 @@ void ObjectsWidget::reload() {
 void ObjectsWidget::addObject(shared_ptr<AnnotatorLib::Object> object) {
   QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
 
-  ObjectItem *objectItem = new ObjectItem(object);
+  ObjectItem *objectItem = new ObjectItem(this->session, object);
   item->setSizeHint(objectItem->minimumSizeHint());
   ui->listWidget->setItemWidget(item, objectItem);
   objectIdToRowMap[object->getId()] = ui->listWidget->count() - 1;

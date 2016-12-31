@@ -78,7 +78,7 @@ void PluginRunner::initObjectsList() {
 void PluginRunner::addObject(shared_ptr<AnnotatorLib::Object> object) {
   QListWidgetItem *item = new QListWidgetItem(ui->objectsListWidget);
 
-  ObjectItem *objectItem = new ObjectItem(object);
+  ObjectItem *objectItem = new ObjectItem(this->project->getSession(), object);
   item->setSizeHint(objectItem->minimumSizeHint());
   ui->objectsListWidget->setItemWidget(item, objectItem);
   objectIdToRowMap[object->getId()] = ui->objectsListWidget->count() - 1;
