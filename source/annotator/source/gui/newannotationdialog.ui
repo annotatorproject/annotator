@@ -21,7 +21,31 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>First Frame:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="objectIdLineEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -34,49 +58,6 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="2">
-    <widget class="QSpinBox" name="frameSpinBox">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="maximum">
-      <number>9999999</number>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>First Frame:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="editClassesButton">
-     <property name="text">
-      <string>edit Classes</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QComboBox" name="objectClassComboBox">
-     <item>
-      <property name="text">
-       <string>Undefined</string>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
@@ -84,10 +65,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="objectIdLineEdit">
-     <property name="enabled">
-      <bool>false</bool>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="editClassesButton">
+     <property name="text">
+      <string>edit Classes</string>
      </property>
     </widget>
    </item>
@@ -111,6 +92,15 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="2">
+    <widget class="QComboBox" name="objectClassComboBox">
+     <item>
+      <property name="text">
+       <string>Undefined</string>
+      </property>
+     </item>
+    </widget>
+   </item>
    <item row="1" column="2">
     <widget class="QLineEdit" name="positionValue">
      <property name="enabled">
@@ -118,6 +108,16 @@
      </property>
      <property name="readOnly">
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QSpinBox" name="frameSpinBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="maximum">
+      <number>9999999</number>
      </property>
     </widget>
    </item>
@@ -156,6 +156,32 @@
        <widget class="QRadioButton" name="radioButtonSelObj">
         <property name="text">
          <string>selected Obj.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="4">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Attributes</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0" colspan="2">
+       <widget class="QListWidget" name="attributesListWidget"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="removeAttributeButton">
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="addAttributeButton">
+        <property name="text">
+         <string>+</string>
         </property>
        </widget>
       </item>

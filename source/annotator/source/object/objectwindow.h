@@ -33,7 +33,7 @@ class ObjectWindow : public QDialog {
 
   void on_addAttributeButton_clicked();
 
-private:
+ private:
   Ui::ObjectWindow *ui;
   const std::shared_ptr<AnnotatorLib::Session> session;
   const std::shared_ptr<AnnotatorLib::Object> object;

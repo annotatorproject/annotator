@@ -43,7 +43,7 @@ class Haarcascade : public Plugin {
   void setNewObjects(bool newObjects);
   void setObjectName(std::string name);
 
-  QWidget *getWidget();
+  QWidget *getWidget() override;
 
  protected:
   shared_ptr<Frame> frame = 0;

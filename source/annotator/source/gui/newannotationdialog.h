@@ -4,6 +4,7 @@
 #include <AnnotatorLib/Session.h>
 #include <QDialog>
 #include <memory>
+#include <vector>
 
 namespace Ui {
 class NewAnnotationDialog;
@@ -25,6 +26,7 @@ class NewAnnotationDialog : public QDialog {
  protected:
   bool checkValues();
   void reloadClasses();
+  void reloadAttributes();
 
   std::shared_ptr<AnnotatorLib::Session> session;
   const unsigned long frame_nmb = 0;
@@ -35,11 +37,14 @@ class NewAnnotationDialog : public QDialog {
   float w = 0;
   float h = 0;
 
+  std::vector<std::shared_ptr<AnnotatorLib::Attribute>> attributes;
+
  private slots:
   void on_radioButtonNewObj_clicked();
   void on_radioButtonSelObj_clicked();
   void done(int r) override;  // called when ok or cancel is clicked
   void on_editClassesButton_clicked();
+  void on_addAttributeButton_clicked();
 };
 
 #endif  // NEWANNOTATIONDIALOG_H

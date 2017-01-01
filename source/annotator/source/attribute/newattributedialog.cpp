@@ -1,19 +1,20 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #include "newattributedialog.h"
 #include "controller/commandcontroller.h"
 #include "ui_newattributedialog.h"
 
-#include <AnnotatorLib/Commands/NewAttribute.h>
+#include <memory>
 
-NewAttributeDialog::NewAttributeDialog(
-    std::shared_ptr<AnnotatorLib::Session> session,
-    shared_ptr<AnnotatorLib::Object> object, QWidget *parent)
-    : QDialog(parent), ui(new Ui::NewAttributeDialog), session(session),
-      object(object) {
+NewAttributeDialog::NewAttributeDialog(QWidget *parent)
+    : QDialog(parent), ui(new Ui::NewAttributeDialog) {
   ui->setupUi(this);
 }
 
 NewAttributeDialog::~NewAttributeDialog() { delete ui; }
+
+std::shared_ptr<AnnotatorLib::Attribute> NewAttributeDialog::getAttribute() {
+  return attribute;
+}
 
 void NewAttributeDialog::done(int status) {
   if (QDialog::Accepted == status) {
@@ -23,11 +24,17 @@ void NewAttributeDialog::done(int status) {
 }
 
 void NewAttributeDialog::createAttribute() {
-    std::string name = ui->nameLineEdit->text().toStdString();
-    std::string type = ui->typeComboBox->currentText().toStdString();
-    std::string value = ui->valueLineEdit->text().toStdString();
-    shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
-    nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(session, object, type, name, value);
-    CommandController::instance()->execute(nA);
-}
+  std::string name = ui->nameLineEdit->text().toStdString();
+  std::string type = ui->typeComboBox->currentText().toStdString();
+  std::string value = ui->valueLineEdit->text().toStdString();
 
+  attribute = std::make_shared<AnnotatorLib::Attribute>(type, name);
+  AnnotatorLib::AttributeValue *av =
+      AnnotatorLib::Attribute::createAttributeValue(type, value);
+  attribute->setValue(av);
+
+  // shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
+  // nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(session,
+  // object, type, name, value);
+  // CommandController::instance()->execute(nA);
+}

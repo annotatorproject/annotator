@@ -1,12 +1,16 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #include "newannotationdialog.h"
-#include <AnnotatorLib/Commands/NewAnnotation.h>
-#include <QMessageBox>
+#include "attribute/attributeitem.h"
+#include "attribute/newattributedialog.h"
 #include "classesdialog.h"
 #include "controller/commandcontroller.h"
 #include "geomObject/annotationgraphicsitem.h"
 #include "plugins/pluginloader.h"
 #include "ui_newannotationdialog.h"
+
+#include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Commands/NewAttribute.h>
+#include <QMessageBox>
 
 NewAnnotationDialog::NewAnnotationDialog(
     std::shared_ptr<AnnotatorLib::Session> session, unsigned long frame_nmb,
@@ -65,15 +69,15 @@ void NewAnnotationDialog::createAnnotation() {
     nA = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
         this->session, session->getObject(id), frame, x, y, w, h);
   }
-  // AnnotationGraphicsItem::setSelectedAnnotation(nA->getAnnotation()); //set
-  // the created annotation as selected
-  // TODO: emit signal_objectSelection(nA->getAnnotation()->getObject());
+
   CommandController::instance()->execute(nA);
 
-  //  Annotator::Plugin *plugin =
-  //      Annotator::PluginLoader::getInstance().getCurrent();
-  //  plugin->setObject(nA->getAnnotation()->getObject());
-  //  plugin->setLastAnnotation(nA->getAnnotation());
+  for (auto attribute : attributes) {
+    shared_ptr<AnnotatorLib::Commands::NewAttribute> nAttr;
+    nAttr = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
+        session, nA->getAnnotation(), attribute);
+    CommandController::instance()->execute(nAttr);
+  }
 }
 
 void NewAnnotationDialog::reloadClasses() {
@@ -81,6 +85,16 @@ void NewAnnotationDialog::reloadClasses() {
   for (auto& pair : session->getClasses()) {
     ui->objectClassComboBox->addItem(
         QString::fromStdString(pair.second->getName()));
+  }
+}
+
+void NewAnnotationDialog::reloadAttributes() {
+  ui->attributesListWidget->clear();
+  for (auto attribute : attributes) {
+    QListWidgetItem* item = new QListWidgetItem(ui->attributesListWidget);
+    AttributeItem* attributeItem = new AttributeItem(attribute);
+    item->setSizeHint(attributeItem->minimumSizeHint());
+    ui->attributesListWidget->setItemWidget(item, attributeItem);
   }
 }
 
@@ -125,4 +139,11 @@ void NewAnnotationDialog::on_radioButtonNewObj_clicked() {
   ui->objectIdLineEdit->setText(QString::number(AnnotatorLib::Object::genId()));
   ui->editClassesButton->show();
   ui->objectClassComboBox->setEnabled(true);
+}
+
+void NewAnnotationDialog::on_addAttributeButton_clicked() {
+  NewAttributeDialog dlg(this);
+  dlg.exec();
+  attributes.push_back(dlg.getAttribute());
+  reloadAttributes();
 }

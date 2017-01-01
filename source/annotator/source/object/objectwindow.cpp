@@ -1,14 +1,17 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #include "objectwindow.h"
-#include "../attribute/attributeitem.h"
-#include "../attribute/newattributedialog.h"
-#include "../gui/classesdialog.h"
+#include "attribute/attributeitem.h"
+#include "attribute/newattributedialog.h"
+#include "controller/commandcontroller.h"
+#include "gui/classesdialog.h"
 #include "ui_objectwindow.h"
 
 #include <assert.h>
+#include <memory>
 
 #include <AnnotatorLib/Attribute.h>
 #include <AnnotatorLib/Class.h>
+#include <AnnotatorLib/Commands/NewAttribute.h>
 
 #include <QMessageBox>
 
@@ -76,9 +79,14 @@ void ObjectWindow::done(int status) {
   QDialog::done(status);
 }
 
-void ObjectWindow::on_addAttributeButton_clicked()
-{
-    NewAttributeDialog dlg(session, object, this);
-    dlg.exec();
-    reloadAttributes();
+void ObjectWindow::on_addAttributeButton_clicked() {
+  NewAttributeDialog dlg(this);
+  dlg.exec();
+
+  shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
+  nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
+      session, object, dlg.getAttribute());
+  CommandController::instance()->execute(nA);
+
+  reloadAttributes();
 }
