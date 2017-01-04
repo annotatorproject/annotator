@@ -1,3 +1,4 @@
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATIONGRAPHICSITEM_H
 #define ANNOTATIONGRAPHICSITEM_H
 
@@ -68,6 +69,7 @@ class AnnotationGraphicsItem : public QObject, public QGraphicsItem {
   QAction *action_del_following;
   QAction *action_del_range;
   QAction *action_edit;
+  QAction *action_edit_obj;
   QAction *action_del_obj;
   QAction *action_compress_obj;
   QAction *action_goto_first;
@@ -92,7 +94,16 @@ class AnnotationGraphicsItem : public QObject, public QGraphicsItem {
   void removeFollowingAnnotations();
   void removeAnnotationRange();
   void removeObject();
+  /**
+   * @brief editAnnotation
+   * show window for annotation
+   */
   void editAnnotation();
+  /**
+   * @brief editObject
+   * show window for annotation's object
+   */
+  void editObject();
   void compressObject();
   void goToLast();
   void goToFirst();

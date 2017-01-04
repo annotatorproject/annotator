@@ -1,3 +1,4 @@
+// Copyright 2016-2017 Annotator Team
 #include "annotationgraphicsitem.h"
 
 #include <QMenu>
@@ -18,8 +19,10 @@
 #include "plugins/pluginloader.h"
 
 #include <gui/alert.h>
+#include "annotation/annotationwindow.h"
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
+#include "object/objectwindow.h"
 
 // constructor
 AnnotationGraphicsItem::AnnotationGraphicsItem(
@@ -54,6 +57,7 @@ AnnotationGraphicsItem::~AnnotationGraphicsItem() {
   delete action_del_following;
   delete action_del_range;
   delete action_edit;
+  delete action_edit_obj;
   delete action_compress_obj;
   delete action_del_obj;
   delete action_goto_first;
@@ -127,6 +131,8 @@ void AnnotationGraphicsItem::initActions() {
   action_del_obj =
       new QAction(QString("Remove object"), (QObject *)this->parentObject());
   action_edit = new QAction(QString("Edit"), (QObject *)this->parentObject());
+  action_edit_obj =
+      new QAction(QString("Edit object"), (QObject *)this->parentObject());
   action_compress_obj =
       new QAction(QString("Compress track"), (QObject *)this->parentObject());
   action_goto_first =
@@ -144,6 +150,8 @@ void AnnotationGraphicsItem::initActions() {
                    SLOT(removeObject()));
   QObject::connect(action_edit, SIGNAL(triggered()), this,
                    SLOT(editAnnotation()));
+  QObject::connect(action_edit_obj, SIGNAL(triggered()), this,
+                   SLOT(editObject()));
   QObject::connect(action_compress_obj, SIGNAL(triggered()), this,
                    SLOT(compressObject()));
   QObject::connect(action_goto_first, SIGNAL(triggered()), this,
@@ -226,6 +234,7 @@ void AnnotationGraphicsItem::contextMenuEvent(
   // init context menu
   QMenu contextMenu("Context menu");
   contextMenu.addAction(action_edit);
+  contextMenu.addAction(action_edit_obj);
 
   if (!this->annotation->isTemporary()) contextMenu.addAction(action_del);
 
@@ -311,10 +320,17 @@ void AnnotationGraphicsItem::removeAnnotationRange() {
 void AnnotationGraphicsItem::editAnnotation() {
   QPoint posFromAction = action_edit->data().toPoint();
 
-  EditObjectDialog editObjectDialog(player->getSession(),
-                                    annotation->getObject());
-  editObjectDialog.move(posFromAction.x(), posFromAction.y());
-  editObjectDialog.exec();
+  AnnotationWindow wnd(player->getSession(), annotation);
+  wnd.move(posFromAction.x(), posFromAction.y());
+  wnd.exec();
+}
+
+void AnnotationGraphicsItem::editObject() {
+  QPoint posFromAction = action_edit->data().toPoint();
+
+  ObjectWindow wnd(player->getSession(), annotation->getObject());
+  wnd.move(posFromAction.x(), posFromAction.y());
+  wnd.exec();
 }
 
 /////////////////////////////////////////////////////////////
