@@ -1,3 +1,4 @@
+// Copyright 2016-2017 Annotator Team
 #ifndef ATTRIBUTESWIDGET_H
 #define ATTRIBUTESWIDGET_H
 

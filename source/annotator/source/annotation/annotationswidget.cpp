@@ -1,3 +1,4 @@
+// Copyright 2016-2017 Annotator Team
 #include "annotationswidget.h"
 #include <AnnotatorLib/Annotation.h>
 #include <controller/selectioncontroller.h>

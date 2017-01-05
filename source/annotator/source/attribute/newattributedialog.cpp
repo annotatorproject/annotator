@@ -29,7 +29,7 @@ void NewAttributeDialog::createAttribute() {
   std::string value = ui->valueLineEdit->text().toStdString();
 
   attribute = std::make_shared<AnnotatorLib::Attribute>(type, name);
-  AnnotatorLib::AttributeValue *av =
+  std::shared_ptr<AnnotatorLib::AttributeValue> av =
       AnnotatorLib::Attribute::createAttributeValue(type, value);
   attribute->setValue(av);
 

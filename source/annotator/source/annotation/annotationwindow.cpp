@@ -24,14 +24,15 @@ AnnotationWindow::AnnotationWindow(
 
 AnnotationWindow::~AnnotationWindow() { delete ui; }
 
-void AnnotationWindow::reload()
-{
-    this->setWindowTitle(
-        QString::number(this->annotation->getId()) + " (" +
-        QString::fromStdString(this->annotation->getObject()->getClass()->getName()) + ")["+
-                QString::number(this->annotation->getFrame()->getFrameNumber())+"]");
-    ui->idLabel->setText(QString::number(this->annotation->getId()));
-    reloadAttributes();
+void AnnotationWindow::reload() {
+  this->setWindowTitle(
+      QString::number(this->annotation->getId()) + " (" +
+      QString::fromStdString(
+          this->annotation->getObject()->getClass()->getName()) +
+      ")[" + QString::number(this->annotation->getFrame()->getFrameNumber()) +
+      "]");
+  ui->idLabel->setText(QString::number(this->annotation->getId()));
+  reloadAttributes();
 }
 
 void AnnotationWindow::reloadAttributes() {
@@ -39,14 +40,14 @@ void AnnotationWindow::reloadAttributes() {
   for (auto attribute : this->annotation->getAttributes()) {
     QListWidgetItem *item = new QListWidgetItem(ui->attributesListWidget);
     AttributeItem *attributeItem = new AttributeItem(attribute);
+    attributeItem->setAnnotation(this->annotation);
     item->setSizeHint(attributeItem->minimumSizeHint());
     ui->attributesListWidget->setItemWidget(item, attributeItem);
   }
 }
 
-void AnnotationWindow::on_editObjectButton_clicked()
-{
-    ObjectWindow wnd(session, annotation->getObject());
-    wnd.exec();
-    reload();
+void AnnotationWindow::on_editObjectButton_clicked() {
+  ObjectWindow wnd(session, annotation->getObject());
+  wnd.exec();
+  reload();
 }

@@ -1,3 +1,4 @@
+// Copyright 2016-2017 Annotator Team
 #include "attributeswidget.h"
 #include "attribute/attributeitem.h"
 #include "ui_attributeswidget.h"

@@ -19,14 +19,14 @@ class AnnotationWindow : public QDialog {
                             shared_ptr<AnnotatorLib::Annotation> annotation,
                             QWidget *parent = 0);
   ~AnnotationWindow();
-      void reload();
+  void reload();
 
-protected:
-      void reloadAttributes();
-private slots:
-      void on_editObjectButton_clicked();
+ protected:
+  void reloadAttributes();
+ private slots:
+  void on_editObjectButton_clicked();
 
-private:
+ private:
   Ui::AnnotationWindow *ui;
   const std::shared_ptr<AnnotatorLib::Session> session;
   const std::shared_ptr<AnnotatorLib::Annotation> annotation;
