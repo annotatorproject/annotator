@@ -12,6 +12,7 @@
 #include <AnnotatorLib/Attribute.h>
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Commands/NewAttribute.h>
+#include <AnnotatorLib/Commands/RemoveAttribute.h>
 
 #include <QMessageBox>
 
@@ -89,4 +90,21 @@ void ObjectWindow::on_addAttributeButton_clicked() {
   CommandController::instance()->execute(nA);
 
   reloadAttributes();
+}
+
+void ObjectWindow::on_removeAttributeButton_clicked() {
+  shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA;
+  std::shared_ptr<AnnotatorLib::Attribute> attr;
+  AttributeItem *attributeItem =
+      (AttributeItem *)ui->attributesListWidget->itemWidget(
+          ui->attributesListWidget->currentItem());
+  if (attributeItem) attr = attributeItem->getAttribute();
+  if (attr) {
+    shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA =
+        std::make_shared<AnnotatorLib::Commands::RemoveAttribute>(session,
+                                                                  object, attr);
+    CommandController::instance()->execute(rA);
+
+    reloadAttributes();
+  }
 }

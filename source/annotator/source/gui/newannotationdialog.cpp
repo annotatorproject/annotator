@@ -75,7 +75,7 @@ void NewAnnotationDialog::createAnnotation() {
   for (auto attribute : attributes) {
     shared_ptr<AnnotatorLib::Commands::NewAttribute> nAttr;
     nAttr = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
-        session, nA->getAnnotation(), attribute);
+        session, nA->getAnnotation()->getObject(), attribute);
     CommandController::instance()->execute(nAttr);
   }
 }

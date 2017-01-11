@@ -55,5 +55,6 @@ void AttributeItem::on_updateButton_clicked() {
         std::make_shared<AnnotatorLib::Commands::UpdateAttribute>(
             annotation, attribute->getName(), value);
     CommandController::instance()->execute(nAttr);
+    ui->updateButton->hide();
   }
 }
