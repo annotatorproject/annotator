@@ -26,13 +26,25 @@ Clone and install [dlib](http://dlib.net).
 
 Then clone and build [annotatorlib](https://github.com/lasmue/annotatorlib).
 
+Build LibPoco
+```sh
+git clone https://github.com/pocoproject/poco.git
+cd poco
+sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' cmake/FindMySQL.cmake
+cd build
+cmake ..
+make -j2
+```
+
+Then build.
+
 ```sh
 git clone https://github.com/lasmue/annotatorlib
-cd annotatorlib
 git submodule update --init --recursive
+cd annotatorlib
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DPoco_DIR= ../../poco/build/Poco ..
 make
 ```
 
