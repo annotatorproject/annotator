@@ -30,6 +30,12 @@
    </item>
    <item row="1" column="0">
     <widget class="QComboBox" name="typeComboBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
      <item>
       <property name="text">
        <string>String</string>
