@@ -5,7 +5,6 @@
 
 # find_package(THIRDPARTY REQUIRED)
 
-
 # Enable automoc
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -125,8 +124,7 @@ target_include_directories(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
-    ${META_PROJECT_NAME}::annotatorplugin)
-
+    ${META_PROJECT_NAME}::annotatorplugin ${crashcpp_LIB})
 
 #
 # Compile definitions
@@ -156,6 +154,7 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
     ${META_PROJECT_NAME}::annotatorplugin
+    ${crashcpp_LIB}
 )
 
 

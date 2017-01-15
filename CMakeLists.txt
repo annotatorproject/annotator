@@ -60,7 +60,7 @@ option(OPTION_BUILD_TESTS    "Build tests."                                     
 option(OPTION_BUILD_DOCS     "Build documentation."                                   OFF)
 option(OPTION_BUILD_PLUGINS  "Build plugins."                                         ON)
 option(OPTION_BUILD_ANNOTATORLIB  "Build Annotatorlib"                                ON)
-
+option(OPTION_INCLUDE_CRASHCPP  "Crash Reporter"                                      OFF)
 
 # 
 # Declare project

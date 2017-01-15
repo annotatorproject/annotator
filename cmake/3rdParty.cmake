@@ -57,3 +57,37 @@ include_directories("${source_dir}/googletest/include"
                     "${source_dir}/googlemock/include")
 
 endif( OPTION_BUILD_TESTS )
+
+## CrashCpp
+
+if( OPTION_INCLUDE_CRASHCPP )
+
+ExternalProject_Add(
+    crashcpp
+    GIT_REPOSITORY https://github.com/falsecam/crashcpp.git
+    GIT_TAG master
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/crashcpp
+    INSTALL_COMMAND ""
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=Off source
+)
+
+ExternalProject_Get_Property(crashcpp source_dir binary_dir)
+
+file(COPY "${binary_dir}/libcrashcpp.so" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+add_library(libcrashcpp IMPORTED STATIC GLOBAL)
+add_dependencies(libcrashcpp crashcpp)
+
+
+set_target_properties(libcrashcpp PROPERTIES
+    "IMPORTED_LOCATION" "${binary_dir}/libcrashcpp.so"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+)
+
+include_directories("${source_dir}/source/crashcpp/include"
+		"${binary_dir}/source/crashcpp/include")
+
+add_definitions(-DOPTION_INCLUDE_CRASHCPP)
+set(crashcpp_LIB libcrashcpp)
+
+endif(OPTION_INCLUDE_CRASHCPP)

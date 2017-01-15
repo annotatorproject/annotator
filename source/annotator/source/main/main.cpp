@@ -1,7 +1,14 @@
-#include <sys/stat.h>
+#include "mainwindow.h"
+#include <Poco/Exception.h>
 #include <QApplication>
 #include <QSettings>
-#include "mainwindow.h"
+#include <sys/stat.h>
+
+#ifdef OPTION_INCLUDE_CRASHCPP
+#include <crashcpp/crashcpp.h>
+#include <crashcpp/logreport.h>
+#include <crashcpp/postreport.h>
+#endif
 
 void setStyleSheet(QApplication &app, QString filename) {
   QFile file(filename);
@@ -17,6 +24,14 @@ int main(int argc, char *argv[]) {
   a.setApplicationName("Annotator");
   // a.setApplicationDisplayName("Annotation Tool");
   a.setApplicationVersion("Alpha");
+
+#ifdef OPTION_INCLUDE_CRASHCPP
+  CrashCpp::init();
+  CrashCpp::addReporter(std::make_shared<crashcpp::PostReport>(
+      "http://crashcpp.chriamue.de/api/report"));
+  CrashCpp::addReporter(std::make_shared<crashcpp::LogReport>());
+#endif
+
   setStyleSheet(a, "annotator.qss");
 
   MainWindow w;
@@ -35,5 +50,24 @@ int main(int argc, char *argv[]) {
       w.openProject(AnnotatorLib::Project::load(lastProjPath.toStdString()));
   }
 
-  return a.exec();
+  /*
+   * If an unhandled exception occurs, the exception will be sent to crashcpp.chriamue.de
+   */
+  try {
+    return a.exec();
+  } catch (cv::Exception &e) {
+#ifdef OPTION_INCLUDE_CRASHCPP
+    CrashCpp::sendReport("Annotator", "cv::Exception", e.what());
+#endif
+  } catch (Poco::Exception &e) {
+#ifdef OPTION_INCLUDE_CRASHCPP
+    CrashCpp::sendReport("Annotator", e.what(), e.message());
+#endif
+  } catch (std::exception &e) {
+#ifdef OPTION_INCLUDE_CRASHCPP
+    CrashCpp::sendReport("Annotator", "cv::Exception", e.what());
+#endif
+  }
+
+  return 1;
 }
