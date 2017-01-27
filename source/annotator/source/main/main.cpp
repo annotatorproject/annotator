@@ -1,8 +1,9 @@
-#include "mainwindow.h"
 #include <Poco/Exception.h>
-#include <QApplication>
-#include <QSettings>
 #include <sys/stat.h>
+#include <QApplication>
+#include <QMessageBox>
+#include <QSettings>
+#include "mainwindow.h"
 
 #ifdef OPTION_INCLUDE_CRASHCPP
 #include <crashcpp/crashcpp.h>
@@ -43,15 +44,28 @@ int main(int argc, char *argv[]) {
   QString lastProjPath = settings.value("LastProjectPath", "").toString();
 
   // check if path was stored previously
-  if (!lastProjPath.isEmpty()) {
-    // check if file exists on fs
-    struct stat buffer;
-    if (stat(lastProjPath.toStdString().c_str(), &buffer) == 0)
-      w.openProject(AnnotatorLib::Project::load(lastProjPath.toStdString()));
+  try {
+    if (!lastProjPath.isEmpty()) {
+      // check if file exists on fs
+      struct stat buffer;
+      if (stat(lastProjPath.toStdString().c_str(), &buffer) == 0)
+        w.openProject(AnnotatorLib::Project::load(lastProjPath.toStdString()));
+    }
+  } catch (Poco::Exception &e) {
+    QMessageBox::critical(
+        nullptr, "Critical error while loading last session.",
+        "Last session coult not been loaded causing following error: " +
+            QString::fromStdString(e.message()));
+  } catch (std::exception &e) {
+    QMessageBox::critical(
+        nullptr, "Critical error while loading last session.",
+        "Last session coult not been loaded causing following error: " +
+            QString::fromStdString(e.what()));
   }
 
   /*
-   * If an unhandled exception occurs, the exception will be sent to crashcpp.chriamue.de
+   * If an unhandled exception occurs, the exception will be sent to
+   * crashcpp.chriamue.de
    */
   try {
     return a.exec();
