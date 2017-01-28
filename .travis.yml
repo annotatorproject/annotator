@@ -38,7 +38,6 @@ addons:
    - libjasper-dev
    - libdc1394-22-dev
    - libboost-all-dev
-   - libpoco-dev
    - libmysqlclient-dev
    - lcov
 
@@ -97,13 +96,13 @@ before_script:
  - git submodule update --init --recursive
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DPoco_DIR=../../poco/build/Poco -DOpenCV_DIR=../../opencv/build/Poco -DOPTION_BUILD_TESTS=0 ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DPoco_DIR=../../poco/build/Poco -DOpenCV_DIR=../../opencv/build -DOPTION_BUILD_TESTS=0 ..
  - make
  - cd ../../
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DPoco_DIR=poco/build/Poco -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=0 ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DPoco_DIR=poco/build/Poco -DOpenCV_DIR=opencv/build -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=0 ..
 script:
  - make -j4
  - make pack
