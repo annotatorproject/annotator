@@ -70,12 +70,11 @@ before_script:
  - sudo make install
  - cd ..
 
- - curl -sL https://github.com/Itseez/opencv/archive/3.1.0.zip > opencv.zip
- - unzip opencv.zip
- - cd opencv-3.1.0
- - mkdir build install
+ - git clone https://github.com/opencv/opencv
+ - cd opencv
+ - mkdir -p build
  - cd build
- - cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_FFMPEG=OFF -DWITH_IPP=OFF ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF -DWITH_IPP=OFF ..
  - make -j8
  - sudo make install
  - cd ../../
@@ -85,12 +84,12 @@ before_script:
  - cd poco
  - mkdir -p build
  - cd build
- - cmake -DCMAKE_BUILD_TYPE=Release .. && make -j3 && sudo make install && sudo ldconfig
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DPOCO_STATIC=ON .. && make -j3 && sudo make install && sudo ldconfig
  - cd ../..
 
  - git clone https://github.com/davisking/dlib
  - cd dlib
- - mkdir build; cd build; cmake .. ; make; sudo make install
+ - mkdir build; cd build; cmake -DCMAKE_CXX_COMPILER=$CXX .. ; make; sudo make install
  - cd ../../
 
  - git clone https://github.com/lasmue/annotatorlib
@@ -98,13 +97,13 @@ before_script:
  - git submodule update --init --recursive
  - mkdir build
  - cd build
- - cmake  -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=0 ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DPoco_DIR=../../poco/build/Poco -DOpenCV_DIR=../../opencv/build/Poco -DOPTION_BUILD_TESTS=0 ..
  - make
  - cd ../../
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=0 ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -Dannotatorlib_DIR=annotatorlib -DPoco_DIR=poco/build/Poco -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_TESTS=0 ..
 script:
  - make -j4
  - make pack

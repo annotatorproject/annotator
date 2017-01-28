@@ -4,10 +4,6 @@
 # 
 
 find_package(dlib)
-if ( NOT dlib_FOUND )
-  message(WARNING "Package dlib required, but not found!")
-  return()
-endif(NOT dlib_FOUND )
 
 # Enable automoc
 set(CMAKE_AUTOMOC ON)
@@ -28,8 +24,8 @@ set_policy(CMP0020 NEW)
 set(target correlationtracker)
 
 # Exit here if required dependencies are not met
-if (NOT Qt5Core_FOUND)
-    message(STATUS "Plugin ${target} skipped: Qt5 not found")
+if (NOT dlib_FOUND)
+    message(STATUS "Plugin ${target} skipped: dlib not found")
     return()
 else()
     message(STATUS "Plugin ${target}")
