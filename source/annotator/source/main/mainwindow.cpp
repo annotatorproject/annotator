@@ -250,7 +250,8 @@ void MainWindow::on_actionOpen_Project_triggered() {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     Annotator::PluginLoader::getInstance();
     try {
-      openProject(AnnotatorLib::Project::load(fileName.toStdString()));
+      std::shared_ptr<AnnotatorLib::Project> project = AnnotatorLib::Project::load(fileName.toStdString());
+      openProject(project);
       QApplication::restoreOverrideCursor();
     } catch (std::exception &e) {
       QApplication::restoreOverrideCursor();

@@ -32,6 +32,7 @@ QString NewProjectDialog::getStorageType() {
   if (ui->xmlRadioButton->isChecked()) storageType = "xml";
   if (ui->sqlRadioButton->isChecked()) storageType = "mysql";
   if (ui->sqliteRadioButton->isChecked()) storageType = "sqlite";
+  if (ui->mongoDBRadioButton->isChecked()) storageType = "mongodb";
   return storageType;
 }
 
@@ -131,4 +132,10 @@ void NewProjectDialog::on_imageFTPRadioButton_toggled(bool checked) {
 
 void NewProjectDialog::on_sqliteRadioButton_toggled(bool checked) {
   if (checked) ui->storagePathLineEdit->setPlaceholderText("annotator.sqlite3");
+}
+
+void NewProjectDialog::on_mongoDBRadioButton_toggled(bool checked) {
+  if (checked)
+    ui->storagePathLineEdit->setPlaceholderText(
+        "mongodb://localhost:27017/annotator");
 }

@@ -39,6 +39,7 @@ addons:
    - libdc1394-22-dev
    - libboost-all-dev
    - libmysqlclient-dev
+   - libmongo-client-dev
    - lcov
 
 install:

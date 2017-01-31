@@ -34,6 +34,8 @@ class NewProjectDialog : public QDialog {
 
   void on_sqliteRadioButton_toggled(bool checked);
 
+  void on_mongoDBRadioButton_toggled(bool checked);
+
  private:
   Ui::NewProjectDialog *ui;
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
