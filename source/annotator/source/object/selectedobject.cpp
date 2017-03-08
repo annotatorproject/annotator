@@ -72,11 +72,20 @@ QPixmap SelectedObject::getImgCrop(
       annotation->getFrame()->getFrameNumber());
   // project->getImageSet()->gotoPosition(prev_pos);
   // END ugly hack
-  cv::Rect rect(annotation->getX(), annotation->getY(), annotation->getWidth(),
-                annotation->getHeight());
+
+  float x = std::max(annotation->getX(),0.f);
+  float y = std::max(annotation->getY(),0.f);
+  float w = std::min(annotation->getWidth(), tmp.cols - x);
+  float h = std::min(annotation->getHeight(), tmp.rows - y);
+
+  cv::Rect rect(x,y,w,h);
 
   cv::Mat cropped;
-  tmp(rect).copyTo(cropped);
+  try{
+    tmp(rect).copyTo(cropped);
+  }catch(cv::Exception &e){
+      std::cout << e.what();
+  }
 
   cropped.convertTo(cropped, CV_8U);
   cv::cvtColor(cropped, cropped, CV_BGR2RGB);
