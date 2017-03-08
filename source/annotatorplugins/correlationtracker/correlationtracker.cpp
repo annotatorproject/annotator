@@ -58,7 +58,12 @@ void CorrelationTracker::setLastAnnotation(shared_ptr<Annotation> annotation) {
   selection = cv::Rect(lastAnnotation->getX(), lastAnnotation->getY(),
                        lastAnnotation->getWidth(), lastAnnotation->getHeight());
 
-  if (this->frameImg.empty()) return;
+  if (this->frameImg.empty()) {
+    setFrame(std::make_shared<AnnotatorLib::Frame>(
+                 annotation->getFrame()->getFrameNumber()),
+             project->getImageSet()->getImage(
+                 annotation->getFrame()->getFrameNumber()));
+  }
   dlib::cv_image<dlib::bgr_pixel> cvimg(this->frameImg);
   tracker.start_track(cvimg, dlib::rectangle(selection.x, selection.y,
                                              selection.x + selection.width,

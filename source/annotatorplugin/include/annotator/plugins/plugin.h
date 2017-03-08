@@ -31,18 +31,20 @@ class Plugin : virtual public QObject,
       }
 
       setObject(object);
-      shared_ptr<AnnotatorLib::Annotation> annotationAtFrame =
-          session->getAnnotation(frame, object);  // find annotation at keyFrame
+      shared_ptr<AnnotatorLib::Annotation> annotationAtPrevFrame =
+          session->getAnnotation(std::make_shared<AnnotatorLib::Frame>(
+                                     frame->getFrameNumber() - 1),
+                                 object);
 
-      if (!annotationAtFrame) {
+      if (!annotationAtPrevFrame) {
         shared_ptr<AnnotatorLib::Annotation> previousA = nullptr;
         shared_ptr<AnnotatorLib::Annotation> nextA = nullptr;
         object->findClosestKeyFrames(frame, previousA, nextA);
-        annotationAtFrame = previousA;
+        annotationAtPrevFrame = previousA;
       }
 
-      if (annotationAtFrame) {
-        setLastAnnotation(annotationAtFrame);
+      if (annotationAtPrevFrame) {
+        setLastAnnotation(annotationAtPrevFrame);
       }
     }
 

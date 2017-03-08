@@ -321,8 +321,7 @@ void Player::enableDrawing(bool enable) {
   this->ui->playerScrollArea->setEnabled(enable);
 }
 
-void Player::on_nextFrame(long frame)  // wrong frame number???
-{
+void Player::on_nextFrame(long frame) {
   if (autoAnnotation) runPlugin(frame);
 }
 
