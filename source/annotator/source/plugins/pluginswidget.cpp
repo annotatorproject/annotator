@@ -34,6 +34,7 @@ void PluginsWidget::reload() {
 
 void PluginsWidget::on_objectSelected(shared_ptr<AnnotatorLib::Object> obj) {
   if (autoAnnotate) ui->comboBox->setDisabled(!obj);
+  Annotator::PluginLoader::getInstance().getCurrent()->setObject(obj);
 }
 
 void PluginsWidget::on_comboBox_currentIndexChanged(const QString &arg1) {
