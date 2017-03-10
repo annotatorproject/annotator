@@ -72,6 +72,8 @@ endif ()
 # 
 
 set(DEFAULT_COMPILE_OPTIONS)
+set(CMAKE_CXX_STANDARD 11) # C++11...
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # MSVC compiler options
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
