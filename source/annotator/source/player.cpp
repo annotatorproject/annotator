@@ -100,15 +100,11 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   this->project = project;
 
   this->session = project ? project->getSession() : nullptr;
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                           : 0);
 
+  videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
   if (project) {
-    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                             : 0);
-
-    videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
-    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                             : 0);
-
     cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
     scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
     scene->setSession(project ? session : nullptr);
@@ -173,7 +169,7 @@ void Player::showFrame(cv::Mat frame) {
   currentFrame = frame;
 
   // convert cv::mat to QImage, cv::mat uses bgr, qimage rgb format
-  cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
+  cv::cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
   QImage img = QImage((const unsigned char *)(frame.data), frame.cols,
                       frame.rows, frame.step, QImage::Format_RGB888);
 

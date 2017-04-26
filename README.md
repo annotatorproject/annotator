@@ -1,4 +1,4 @@
-# Annotator [![Stories in Ready] [waffle-image]] [waffle] [![Build Status] [travis-image]] [travis] [![Documentation] [codedocs-image]] [codedocs] [![Gitter] [gitter-image]] [gitter]
+# Annotator [![Stories in Ready][waffle-image]][waffle][![Build Status][travis-image]][travis][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
 [travis-image]: https://travis-ci.org/lasmue/annotator.png?branch=master
 [travis]: http://travis-ci.org/lasmue/annotator
