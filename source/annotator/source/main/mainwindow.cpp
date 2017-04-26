@@ -15,6 +15,7 @@
 #include "gui/alert.h"
 #include "gui/classesdialog.h"
 #include "gui/statisticsdialog.h"
+#include "gui/exportannotations.h"
 #include "newprojectdialog.h"
 #include "plugins/pluginloader.h"
 #include "plugins/pluginrunner.h"
@@ -369,4 +370,10 @@ void MainWindow::on_actionProject_Statistics_triggered() {
 void MainWindow::on_actionRun_Plugins_Dialog_triggered() {
   PluginRunner pluginRunner(project, this);
   pluginRunner.exec();
+}
+
+void MainWindow::on_actionExport_Annotations_triggered()
+{
+    ExportAnnotations dialog(project, this);
+    dialog.exec();
 }

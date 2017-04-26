@@ -32,7 +32,7 @@
          <x>0</x>
          <y>0</y>
          <width>638</width>
-         <height>588</height>
+         <height>590</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
@@ -73,7 +73,7 @@
          <x>0</x>
          <y>0</y>
          <width>1014</width>
-         <height>588</height>
+         <height>590</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -92,7 +92,7 @@
      <x>0</x>
      <y>0</y>
      <width>1680</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -110,6 +110,7 @@
     <addaction name="separator"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
+    <addaction name="actionExport_Annotations"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Project"/>
     <addaction name="separator"/>
@@ -167,7 +168,7 @@
   </widget>
   <action name="actionOpen_Project">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/open-or.png</normaloff>:/Icons/open-or.png</iconset>
    </property>
    <property name="text">
@@ -176,7 +177,7 @@
   </action>
   <action name="actionSave_Project">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/save-or.png</normaloff>:/Icons/save-or.png</iconset>
    </property>
    <property name="text">
@@ -185,7 +186,7 @@
   </action>
   <action name="actionSave_Project_As">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/save-or.png</normaloff>:/Icons/save-or.png</iconset>
    </property>
    <property name="text">
@@ -194,7 +195,7 @@
   </action>
   <action name="actionClose_Project">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/delet-or.png</normaloff>:/Icons/delet-or.png</iconset>
    </property>
    <property name="text">
@@ -203,7 +204,7 @@
   </action>
   <action name="actionNew_Project">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/edit-or.png</normaloff>:/Icons/edit-or.png</iconset>
    </property>
    <property name="text">
@@ -212,7 +213,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../../resource/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/quit-or.png</normaloff>:/Icons/quit-or.png</iconset>
    </property>
    <property name="text">
@@ -288,10 +289,13 @@
     <string>Run Plugins Dialog</string>
    </property>
   </action>
+  <action name="actionExport_Annotations">
+   <property name="text">
+    <string>Export Annotations</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../../resource/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
