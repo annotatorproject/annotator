@@ -42,7 +42,7 @@ void ExportAnnotations::on_buttonBox_accepted()
 
     std::string path = ui->destinationLineEdit->text().toStdString();
     saver->setPath(path);
-    saver->saveSession(project->getSession().get());
+    saver->saveProject(project);
     saver->close();
     delete saver;
 }
