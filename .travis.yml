@@ -89,7 +89,7 @@ before_script:
  - mkdir build; cd build; cmake -DCMAKE_CXX_COMPILER=$CXX .. ; make; sudo make install
  - cd ../../
 
- - git clone https://github.com/lasmue/annotatorlib
+ - git clone https://github.com/annotatorproject/annotatorlib
  - cd annotatorlib
  - git submodule update --init --recursive
  - mkdir build

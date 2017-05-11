@@ -44,7 +44,7 @@ parts:
     plugin: cmake
     configflags:
       - "-DOPTION_BUILD_ANNOTATORLIB=0"
-    source: https://github.com/lasmue/annotator.git
+    source: https://github.com/annotatorproject/annotator.git
     after: [dlib, qt, integration]
     organize:
       annotator: bin/annotator

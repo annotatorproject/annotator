@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>45</height>
+    <height>40</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>ObjectItem</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

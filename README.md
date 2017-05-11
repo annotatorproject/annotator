@@ -1,16 +1,16 @@
 # Annotator [![Stories in Ready][waffle-image]][waffle][![Build Status][travis-image]][travis][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
-[travis-image]: https://travis-ci.org/lasmue/annotator.png?branch=master
-[travis]: http://travis-ci.org/lasmue/annotator
+[travis-image]: https://travis-ci.org/annotatorproject/annotator.png?branch=master
+[travis]: http://travis-ci.org/annotatorproject/annotator
 
-[codedocs-image]: https://codedocs.xyz/lasmue/annotator.svg
-[codedocs]: https://codedocs.xyz/lasmue/annotator/
+[codedocs-image]: https://codedocs.xyz/annotatorproject/annotator.svg
+[codedocs]: https://codedocs.xyz/annotatorproject/annotator/
 
 [gitter-image]: https://badges.gitter.im/Join%20Chat.svg
-[gitter]: https://gitter.im/lasmue/annotator
+[gitter]: https://gitter.im/annotatorproject/annotator
 
-[waffle-image]: https://badge.waffle.io/lasmue/annotator.svg?label=ready&title=Ready
-[waffle]: http://waffle.io/lasmue/annotator
+[waffle-image]: https://badge.waffle.io/annotatorproject/annotator.svg?label=ready&title=Ready
+[waffle]: http://waffle.io/annotatorproject/annotator
 
 ### Quick start
 
@@ -24,7 +24,7 @@ sudo apt-get install libopencv-dev
 
 Clone and install [dlib](http://dlib.net).
 
-Then clone and build [annotatorlib](https://github.com/lasmue/annotatorlib).
+Then clone and build [annotatorlib](https://github.com/annotatorproject/annotatorlib).
 
 Build LibPoco
 ```sh
@@ -39,7 +39,7 @@ make -j2
 Then build.
 
 ```sh
-git clone https://github.com/lasmue/annotatorlib
+git clone https://github.com/annotatorproject/annotatorlib
 git submodule update --init --recursive
 cd annotatorlib
 mkdir build
@@ -51,7 +51,7 @@ make
 Now you can clone and build annotator.
 
 ```sh
-git clone https://github.com/lasmue/annotator
+git clone https://github.com/annotatorproject/annotator
 cd annotator
 git submodule update --init --recursive
 mkdir build
