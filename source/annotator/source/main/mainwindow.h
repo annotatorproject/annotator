@@ -82,7 +82,9 @@ class MainWindow : public QMainWindow {
 
   void on_actionExport_Annotations_triggered();
 
-protected:
+  void on_action_Options_triggered();
+
+ protected:
   Player playerWidget;
   AnnotationsWidget annotationsWidget;
   ObjectsWidget objectsWidget;

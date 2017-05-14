@@ -128,12 +128,14 @@
    </widget>
    <widget class="QMenu" name="menuAlgorithm">
     <property name="title">
-     <string>Tools</string>
+     <string>&amp;Tools</string>
     </property>
     <addaction name="actionCompress_Session"/>
     <addaction name="actionClear_Session"/>
     <addaction name="actionProject_Statistics"/>
     <addaction name="actionRun_Plugins_Dialog"/>
+    <addaction name="separator"/>
+    <addaction name="action_Options"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -292,6 +294,11 @@
   <action name="actionExport_Annotations">
    <property name="text">
     <string>Export Annotations</string>
+   </property>
+  </action>
+  <action name="action_Options">
+   <property name="text">
+    <string>&amp;Options...</string>
    </property>
   </action>
  </widget>

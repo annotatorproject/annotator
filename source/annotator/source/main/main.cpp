@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
                      QApplication::applicationName());
   QString lastProjPath = settings.value("LastProjectPath", "").toString();
 
-  std::string storagesPath = settings.value("StoragesPath", "storages").toString().toStdString();
+  std::string storagesPath =
+      settings.value("StoragesPath", "storages").toString().toStdString();
   AnnotatorLib::Storage::StorageFactory::instance()->loadPlugins(storagesPath);
 
   // check if path was stored previously
@@ -66,9 +67,9 @@ int main(int argc, char *argv[]) {
         nullptr, "Critical error while loading last session.",
         "Last session coult not been loaded causing following error: " +
             QString::fromStdString(e.what()));
-  } catch(...){
-      QMessageBox::critical(
-          nullptr, "Error", "Unknown error occured while loading last project.");
+  } catch (...) {
+    QMessageBox::critical(nullptr, "Error",
+                          "Unknown error occured while loading last project.");
   }
 
   /*

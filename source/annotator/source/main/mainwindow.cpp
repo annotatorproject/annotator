@@ -1,25 +1,32 @@
+// Copyright 2015-2017 Annotator Team
+
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include <string>
+
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
+
 #include <QApplication>
 #include <QCheckBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
-#include <string>
+
 #include "aboutdialog.h"
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "gui/alert.h"
 #include "gui/classesdialog.h"
-#include "gui/statisticsdialog.h"
 #include "gui/exportannotations.h"
+#include "gui/statisticsdialog.h"
 #include "newprojectdialog.h"
+#include "optionsdialog.h"
 #include "plugins/pluginloader.h"
 #include "plugins/pluginrunner.h"
-#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -372,8 +379,12 @@ void MainWindow::on_actionRun_Plugins_Dialog_triggered() {
   pluginRunner.exec();
 }
 
-void MainWindow::on_actionExport_Annotations_triggered()
-{
-    ExportAnnotations dialog(project, this);
-    dialog.exec();
+void MainWindow::on_actionExport_Annotations_triggered() {
+  ExportAnnotations dialog(project, this);
+  dialog.exec();
+}
+
+void MainWindow::on_action_Options_triggered() {
+  OptionsDialog dialog;
+  dialog.exec();
 }
