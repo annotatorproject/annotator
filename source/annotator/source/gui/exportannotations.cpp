@@ -1,7 +1,7 @@
 #include "exportannotations.h"
 #include "ui_exportannotations.h"
 
-#include <AnnotatorLib/Saver/SaverFactory.h>
+#include <AnnotatorLib/Storage/StorageFactory.h>
 
 #include <QFileDialog>
 
@@ -11,7 +11,7 @@ ExportAnnotations::ExportAnnotations(std::shared_ptr<AnnotatorLib::Project> proj
 {
     this->project = project;
     ui->setupUi(this);
-    for(std::string saver: AnnotatorLib::Saver::SaverFactory::availableSaver()){
+    for(std::string saver: AnnotatorLib::Storage::StorageFactory::instance()->availableSaver()){
         ui->fileFormatComboBox->addItem(QString::fromStdString(saver));
     }
 }
@@ -38,11 +38,11 @@ void ExportAnnotations::on_destinationButton_clicked()
 void ExportAnnotations::on_buttonBox_accepted()
 {
     std::string saverType = ui->fileFormatComboBox->currentText().toStdString();
-    AnnotatorLib::Saver::AbstractSaver *saver = AnnotatorLib::Saver::SaverFactory::createSaver(saverType);
+    std::shared_ptr<AnnotatorLib::Saver::AbstractSaver> saver =
+            AnnotatorLib::Storage::StorageFactory::instance()->createSaver(saverType);
 
     std::string path = ui->destinationLineEdit->text().toStdString();
     saver->setPath(path);
     saver->saveProject(project);
     saver->close();
-    delete saver;
 }
