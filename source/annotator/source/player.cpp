@@ -318,6 +318,7 @@ void Player::enableDrawing(bool enable) {
 }
 
 void Player::on_nextFrame(long frame) {
+    emit signal_frameChanged(frame);
   if (autoAnnotation) runPlugin(frame);
 }
 

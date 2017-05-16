@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->annotationsLayout->addWidget(&annotationsWidget);
   ui->objectsLayout->addWidget(&objectsWidget);
   ui->selectedObjectLayout->addWidget(&selectedObject);
-  // ui->attributesLayout->addWidget(&attributesWidget); // TODO
+  ui->attributesLayout->addWidget(&attributesWidget); // TODO
   ui->pluginsLayout->addWidget(&pluginsWidget);
 
   rateLabel = new QLabel;     // Frame rate
@@ -109,6 +109,12 @@ void MainWindow::connectSignalSlots() {
           SIGNAL(signal_removedObject(shared_ptr<AnnotatorLib::Object>)),
           &objectsWidget,
           SLOT(on_objectRemoved(shared_ptr<AnnotatorLib::Object>)));
+
+  // update attributes
+  connect(SelectionController::instance(), SIGNAL(signal_frameSelection(long)),
+          &attributesWidget, SLOT(setFrame(long)));
+  connect(&playerWidget, SIGNAL(signal_frameChanged(long)),
+          &attributesWidget, SLOT(setFrame(long)));
 
   // autoAnnotate
   connect(&pluginsWidget, SIGNAL(signal_autoAnnotate(bool)), &playerWidget,

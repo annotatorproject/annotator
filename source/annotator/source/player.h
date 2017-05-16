@@ -67,6 +67,7 @@ class Player : public QWidget {
 
  signals:
   void signal_objectSelection(shared_ptr<AnnotatorLib::Object> object);
+  void signal_frameChanged(long frame);
 
  protected:
   void clearAnnotationsGraphics();
