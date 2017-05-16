@@ -2,8 +2,8 @@
 #ifndef ATTRIBUTESWIDGET_H
 #define ATTRIBUTESWIDGET_H
 
-#include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Frame.h>
+#include <AnnotatorLib/Session.h>
 #include <QWidget>
 
 namespace Ui {
@@ -21,15 +21,15 @@ class AttributesWidget : public QWidget {
   void setFrame(std::shared_ptr<AnnotatorLib::Frame> frame);
   void reload();
 
-public slots:
-    void setFrame(long frame_number);
+ public slots:
+  void setFrame(long frame_number);
 
-private slots:
+ private slots:
   void on_removeAttributeButton_clicked();
 
   void on_addAttributeButton_clicked();
 
-private:
+ private:
   Ui::AttributesWidget *ui;
 
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;

@@ -19,62 +19,58 @@ AttributesWidget::~AttributesWidget() { delete ui; }
 
 void AttributesWidget::setSession(
     std::shared_ptr<AnnotatorLib::Session> session) {
-    this->session = session;
+  this->session = session;
 }
 
-void AttributesWidget::setFrame(long frame_number)
-{
-    if(session)
-    setFrame(session->getFrame(frame_number));
+void AttributesWidget::setFrame(long frame_number) {
+  if (!session) return;
+  std::shared_ptr<AnnotatorLib::Frame> frame = session->getFrame(frame_number);
+  if (!frame) frame = std::make_shared<AnnotatorLib::Frame>(frame_number);
+  setFrame(frame);
 }
 
-void AttributesWidget::setFrame(std::shared_ptr<AnnotatorLib::Frame> frame)
-{
- this->frame = frame;
-    reload();
+void AttributesWidget::setFrame(std::shared_ptr<AnnotatorLib::Frame> frame) {
+  this->frame = frame;
+  reload();
 }
 
 void AttributesWidget::reload() {
-    ui->attributesListWidget->clear();
-    if(!frame)
-        return;
-    for (std::shared_ptr<AnnotatorLib::Attribute> attribute : frame->getAttributes()) {
-      QListWidgetItem *item = new QListWidgetItem(ui->attributesListWidget);
+  ui->attributesListWidget->clear();
+  if (!frame) return;
+  for (auto attribute : frame->getAttributes()) {
+    QListWidgetItem *item = new QListWidgetItem(ui->attributesListWidget);
 
-      AttributeItem *attributeItem = new AttributeItem(attribute);
-      item->setSizeHint(attributeItem->minimumSizeHint());
-      ui->attributesListWidget->setItemWidget(item, attributeItem);
-    }
+    AttributeItem *attributeItem = new AttributeItem(attribute.second);
+    item->setSizeHint(attributeItem->minimumSizeHint());
+    ui->attributesListWidget->setItemWidget(item, attributeItem);
+  }
 }
 
-void AttributesWidget::on_removeAttributeButton_clicked()
-{
-    shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA;
-    std::shared_ptr<AnnotatorLib::Attribute> attr;
-    AttributeItem *attributeItem =
-        (AttributeItem *)ui->attributesListWidget->itemWidget(
-            ui->attributesListWidget->currentItem());
-    if (attributeItem) attr = attributeItem->getAttribute();
-    if (attr) {
-      shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA =
-          std::make_shared<AnnotatorLib::Commands::RemoveAttribute>(session,
-                                                                    frame, attr);
-      CommandController::instance()->execute(rA);
+void AttributesWidget::on_removeAttributeButton_clicked() {
+  shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA;
+  std::shared_ptr<AnnotatorLib::Attribute> attr;
+  AttributeItem *attributeItem =
+      (AttributeItem *)ui->attributesListWidget->itemWidget(
+          ui->attributesListWidget->currentItem());
+  if (attributeItem) attr = attributeItem->getAttribute();
+  if (attr) {
+    shared_ptr<AnnotatorLib::Commands::RemoveAttribute> rA =
+        std::make_shared<AnnotatorLib::Commands::RemoveAttribute>(session,
+                                                                  frame, attr);
+    CommandController::instance()->execute(rA);
 
-      reload();
-    }
+    reload();
+  }
 }
 
-void AttributesWidget::on_addAttributeButton_clicked()
-{
-    if(!frame) return;
-    NewAttributeDialog dlg(this);
-    dlg.exec();
-
+void AttributesWidget::on_addAttributeButton_clicked() {
+  if (!frame) return;
+  NewAttributeDialog dlg(this);
+  if (QDialog::Accepted == dlg.exec()) {
     shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
     nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
         session, frame, dlg.getAttribute());
     CommandController::instance()->execute(nA);
-
     reload();
+  }
 }

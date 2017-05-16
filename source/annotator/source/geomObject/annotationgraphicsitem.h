@@ -2,14 +2,15 @@
 #ifndef ANNOTATIONGRAPHICSITEM_H
 #define ANNOTATIONGRAPHICSITEM_H
 
+#include <memory>
+#include <mutex>
+
 #include <QBrush>
 #include <QColor>
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QPainter>
 #include <QPen>
-#include <memory>
-#include <mutex>
 
 #include "corner.h"
 #include "player.h"

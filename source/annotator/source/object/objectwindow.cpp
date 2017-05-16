@@ -82,14 +82,14 @@ void ObjectWindow::done(int status) {
 
 void ObjectWindow::on_addAttributeButton_clicked() {
   NewAttributeDialog dlg(this);
-  dlg.exec();
+  if (QDialog::Accepted == dlg.exec()) {
+    shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
+    nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
+        session, object, dlg.getAttribute());
+    CommandController::instance()->execute(nA);
 
-  shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
-  nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(
-      session, object, dlg.getAttribute());
-  CommandController::instance()->execute(nA);
-
-  reloadAttributes();
+    reloadAttributes();
+  }
 }
 
 void ObjectWindow::on_removeAttributeButton_clicked() {

@@ -318,7 +318,7 @@ void Player::enableDrawing(bool enable) {
 }
 
 void Player::on_nextFrame(long frame) {
-    emit signal_frameChanged(frame);
+  emit signal_frameChanged(frame);
   if (autoAnnotation) runPlugin(frame);
 }
 
@@ -360,7 +360,10 @@ void Player::on_btnPause_clicked() { pause(); }
 
 void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
 
-void Player::on_btnPrev_clicked() { videoplayer->prevFrame(); }
+void Player::on_btnPrev_clicked() {
+  emit signal_frameChanged(videoplayer->getCurFrameNr() - 1);
+  videoplayer->prevFrame();
+}
 
 void Player::on_btnNext_clicked() {
   on_nextFrame(videoplayer->getCurFrameNr() + 1);
