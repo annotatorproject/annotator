@@ -1,11 +1,23 @@
 version: '2'
 services:
- annotator:
-  # image:chriamue/annotator
-  build: .
-  environment:
-   - DISPLAY=$DISPLAY
-   - QT_X11_NOMITSHM=1
-  volumes:
-   - '/tmp/.X11-unix:/tmp/.X11-unix'
-   - '~/:/home/user/'
+  annotator:
+  # image:chriamue/annotator:cpu
+    build: cpu
+    environment:
+     - DISPLAY=$DISPLAY
+     - QT_X11_NOMITSHM=1
+    volumes:
+     - '/tmp/.X11-unix:/tmp/.X11-unix'
+     - '~/:/home/user/'
+  annotatorgpu:
+  # image:chriamue/annotator:gpu
+    build: gpu
+    environment:
+     - DISPLAY=$DISPLAY
+     - QT_X11_NOMITSHM=1
+    volumes:
+     - '/tmp/.X11-unix:/tmp/.X11-unix'
+     - '~/:/home/user/'
+    devices:
+     - /dev/nvidia0
+

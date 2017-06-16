@@ -12,7 +12,7 @@
 [waffle-image]: https://badge.waffle.io/annotatorproject/annotator.svg?label=ready&title=Ready
 [waffle]: http://waffle.io/annotatorproject/annotator
 
-### Quick start
+## Quick start
 
 First install CMake, Qt5, OpenCV and a c++11 compiler (gcc 5).
 
@@ -60,8 +60,18 @@ cmake -Dannotatorlib_DIR=../annotatorlib -DCMAKE_BUILD_TYPE=Debug ..
 make
 ```
 
-### Docker
+## Docker
+
+### CPU
+
 ```sh
 xhost +
-docker run --rm -e DISPLAY=$DISPLAY -e QT_X11_NOMITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/:/home/user/ chriamue/annotator
+docker run --rm -e DISPLAY=$DISPLAY -e QT_X11_NOMITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/:/home/user/ chriamue/annotator:cpu
+```
+
+### GPU (Cuda)
+
+```sh
+xhost +
+nvidia-docker run --rm -e DISPLAY=$DISPLAY -e QT_X11_NOMITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/:/home/user/ chriamue/annotator:gpu
 ```
