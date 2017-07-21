@@ -20,4 +20,12 @@ services:
      - '~/:/home/user/'
     devices:
      - /dev/nvidia0
+  annotatorvnc:
+  # image:chriamue/annotator:vnc
+    build: vnc
+    volumes:
+     - '~/:/home/$USER/'
+    expose:
+     - "6080"
+     - "5900"
 
