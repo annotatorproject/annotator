@@ -1,8 +1,10 @@
 #include "pluginswidget.h"
 #include "plugins/pluginloader.h"
 #include "ui_pluginswidget.h"
+#include "controller/commandcontroller.h"
 
 #include <annotator/plugins/plugin.h>
+
 
 PluginsWidget::PluginsWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::PluginsWidget) {
@@ -58,4 +60,9 @@ void PluginsWidget::on_auto_annotate_checkBox_clicked(bool checked) {
   this->ui->comboBox->setEnabled(checked);
   if (this->lastWidget) lastWidget->setEnabled(checked);
   emit signal_autoAnnotate(checked);
+}
+
+void PluginsWidget::on_auto_annotate_checkBox_toggled(bool checked)
+{
+    CommandController::instance()->doEmitRefreshSession();
 }

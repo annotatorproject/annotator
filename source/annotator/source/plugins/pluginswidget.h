@@ -31,7 +31,9 @@ class PluginsWidget : public QWidget {
   void on_auto_annotate_checkBox_clicked(bool checked);
   void on_comboBox_currentIndexChanged(const QString &arg1);
 
- private:
+  void on_auto_annotate_checkBox_toggled(bool checked);
+
+private:
   bool autoAnnotate = false;
   Ui::PluginsWidget *ui;
   QWidget *lastWidget = nullptr;
