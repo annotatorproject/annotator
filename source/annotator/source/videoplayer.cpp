@@ -238,7 +238,8 @@ void Videoplayer::prevFrame() {
   }
 }
 
-void Videoplayer::setImageSet(AnnotatorLib::ImageSet *imageSet) {
+void Videoplayer::setImageSet(
+    std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> imageSet) {
   this->imageSet = imageSet;
   if (this->imageSet) {
     cv::Mat input;

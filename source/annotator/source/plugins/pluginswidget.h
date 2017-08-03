@@ -33,7 +33,7 @@ class PluginsWidget : public QWidget {
 
   void on_auto_annotate_checkBox_toggled(bool checked);
 
-private:
+ private:
   bool autoAnnotate = false;
   Ui::PluginsWidget *ui;
   QWidget *lastWidget = nullptr;
