@@ -21,6 +21,8 @@ class OptionsDialog : public QDialog {
 
   void on_storagesButton_clicked();
 
+  void on_imagesetsButton_clicked();
+
  private:
   Ui::OptionsDialog *ui;
 };

@@ -1,4 +1,5 @@
 
+#include <AnnotatorLib/ImageSet/ImageSetFactory.h>
 #include <AnnotatorLib/Storage/StorageFactory.h>
 #include <Poco/Exception.h>
 #include <sys/stat.h>
@@ -48,6 +49,10 @@ int main(int argc, char *argv[]) {
   std::string storagesPath =
       settings.value("StoragesPath", "storages").toString().toStdString();
   AnnotatorLib::Storage::StorageFactory::instance()->loadPlugins(storagesPath);
+  std::string imagesetsPath =
+      settings.value("ImageSetsPath", "imagesets").toString().toStdString();
+  AnnotatorLib::ImageSet::ImageSetFactory::instance()->loadPlugins(
+      imagesetsPath);
 
   // check if path was stored previously
   try {
