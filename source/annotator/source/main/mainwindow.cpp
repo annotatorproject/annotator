@@ -22,6 +22,7 @@
 #include "gui/alert.h"
 #include "gui/classesdialog.h"
 #include "gui/exportannotations.h"
+#include "gui/saveasdialog.h"
 #include "gui/statisticsdialog.h"
 #include "newprojectdialog.h"
 #include "optionsdialog.h"
@@ -392,5 +393,10 @@ void MainWindow::on_actionExport_Annotations_triggered() {
 
 void MainWindow::on_action_Options_triggered() {
   OptionsDialog dialog;
+  dialog.exec();
+}
+
+void MainWindow::on_actionSave_Project_As_triggered() {
+  SaveAsDialog dialog(project, this);
   dialog.exec();
 }

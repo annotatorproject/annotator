@@ -84,6 +84,8 @@ class MainWindow : public QMainWindow {
 
   void on_action_Options_triggered();
 
+  void on_actionSave_Project_As_triggered();
+
  protected:
   Player playerWidget;
   AnnotationsWidget annotationsWidget;
