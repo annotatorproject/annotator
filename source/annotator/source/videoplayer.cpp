@@ -242,16 +242,6 @@ void Videoplayer::setImageSet(
     std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> imageSet) {
   this->imageSet = imageSet;
   if (this->imageSet) {
-    cv::Mat input;
-
-    // show first frame
-    if (getNextFrame(input)) {
-      emit setInputCoordinate(QPoint(input.cols, input.rows));
-
-      emit showFrame(input);
-      emit updateFrame(getCurFrameNr());
-
-      emit updateBtn_signal();
-    }
+    reload();
   }
 }

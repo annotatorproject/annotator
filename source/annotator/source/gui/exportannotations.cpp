@@ -23,11 +23,13 @@ void ExportAnnotations::on_destinationButton_clicked() {
   if (ui->fileFormatComboBox->currentText() == "xml")
     path = QFileDialog::getSaveFileName(this, tr("Export Path"), ".",
                                         tr("Project Files (*.xml)"));
-  if (ui->fileFormatComboBox->currentText() == "pascalvocxml")
+  else if (ui->fileFormatComboBox->currentText() == "pascalvocxml")
     path = QFileDialog::getExistingDirectory(this, tr("Export Path"), ".");
-  if (ui->fileFormatComboBox->currentText() == "json")
+  else if (ui->fileFormatComboBox->currentText() == "json")
     path = QFileDialog::getSaveFileName(this, tr("Export Path"), ".",
                                         tr("Project Files (*.json)"));
+  else
+      path = QFileDialog::getExistingDirectory(this, tr("Export Path"), ".");
   ui->destinationLineEdit->setText(path);
 }
 
@@ -38,4 +40,5 @@ void ExportAnnotations::on_buttonBox_accepted() {
   std::shared_ptr<AnnotatorLib::Export::AbstractExport> exporter =
       AnnotatorLib::Export::ExportFactory::instance()->createExport(
           exportType, project, path);
+  exporter->doExport();
 }
