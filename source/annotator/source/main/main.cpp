@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
   CrashCpp::addReporter(std::make_shared<crashcpp::LogReport>());
 #endif
 
-  setStyleSheet(a, "annotator.qss");
+  setStyleSheet(a, ":/Styles/annotator.qss");
 
   MainWindow w;
   w.show();

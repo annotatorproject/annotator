@@ -57,6 +57,8 @@ file(GLOB_RECURSE uis
 
 file(GLOB resources "${resource_path}/*.qrc" )
 
+file(GLOB qss "${resource_path}/*.qss" )
+
 # Group source files
 set(header_group "Header Files (API)")
 set(source_group "Source Files")
@@ -77,6 +79,7 @@ add_executable(${target}
     ${headers}
     ${uis}
     ${resources}
+    ${qss}
 )
 
 # Create namespaced alias

@@ -35,8 +35,6 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(setSliderValue(int)));
   connect(videoplayer, SIGNAL(updateBtn_signal()), this, SLOT(on_updateBtn()));
   connect(videoplayer, SIGNAL(sleep(int)), this, SLOT(sleep(int)));
-  connect(videoplayer, SIGNAL(updateHorizontalSlider()), this,
-          SLOT(updateHorizontalSlider()));
   connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
   // command controller
