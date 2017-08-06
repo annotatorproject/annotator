@@ -83,7 +83,6 @@ std::shared_ptr<AnnotatorLib::Session> Player::getSession() const {
 }
 
 void Player::closeProject() {
-  this->currentFrame = cv::Mat();
   setProject(nullptr);
   this->videoplayer->close();
   scene->setBackgroundBrush(QPixmap(1, 1));
@@ -166,10 +165,7 @@ void Player::on_updateBtn() {
  *
  */
 void Player::showFrame(cv::Mat frame) {
-  currentFrame = frame;
-
-  // convert cv::mat to QImage, cv::mat uses bgr, qimage rgb format
-  cv::cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
+  cv::cvtColor(frame, frame, CV_BGR2RGB);
   QImage img = QImage((const unsigned char *)(frame.data), frame.cols,
                       frame.rows, frame.step, QImage::Format_RGB888);
 
@@ -186,6 +182,7 @@ void Player::updateFrame(long frame_nmb) {
   this->scene->setCurrentFrame(frame_nmb);
   showAnnotationsOfFrame(f);
   this->scene->update();
+  this->updateHorizontalSlider();
 }
 
 void Player::runPlugin(unsigned long frame_nmb) {

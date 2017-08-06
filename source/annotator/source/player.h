@@ -100,8 +100,6 @@ class Player : public QWidget {
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   QLabel *rateLabel;
 
-  cv::Mat currentFrame;
-
   std::list<AnnotationGraphicsItem *> annotationGraphics;
 
   void updateStatus(bool var);

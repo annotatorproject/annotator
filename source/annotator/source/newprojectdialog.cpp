@@ -23,7 +23,8 @@ NewProjectDialog::NewProjectDialog(QWidget *parent)
       new QRegExpValidator(QRegExp("\\S+"), this));
 
   for (std::string imageSetType :
-       AnnotatorLib::ImageSet::ImageSetFactory::instance()->availableImageSets()) {
+       AnnotatorLib::ImageSet::ImageSetFactory::instance()
+           ->availableImageSets()) {
     ui->imageSetComboBox->addItem(QString::fromStdString(imageSetType));
   }
 }

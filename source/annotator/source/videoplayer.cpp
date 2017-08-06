@@ -2,7 +2,7 @@
 #include <QDebug>
 
 Videoplayer::Videoplayer(QObject *parent)
-    : QThread(parent), delay(-1), stop(true), curIndex(0) {
+    : QThread(parent), delay(-1), stop(true) {
   connect(this, SIGNAL(revert()), this, SLOT(revertVideo()));
 }
 
@@ -105,35 +105,14 @@ void Videoplayer::run() { playIt(); }
  *
  */
 void Videoplayer::playIt() {
-  // current frame
-  cv::Mat input;
-
-  // if no capture device has been set
-  if (!isOpened()) return;
-
   // is playing
   setStop(false);
-
-  // update buttons
   emit updateBtn_signal();
-
-  while (!isStop()) {
-    // capture time needed to process 1 frame.
+  while (!isStop() && imageSet->hasNext()) {
     start_Timer.start();
-
-    // read next frame if any
-    if (!getNextFrame(input)) break;
-
+    nextFrame();
     emit nextFrame(getCurFrameNr());
-    // display input frame
-    emit showFrame(input);
-    emit updateFrame(getCurFrameNr());
-
-    // update the progress bar
-    emit updateHorizontalSlider();
-
-    // introduce a delay
-    emit sleep(delay);
+    sleep(delay);
   }
   // if video ended and not stopped jump to first frame
   if (!isStop()) {
@@ -148,11 +127,13 @@ void Videoplayer::playIt() {
  */
 void Videoplayer::wait(int msecs) {
   double stop = start_Timer.elapsed();
-  int wait = cv::max(msecs - stop, 1.0);
+  int wait = std::max(msecs - stop, 1.0);
 
   QTime dieTime = QTime::currentTime().addMSecs(wait);
-  while (QTime::currentTime() < dieTime)
+  while (QTime::currentTime() < dieTime) {
+    QThread::msleep(1);
     QApplication::processEvents(QEventLoop::AllEvents, 1);
+  }
 }
 
 /**
@@ -205,10 +186,7 @@ void Videoplayer::stopIt() {
  * revertVideo	-	revert playing
  *
  */
-void Videoplayer::revertVideo() {
-  on_frameSelected(0);
-  emit updateHorizontalSlider();
-}
+void Videoplayer::revertVideo() { on_frameSelected(0); }
 
 /**
  * close	-	close the video
@@ -223,7 +201,6 @@ void Videoplayer::close() { imageSet = nullptr; }
 void Videoplayer::nextFrame() {
   if (getCurFrameNr() < getTotalFrameNr()) {
     on_frameSelected(getCurFrameNr() + 1);
-    emit updateHorizontalSlider();
   }
 }
 
@@ -234,7 +211,6 @@ void Videoplayer::nextFrame() {
 void Videoplayer::prevFrame() {
   if (getCurFrameNr() > 0) {
     on_frameSelected(getCurFrameNr() - 1);
-    emit updateHorizontalSlider();
   }
 }
 

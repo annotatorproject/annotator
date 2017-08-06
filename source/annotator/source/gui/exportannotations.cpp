@@ -29,7 +29,7 @@ void ExportAnnotations::on_destinationButton_clicked() {
     path = QFileDialog::getSaveFileName(this, tr("Export Path"), ".",
                                         tr("Project Files (*.json)"));
   else
-      path = QFileDialog::getExistingDirectory(this, tr("Export Path"), ".");
+    path = QFileDialog::getExistingDirectory(this, tr("Export Path"), ".");
   ui->destinationLineEdit->setText(path);
 }
 

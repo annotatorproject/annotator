@@ -73,8 +73,7 @@ class Videoplayer : public QThread {
   void updateBtn_signal();        // update button status
   void showFrame(cv::Mat frame);  // show a frame
   void updateFrame(long frame);
-  void updateHorizontalSlider();  // update horizontal Slider
-  void sleep(int msecs);          // sleep for a while
+  void sleep(int msecs);  // sleep for a while
   void revert();
   void imageon_frameSelected(long pos);  // jump to position for images
   void showImage(QPixmap img);
@@ -85,8 +84,6 @@ class Videoplayer : public QThread {
   int delay;  // delay between each frame processing
 
   bool stop;  // to stop the player
-
-  int curIndex;  // current index for output images
 
   bool getNextFrame(cv::Mat &frame);  // get the next frame if any
 
