@@ -23,7 +23,7 @@ void OptionsDialog::loadOptions() {
   ui->storagesLineEdit->setText(storagesPath);
   QString imagesetsPath =
       settings.value("ImageSetsPath", "imagesets").toString();
-  ui->storagesLineEdit->setText(storagesPath);
+  ui->imagesetsLineEdit->setText(imagesetsPath);
 }
 
 void OptionsDialog::on_buttonBox_accepted() {
