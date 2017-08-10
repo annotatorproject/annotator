@@ -169,7 +169,7 @@ void MainWindow::loadRecentProjects() {
             [recentProjectAction, this]() {
               QString recentProject = recentProjectAction->toolTip();
               this->openProject(
-                  AnnotatorLib::Project::load(recentProject.toStdString()));
+                  AnnotatorLib::Project::loadPath(recentProject.toStdString()));
             });
     ui->menuRecentProjects->addAction(recentProjectAction);
   }
@@ -266,7 +266,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
     Annotator::PluginLoader::getInstance();
     try {
       std::shared_ptr<AnnotatorLib::Project> project =
-          AnnotatorLib::Project::load(fileName.toStdString());
+          AnnotatorLib::Project::loadPath(fileName.toStdString());
       openProject(project);
       QApplication::restoreOverrideCursor();
     } catch (std::exception &e) {
@@ -283,7 +283,7 @@ void MainWindow::on_actionNew_Project_triggered() {
   dialog.exec();
   if (dialog.getProject()) {
     this->project = dialog.getProject();
-    AnnotatorLib::Project::save(this->project, this->project->getPath());
+    AnnotatorLib::Project::savePath(this->project, this->project->getPath());
     openProject(this->project);
   }
 }

@@ -60,7 +60,8 @@ int main(int argc, char *argv[]) {
       // check if file exists on fs
       struct stat buffer;
       if (stat(lastProjPath.toStdString().c_str(), &buffer) == 0)
-        w.openProject(AnnotatorLib::Project::load(lastProjPath.toStdString()));
+        w.openProject(
+            AnnotatorLib::Project::loadPath(lastProjPath.toStdString()));
     }
   } catch (Poco::Exception &e) {
     QMessageBox::critical(
