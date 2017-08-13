@@ -8,7 +8,7 @@ services:
      - QT_X11_NOMITSHM=1
     volumes:
      - '/tmp/.X11-unix:/tmp/.X11-unix'
-     - '~/:/home/user/'
+     - '~/:/home/$USER/'
   annotatorgpu:
   # image:chriamue/annotator:gpu
     build: gpu
@@ -17,7 +17,7 @@ services:
      - QT_X11_NOMITSHM=1
     volumes:
      - '/tmp/.X11-unix:/tmp/.X11-unix'
-     - '~/:/home/user/'
+     - '~/:/home/$USER/'
     devices:
      - /dev/nvidia0
   annotatorvnc:
