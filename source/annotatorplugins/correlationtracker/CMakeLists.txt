@@ -2,8 +2,10 @@
 # 
 # External dependencies
 # 
-
+include(CheckIncludeFiles)
 find_package(dlib)
+
+CHECK_INCLUDE_FILES (dlib/dnn.h HAVE_DNN_H)
 
 # Enable automoc
 set(CMAKE_AUTOMOC ON)
@@ -24,7 +26,7 @@ set_policy(CMP0020 NEW)
 set(target correlationtracker)
 
 # Exit here if required dependencies are not met
-if (NOT dlib_FOUND)
+if (NOT dlib_FOUND OR NOT HAVE_DNN_H)
     message(STATUS "Plugin ${target} skipped: dlib not found")
     return()
 else()
@@ -84,7 +86,7 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorplugin
-    dlib::dlib_shared
+    dlib
 )
 
 

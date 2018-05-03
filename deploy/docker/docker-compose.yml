@@ -1,8 +1,8 @@
-version: '2'
+version: '3'
 services:
  annotator:
   # image:chriamue/annotator
-  build: .
+  build: ./
   environment:
    - DISPLAY=$DISPLAY
    - QT_X11_NOMITSHM=1
