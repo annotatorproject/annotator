@@ -21,7 +21,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <AnnotatorLib/Frame.h>
-#include <AnnotatorLib/ImageSet.h>
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 
 class Videoplayer : public QThread {
   Q_OBJECT
@@ -45,7 +45,8 @@ class Videoplayer : public QThread {
   void nextFrame();  // display the next frame of the sequence
   void prevFrame();  // display the prev frame of the sequence
 
-  void setImageSet(AnnotatorLib::ImageSet *imageSet);
+  void setImageSet(
+      std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> imageSet);
 
   void wait(int msecs);
 
@@ -72,8 +73,7 @@ class Videoplayer : public QThread {
   void updateBtn_signal();        // update button status
   void showFrame(cv::Mat frame);  // show a frame
   void updateFrame(long frame);
-  void updateHorizontalSlider();  // update horizontal Slider
-  void sleep(int msecs);          // sleep for a while
+  void sleep(int msecs);  // sleep for a while
   void revert();
   void imageon_frameSelected(long pos);  // jump to position for images
   void showImage(QPixmap img);
@@ -85,8 +85,6 @@ class Videoplayer : public QThread {
 
   bool stop;  // to stop the player
 
-  int curIndex;  // current index for output images
-
   bool getNextFrame(cv::Mat &frame);  // get the next frame if any
 
   /**
@@ -96,7 +94,7 @@ class Videoplayer : public QThread {
    */
   bool getFrame(cv::Mat &frame);
 
-  AnnotatorLib::ImageSet *imageSet = nullptr;
+  std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> imageSet = nullptr;
 };
 
 #endif  // VIDEOPLAYER

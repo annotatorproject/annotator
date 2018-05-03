@@ -38,10 +38,13 @@ class Haarcascade : public Plugin {
   shared_ptr<Object> getObject() const override;
   void setLastAnnotation(shared_ptr<Annotation> annotation) override;
   std::vector<shared_ptr<Commands::Command>> getCommands() override;
+  virtual void setProject(
+      std::shared_ptr<AnnotatorLib::Project> project) override;
+  virtual bool requiresObject() const override { return false; }
 
   void loadCascade(std::string cascadeFile);
   void setNewObjects(bool newObjects);
-  void setObjectName(std::string name);
+  void setClass(std::string name);
 
   QWidget *getWidget() override;
 
@@ -51,11 +54,10 @@ class Haarcascade : public Plugin {
 
   shared_ptr<Annotation> lastAnnotation;
   shared_ptr<Object> object;
+  std::string _class;
 
   cv::Mat frameImg;
-  unsigned int objectNr = 0;
-  bool newObjects = false;
-  std::string objectNames = "noname";
+
   std::string cascadeFile = ":/haarcascade/haarcascade_frontalface_default.xml";
   cv::CascadeClassifier cascade;
 

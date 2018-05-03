@@ -1,4 +1,5 @@
 #include "pluginswidget.h"
+#include "controller/commandcontroller.h"
 #include "plugins/pluginloader.h"
 #include "ui_pluginswidget.h"
 
@@ -58,4 +59,8 @@ void PluginsWidget::on_auto_annotate_checkBox_clicked(bool checked) {
   this->ui->comboBox->setEnabled(checked);
   if (this->lastWidget) lastWidget->setEnabled(checked);
   emit signal_autoAnnotate(checked);
+}
+
+void PluginsWidget::on_auto_annotate_checkBox_toggled(bool checked) {
+  CommandController::instance()->doEmitRefreshSession();
 }

@@ -1,4 +1,7 @@
 #include "newprojectdialog.h"
+
+#include <AnnotatorLib/ImageSet/ImageSetFactory.h>
+
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -18,6 +21,12 @@ NewProjectDialog::NewProjectDialog(QWidget *parent)
 
   ui->projectNameLineEdit->setValidator(
       new QRegExpValidator(QRegExp("\\S+"), this));
+
+  for (std::string imageSetType :
+       AnnotatorLib::ImageSet::ImageSetFactory::instance()
+           ->availableImageSets()) {
+    ui->imageSetComboBox->addItem(QString::fromStdString(imageSetType));
+  }
 }
 
 NewProjectDialog::~NewProjectDialog() { delete ui; }
@@ -37,11 +46,7 @@ QString NewProjectDialog::getStorageType() {
 }
 
 QString NewProjectDialog::getImageSetType() {
-  QString imageSetType;
-  if (ui->videoRadioButton->isChecked()) imageSetType = "video";
-  if (ui->imagesRadioButton->isChecked()) imageSetType = "images";
-  if (ui->imageFTPRadioButton->isChecked()) imageSetType = "imageftp";
-  return imageSetType;
+  return ui->imageSetComboBox->currentText();
 }
 
 void NewProjectDialog::on_imageSetPathPushButton_clicked() {

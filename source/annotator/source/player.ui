@@ -28,9 +28,6 @@
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: qlineargradient(spread:pad, x1:0.489, y1:0, x2:0.5, y2:0.994318, stop:0 #3F3B3A, stop:1 #151414);</string>
-     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -40,7 +37,7 @@
         <x>0</x>
         <y>0</y>
         <width>1023</width>
-        <height>475</height>
+        <height>482</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -66,7 +63,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: qlineargradient(spread:pad, x1:0.489, y1:0, x2:0.5, y2:0.994318, stop:0 #CB4012, stop:1 #852001);</string>
+      <string notr="true"/>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -79,10 +76,6 @@
           <width>122</width>
           <height>0</height>
          </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgba(0,0,0,0);
-color: #ffffff</string>
         </property>
         <property name="text">
          <string>Frame Number</string>
@@ -119,9 +112,6 @@ color: #ffffff</string>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-        </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>2</number>
@@ -146,14 +136,11 @@ color: #ffffff</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../resource/icons.qrc">
+            <iconset resource="../resource/annotator.qrc">
              <normaloff>:/Icons/last.png</normaloff>:/Icons/last.png</iconset>
            </property>
           </widget>
@@ -166,14 +153,11 @@ color: #ffffff</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../resource/icons.qrc">
+            <iconset resource="../resource/annotator.qrc">
              <normaloff>:/Icons/play.png</normaloff>:/Icons/play.png</iconset>
            </property>
            <property name="iconSize">
@@ -192,14 +176,11 @@ color: #ffffff</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../resource/icons.qrc">
+            <iconset resource="../resource/annotator.qrc">
              <normaloff>:/Icons/pause.png</normaloff>:/Icons/pause.png</iconset>
            </property>
            <property name="iconSize">
@@ -218,14 +199,11 @@ color: #ffffff</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../resource/icons.qrc">
+            <iconset resource="../resource/annotator.qrc">
              <normaloff>:/Icons/stop.png</normaloff>:/Icons/stop.png</iconset>
            </property>
            <property name="iconSize">
@@ -244,14 +222,11 @@ color: #ffffff</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../resource/icons.qrc">
+            <iconset resource="../resource/annotator.qrc">
              <normaloff>:/Icons/next.png</normaloff>:/Icons/next.png</iconset>
            </property>
            <property name="iconSize">
@@ -317,10 +292,6 @@ color: #ffffff</string>
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgba(0,0,0,0);
-color: #ffffff</string>
-        </property>
         <property name="text">
          <string>00:00:00 / 00:00:00</string>
         </property>
@@ -340,72 +311,11 @@ color: #ffffff</string>
        <height>40</height>
       </size>
      </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
        <widget class="OwnSlider" name="horizontalSlider">
         <property name="autoFillBackground">
-         <bool>true</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QSlider::groove:horizontal {
-border: 1px solid #bbb;
-background: white;
-height: 10px;
-border-radius: 4px;
-}
-
-QSlider::sub-page:horizontal {
-background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
-    stop: 0 #831F01, stop: 1 #CB4012);
-background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
-    stop: 0 #CB4012, stop: 1 #831F01);
-border: 1px solid #777;
-height: 10px;
-border-radius: 4px;
-}
-
-QSlider::add-page:horizontal {
-background: #fff;
-border: 1px solid #777;
-height: 10px;
-border-radius: 4px;
-}
-
-QSlider::handle:horizontal {
-background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-    stop:0 #CB4012, stop:1 #831F01);
-border: 1px solid #777;
-width: 13px;
-margin-top: -2px;
-margin-bottom: -2px;
-border-radius: 4px;
-}
-
-QSlider::handle:horizontal:hover {
-background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-    stop:0 #CB4012, stop:1 #831F01);
-border: 1px solid #444;
-border-radius: 4px;
-}
-
-QSlider::sub-page:horizontal:disabled {
-background: #FFD0B4;
-border-color: #FF5E00;
-}
-
-QSlider::add-page:horizontal:disabled {
-background: #FFD0B4;
-border-color: #FF5E00;
-}
-
-QSlider::handle:horizontal:disabled {
-background: #FF5E00;
-border: 1px solid #aaa;
-border-radius: 4px;
-}</string>
+         <bool>false</bool>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -425,7 +335,7 @@ border-radius: 4px;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../resource/icons.qrc"/>
+  <include location="../resource/annotator.qrc"/>
  </resources>
  <connections/>
 </ui>

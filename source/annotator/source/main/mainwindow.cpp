@@ -1,24 +1,33 @@
+// Copyright 2015-2017 Annotator Team
+
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include <string>
+
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CleanSession.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
+
 #include <QApplication>
 #include <QCheckBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
-#include <string>
+
 #include "aboutdialog.h"
 #include "controller/commandcontroller.h"
 #include "controller/selectioncontroller.h"
 #include "gui/alert.h"
 #include "gui/classesdialog.h"
+#include "gui/exportannotations.h"
+#include "gui/saveasdialog.h"
 #include "gui/statisticsdialog.h"
 #include "newprojectdialog.h"
+#include "optionsdialog.h"
 #include "plugins/pluginloader.h"
 #include "plugins/pluginrunner.h"
-#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -27,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->annotationsLayout->addWidget(&annotationsWidget);
   ui->objectsLayout->addWidget(&objectsWidget);
   ui->selectedObjectLayout->addWidget(&selectedObject);
-  // ui->attributesLayout->addWidget(&attributesWidget); // TODO
+  ui->attributesLayout->addWidget(&attributesWidget);  // TODO
   ui->pluginsLayout->addWidget(&pluginsWidget);
 
   rateLabel = new QLabel;     // Frame rate
@@ -102,6 +111,12 @@ void MainWindow::connectSignalSlots() {
           &objectsWidget,
           SLOT(on_objectRemoved(shared_ptr<AnnotatorLib::Object>)));
 
+  // update attributes
+  connect(SelectionController::instance(), SIGNAL(signal_frameSelection(long)),
+          &attributesWidget, SLOT(setFrame(long)));
+  connect(&playerWidget, SIGNAL(signal_frameChanged(long)), &attributesWidget,
+          SLOT(setFrame(long)));
+
   // autoAnnotate
   connect(&pluginsWidget, SIGNAL(signal_autoAnnotate(bool)), &playerWidget,
           SLOT(on_autoAnnotate(bool)));
@@ -154,7 +169,7 @@ void MainWindow::loadRecentProjects() {
             [recentProjectAction, this]() {
               QString recentProject = recentProjectAction->toolTip();
               this->openProject(
-                  AnnotatorLib::Project::load(recentProject.toStdString()));
+                  AnnotatorLib::Project::loadPath(recentProject.toStdString()));
             });
     ui->menuRecentProjects->addAction(recentProjectAction);
   }
@@ -251,7 +266,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
     Annotator::PluginLoader::getInstance();
     try {
       std::shared_ptr<AnnotatorLib::Project> project =
-          AnnotatorLib::Project::load(fileName.toStdString());
+          AnnotatorLib::Project::loadPath(fileName.toStdString());
       openProject(project);
       QApplication::restoreOverrideCursor();
     } catch (std::exception &e) {
@@ -268,7 +283,7 @@ void MainWindow::on_actionNew_Project_triggered() {
   dialog.exec();
   if (dialog.getProject()) {
     this->project = dialog.getProject();
-    AnnotatorLib::Project::save(this->project, this->project->getPath());
+    AnnotatorLib::Project::savePath(this->project, this->project->getPath());
     openProject(this->project);
   }
 }
@@ -369,4 +384,19 @@ void MainWindow::on_actionProject_Statistics_triggered() {
 void MainWindow::on_actionRun_Plugins_Dialog_triggered() {
   PluginRunner pluginRunner(project, this);
   pluginRunner.exec();
+}
+
+void MainWindow::on_actionExport_Annotations_triggered() {
+  ExportAnnotations dialog(project, this);
+  dialog.exec();
+}
+
+void MainWindow::on_action_Options_triggered() {
+  OptionsDialog dialog;
+  dialog.exec();
+}
+
+void MainWindow::on_actionSave_Project_As_triggered() {
+  SaveAsDialog dialog(project, this);
+  dialog.exec();
 }

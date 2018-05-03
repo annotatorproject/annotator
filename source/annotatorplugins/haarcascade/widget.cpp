@@ -6,13 +6,13 @@
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
-  ui->objectNameLineEdit->setEnabled(false);
 }
 
 Widget::~Widget() { delete ui; }
 
 void Widget::setHaarcascade(Annotator::Plugins::Haarcascade *haarcascade) {
   this->haarcascade = haarcascade;
+  initClasses();
 }
 
 void Widget::on_pushButton_clicked() {
@@ -24,11 +24,16 @@ void Widget::on_pushButton_clicked() {
   }
 }
 
-void Widget::on_objectNameLineEdit_editingFinished() {
-  haarcascade->setObjectName(ui->objectNameLineEdit->text().toStdString());
+void Widget::initClasses() {
+  if (haarcascade && haarcascade->getProject() &&
+      haarcascade->getProject()->getSession()) {
+    ui->classesComboBox->clear();
+    for (auto class_ : haarcascade->getProject()->getSession()->getClasses()) {
+      ui->classesComboBox->addItem(QString::fromStdString(class_.first));
+    }
+  }
 }
 
-void Widget::on_newObjectsCheckBox_toggled(bool checked) {
-  haarcascade->setNewObjects(checked);
-  ui->objectNameLineEdit->setEnabled(checked);
+void Widget::on_classesComboBox_currentTextChanged(const QString &arg1) {
+  this->haarcascade->setClass(arg1.toStdString());
 }

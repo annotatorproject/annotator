@@ -42,7 +42,6 @@ void Haarcascade::setLastAnnotation(shared_ptr<Annotation> annotation) {
 
 std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
   std::vector<shared_ptr<Commands::Command> > commands;
-  if (!this->newObjects) return commands;
   try {
     std::vector<cv::Rect> objects;
     cv::Mat frame_gray;
@@ -52,25 +51,31 @@ std::vector<shared_ptr<Commands::Command> > Haarcascade::getCommands() {
                              0 | CV_HAAR_SCALE_IMAGE, cv::Size(30, 30));
 
     for (size_t i = 0; i < objects.size(); i++) {
-      // std::string name = this->objectNames +
-      // std::to_string(this->objectNr++);
       float x = objects[i].x;
       float y = objects[i].y;
       float w = objects[i].width;
       float h = objects[i].height;
 
-      // cv::rectangle( frameImg, objects[i], cv::Scalar(0,0,255), 3, CV_AA );
-      shared_ptr<Commands::NewAnnotation> nA =
-          std::make_shared<Commands::NewAnnotation>(
-              project->getSession(), this->object, frame, x, y, w, h);
-      commands.push_back(nA);
+      std::shared_ptr<Class> labelClass =
+          this->project->getSession()->getClass(this->_class);
+      if (labelClass) {
+        unsigned long objectId = AnnotatorLib::Object::genId();
+        shared_ptr<Commands::NewAnnotation> nA =
+            std::make_shared<Commands::NewAnnotation>(
+                objectId, labelClass, project->getSession(), this->frame, x, y,
+                w, h, 0.5f, false);
+        commands.push_back(nA);
+      }
     }
-
-    // cv::imshow( "Debug Window", frameImg );
   } catch (std::exception &e) {
   }
 
   return commands;
+}
+
+void Haarcascade::setProject(std::shared_ptr<Project> project) {
+  this->project = project;
+  this->widget.setHaarcascade(this);
 }
 
 void Haarcascade::loadCascade(std::string cascadeFile) {
@@ -81,11 +86,4 @@ void Haarcascade::loadCascade(std::string cascadeFile) {
   }
 }
 
-void Haarcascade::setNewObjects(bool newObjects) {
-  this->newObjects = newObjects;
-}
-
-void Haarcascade::setObjectName(std::string name) {
-  this->objectNr = 0;
-  this->objectNames = name;
-}
+void Haarcascade::setClass(std::string name) { this->_class = name; }

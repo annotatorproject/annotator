@@ -35,8 +35,6 @@ Player::Player(QWidget *parent) : QWidget(parent), ui(new Ui::Player) {
           SLOT(setSliderValue(int)));
   connect(videoplayer, SIGNAL(updateBtn_signal()), this, SLOT(on_updateBtn()));
   connect(videoplayer, SIGNAL(sleep(int)), this, SLOT(sleep(int)));
-  connect(videoplayer, SIGNAL(updateHorizontalSlider()), this,
-          SLOT(updateHorizontalSlider()));
   connect(videoplayer, SIGNAL(setInputCoordinate(QPoint)), this,
           SLOT(setInputCoordinate(QPoint)));
   // command controller
@@ -83,7 +81,6 @@ std::shared_ptr<AnnotatorLib::Session> Player::getSession() const {
 }
 
 void Player::closeProject() {
-  this->currentFrame = cv::Mat();
   setProject(nullptr);
   this->videoplayer->close();
   scene->setBackgroundBrush(QPixmap(1, 1));
@@ -100,15 +97,11 @@ void Player::setProject(std::shared_ptr<AnnotatorLib::Project> project) {
   this->project = project;
 
   this->session = project ? project->getSession() : nullptr;
+  ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
+                                           : 0);
 
+  videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
   if (project) {
-    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                             : 0);
-
-    videoplayer->setImageSet(project ? project->getImageSet() : nullptr);
-    ui->horizontalSlider->setMaximum(project ? project->getImageSet()->size()
-                                             : 0);
-
     cv::Mat firstImage = project ? project->getImageSet()->next() : cv::Mat();
     scene->setSceneRect(0, 0, firstImage.cols, firstImage.rows);
     scene->setSession(project ? session : nullptr);
@@ -170,10 +163,7 @@ void Player::on_updateBtn() {
  *
  */
 void Player::showFrame(cv::Mat frame) {
-  currentFrame = frame;
-
-  // convert cv::mat to QImage, cv::mat uses bgr, qimage rgb format
-  cvtColor(currentFrame, currentFrame, CV_BGR2RGB);
+  cv::cvtColor(frame, frame, CV_BGR2RGB);
   QImage img = QImage((const unsigned char *)(frame.data), frame.cols,
                       frame.rows, frame.step, QImage::Format_RGB888);
 
@@ -190,6 +180,7 @@ void Player::updateFrame(long frame_nmb) {
   this->scene->setCurrentFrame(frame_nmb);
   showAnnotationsOfFrame(f);
   this->scene->update();
+  this->updateHorizontalSlider();
 }
 
 void Player::runPlugin(unsigned long frame_nmb) {
@@ -322,6 +313,7 @@ void Player::enableDrawing(bool enable) {
 }
 
 void Player::on_nextFrame(long frame) {
+  emit signal_frameChanged(frame);
   if (autoAnnotation) runPlugin(frame);
 }
 
@@ -363,7 +355,10 @@ void Player::on_btnPause_clicked() { pause(); }
 
 void Player::on_btnStop_clicked() { videoplayer->stopIt(); }
 
-void Player::on_btnPrev_clicked() { videoplayer->prevFrame(); }
+void Player::on_btnPrev_clicked() {
+  emit signal_frameChanged(videoplayer->getCurFrameNr() - 1);
+  videoplayer->prevFrame();
+}
 
 void Player::on_btnNext_clicked() {
   on_nextFrame(videoplayer->getCurFrameNr() + 1);

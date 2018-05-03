@@ -32,9 +32,4 @@ void NewAttributeDialog::createAttribute() {
   std::shared_ptr<AnnotatorLib::AttributeValue> av =
       AnnotatorLib::Attribute::createAttributeValue(type, value);
   attribute->setValue(av);
-
-  // shared_ptr<AnnotatorLib::Commands::NewAttribute> nA;
-  // nA = std::make_shared<AnnotatorLib::Commands::NewAttribute>(session,
-  // object, type, name, value);
-  // CommandController::instance()->execute(nA);
 }

@@ -47,4 +47,7 @@
         <file>exclamation.png</file>
         <file>warning.png</file>
     </qresource>
+    <qresource prefix="/Styles">
+        <file>annotator.qss</file>
+    </qresource>
 </RCC>

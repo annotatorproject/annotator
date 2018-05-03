@@ -4,7 +4,7 @@ if( NOT annotatorlib_FOUND AND OPTION_BUILD_ANNOTATORLIB)
 
 ExternalProject_Add(
     annotatorlib
-    GIT_REPOSITORY https://github.com/lasmue/annotatorlib.git
+    GIT_REPOSITORY https://github.com/annotatorproject/annotatorlib.git
     GIT_TAG master
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/annotatorlib
     INSTALL_COMMAND ""

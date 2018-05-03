@@ -12,7 +12,6 @@ addons:
  apt:
   sources:
    - ubuntu-toolchain-r-test
-   - sourceline: 'ppa:snappy-dev/tools'
   
   packages:
    - gcc-5
@@ -21,8 +20,6 @@ addons:
    - cmake
    - git
    - rpm
-   - snapcraft
-   - snap
    - libgtk2.0-dev
    - pkg-config
    - libavcodec-dev
@@ -92,12 +89,12 @@ before_script:
  - mkdir build; cd build; cmake -DCMAKE_CXX_COMPILER=$CXX .. ; make; sudo make install
  - cd ../../
 
- - git clone https://github.com/lasmue/annotatorlib
+ - git clone https://github.com/annotatorproject/annotatorlib
  - cd annotatorlib
  - git submodule update --init --recursive
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DPoco_DIR=../../poco/build/Poco -DOpenCV_DIR=../../opencv/build -DOPTION_BUILD_TESTS=0 ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DPoco_DIR=../../poco/build/Poco -DOpenCV_DIR=../../opencv/build -DOPTION_BUILD_TESTS=0 -DOPTION_BUILD_PYTHON=0 ..
  - make
  - cd ../../
 
@@ -117,7 +114,6 @@ deploy:
   file:
    - $TRAVIS_BUILD_DIR/build/*.deb
    - $TRAVIS_BUILD_DIR/build/*.rpm
-   - $TRAVIS_BUILD_DIR/build/*.snap
   skip_cleanup: true
   on:
     tags: true

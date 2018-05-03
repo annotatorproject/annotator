@@ -24,13 +24,13 @@ class Widget : public QWidget {
  private slots:
   void on_pushButton_clicked();
 
-  void on_objectNameLineEdit_editingFinished();
-
-  void on_newObjectsCheckBox_toggled(bool checked);
+  void on_classesComboBox_currentTextChanged(const QString &arg1);
 
  private:
   Ui::Widget *ui;
   Annotator::Plugins::Haarcascade *haarcascade = nullptr;
+
+  void initClasses();
 };
 
 #endif  // WIDGET_H

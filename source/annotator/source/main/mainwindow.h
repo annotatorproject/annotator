@@ -80,6 +80,12 @@ class MainWindow : public QMainWindow {
 
   void on_actionRun_Plugins_Dialog_triggered();
 
+  void on_actionExport_Annotations_triggered();
+
+  void on_action_Options_triggered();
+
+  void on_actionSave_Project_As_triggered();
+
  protected:
   Player playerWidget;
   AnnotationsWidget annotationsWidget;

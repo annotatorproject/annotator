@@ -1,0 +1,33 @@
+services:
+  annotator:
+    build: cpu
+    devices:
+    - /dev/nvidia0
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    environment:
+    - DISPLAY=$DISPLAY
+    - QT_X11_NOMITSHM=1
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - ~/:/home/user/
+    - nvidia_driver_375.66:/usr/local/nvidia:ro
+  annotatorgpu:
+    build: gpu
+    devices:
+    - /dev/nvidia0
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    environment:
+    - DISPLAY=$DISPLAY
+    - QT_X11_NOMITSHM=1
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - ~/:/home/user/
+    - nvidia_driver_375.66:/usr/local/nvidia:ro
+version: '2'
+volumes:
+  nvidia_driver_375.66:
+    external: true
