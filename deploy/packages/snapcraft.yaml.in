@@ -1,7 +1,6 @@
 name: @META_PROJECT_NAME@
 version: @META_VERSION@
 summary: @META_PROJECT_DESCRIPTION@
-vendor: @META_AUTHOR_ORGANIZATION@ <@META_AUTHOR_MAINTAINER@>
 description:
   @META_PROJECT_DESCRIPTION@
 icon: logo.png
@@ -30,6 +29,7 @@ parts:
       - libqt5opengl5
       - libqt5widgets5
       - libqt5x11extras5
+      - libc6
   integration:
     plugin: nil
     stage-packages:
@@ -37,32 +37,34 @@ parts:
 #      - breeze-icon-theme
 #      - hicolor-icon-theme
 #      - oxygen-icon-theme
-    snap:
+    prime:
       - usr/share
+  annotatorlib:
+    plugin: cmake
+    source: https://github.com/annotatorproject/annotatorlib.git
+    stage:
+      - -LICENSE
+      - -README.md
+      - -VERSION
+      - lib/libannotatorlib.so
 
   annotator:
     plugin: cmake
     configflags:
-      - "-DOPTION_BUILD_ANNOTATORLIB=0"
+      - "-DOPTION_BUILD_ANNOTATORLIB=1 -Dannotatorlib_DIR=../annotatorlib"
     source: https://github.com/annotatorproject/annotator.git
-    after: [dlib, qt, integration]
+    after: [annotatorlib, dlib, qt, integration]
     organize:
       annotator: bin/annotator
       lib/plugins/: bin/plugins/
       qt5-launch: bin/qt5-launch
-    snap:
+    prime:
       - -LICENSE
       - -README.md
       - -VERSION
       - bin/annotator
       - bin/plugins
-      - lib/libannotatorlib.so
       - bin/qt5-launch
+      - lib/libannotatorlib.so
 
-  copy:
-    plugin: copy
-    source: parts/annotator/build
-    files: 
-      annotatorlib/src/annotatorlib-build/libannotatorlib.so: lib/libannotatorlib.so
-    after: [annotator]
 
