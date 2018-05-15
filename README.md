@@ -30,6 +30,7 @@ Build LibPoco
 ```sh
 git clone https://github.com/pocoproject/poco.git
 cd poco
+git checkout poco-1.8.0
 sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' cmake/FindMySQL.cmake
 cd build
 cmake ..
